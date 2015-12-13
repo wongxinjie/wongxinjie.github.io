@@ -166,6 +166,87 @@
           
           
             
+              <a class="post-title-link" href="/2015/12/14/跳坑启示录/" itemprop="url">
+                跳坑启示录
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-14T01:46:43+08:00" content="2015-12-14">
+            2015-12-14
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/杂谈/" itemprop="url" rel="index">
+                  <span itemprop="name">杂谈</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>在近期的一个项目中，需要实现这样一个功能：冲HLS直播源中拉流到公司服务器，再构建m3u8文件同时对ts文件进行转码，通过公司的服务器再将m3u8和ts文件分发出去。简单来讲，就是先作为直播客户端， 将直播的HLS文件同步到服务器，然后通过公司的服务器对这些ts进行预加载以及多码率装码后重新构建m3u8文件，作为HLS直播的服务器，相当于直播转播的一个功能。<br>最开始的时候这个功能是由公司的其他同事利用ffmpeg来实现的，但是在实际测试中发现效果不是很理想，首先是利用ffmpeg实现HLS直播转播时，播放时间长会出现卡顿和音画不同步的现象；还有一个问题就是程序难以控制，因为程序的实现实际上是用python的subprocess来调用linux shell命令来实现的，虽然suprocess模块提供了poll/terminate等函数来获取子进程的状态和杀死子进程，但作为一个面向企业用户的直播转播服务，这种实现显然不行。   </p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/14/跳坑启示录/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/10/04/Python性能优化/" itemprop="url">
                 Python性能优化
               </a>
@@ -848,14 +929,14 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
