@@ -39,25 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="redis的Python模块redis-py。安装此模块之后，就可以利用Python与Redis交互了。redis中一共有5中数据结构，分别是String、Hash、List、Set、Sorted Set。这5中数据结构各有各自己适用的场景。
-
-String（字符串）：简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。
-H">
+<meta name="description" content="redis基础数据类型及其应用场合String 字符串string 是redis中最基本的数据类型，能存储任何形式/编码的字符串（当然包括二进制），单个value的最大容量是512M。简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。string可以取代memcached作为缓存，存用户的验证码/session数据等，自带">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis笔记">
 <meta property="og:url" content="http://blog.wongxinjie.com/2015/07/27/Redis笔记/index.html">
 <meta property="og:site_name" content="Wong Page">
-<meta property="og:description" content="redis的Python模块redis-py。安装此模块之后，就可以利用Python与Redis交互了。redis中一共有5中数据结构，分别是String、Hash、List、Set、Sorted Set。这5中数据结构各有各自己适用的场景。
-
-String（字符串）：简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。
-H">
-<meta property="og:updated_time" content="2015-10-01T07:47:12.502Z">
+<meta property="og:description" content="redis基础数据类型及其应用场合String 字符串string 是redis中最基本的数据类型，能存储任何形式/编码的字符串（当然包括二进制），单个value的最大容量是512M。简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。string可以取代memcached作为缓存，存用户的验证码/session数据等，自带">
+<meta property="og:updated_time" content="2016-03-01T16:43:16.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis笔记">
-<meta name="twitter:description" content="redis的Python模块redis-py。安装此模块之后，就可以利用Python与Redis交互了。redis中一共有5中数据结构，分别是String、Hash、List、Set、Sorted Set。这5中数据结构各有各自己适用的场景。
-
-String（字符串）：简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。
-H">
+<meta name="twitter:description" content="redis基础数据类型及其应用场合String 字符串string 是redis中最基本的数据类型，能存储任何形式/编码的字符串（当然包括二进制），单个value的最大容量是512M。简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。string可以取代memcached作为缓存，存用户的验证码/session数据等，自带">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -217,16 +208,12 @@ H">
       
 
       
-        <span itemprop="articleBody"><p>redis的Python模块redis-py。安装此模块之后，就可以利用Python与Redis交互了。<br>redis中一共有5中数据结构，分别是String、Hash、List、Set、Sorted Set。这5中数据结构各有各自己适用的场景。</p>
-<ul>
-<li>String（字符串）：简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。</li>
-<li>Hash（字典）：redis提供的Hash是一种key-dict形式的存储，可以想关系型数据库一样update某个字段。</li>
-<li>List（列表）：redis的list其实是一个双端链表，利用List可以实现最新消息排行等功能。List另外一个应用就是消息队列（生产者消费者模型）。</li>
-<li>Set（集合）：redis的集合和python的集合一样，去重、求合并差集相当方便。</li>
-<li>SortedSet （有序集合）：在Set中增加一个权重参数score，可实现带权重的队列。<a id="more"></a>
-</li>
-</ul>
-<p>redis-py基本实现了redis的操作命令。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import redis</span><br><span class="line">rdb = redis.<span class="function"><span class="title">Redis</span><span class="params">(host=<span class="string">'127.0.0.1'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</span></span> #db可选</span><br><span class="line">srdb = redis.<span class="function"><span class="title">StrictRedis</span><span class="params">(host=<span class="string">'127.0.0.1'</span>, port=<span class="number">6739</span>)</span></span></span><br></pre></td></tr></table></figure></p>
+        <span itemprop="articleBody"><h3 id="redis基础数据类型及其应用场合">redis基础数据类型及其应用场合</h3><h5 id="String_字符串">String 字符串</h5><p>string 是redis中最基本的数据类型，能存储任何形式/编码的字符串（当然包括二进制），单个value的最大容量是512M。<br>简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。<br>string可以取代memcached作为缓存，存用户的验证码/session数据等，自带的expire功能。</p>
+<h4 id="hash_字典">hash 字典</h4><p>hash是redis中一种非常有用的数据类型，相当于python中的dict，能存储key-value，但是无论是但是key/value只支持string而不支持其他的数据类型（即你不能嵌套一个list什么类型的）。<br>redis提供的Hash是一种key-dict形式的存储，可以想关系型数据库一样update某个字段。<br>hash的应用场合很多，譬如作为集群任务处理的注册中心，简单的登记哪部机器在处理什么任务，避免重复处理。在网站后台中也可以实现一些类似于帖子的热度信息等。</p>
+<h3 id="list_列表">list 列表</h3><p>list 是redis中的一个有序的字符串列表，列表内的元素是非唯一的，相当于双端队列。<br>redis的list其实是一个双端链表，利用List可以实现最新消息排行等功能。List另外一个应用就是消息队列（生产者消费者模型）。<br>list 可以作为单机的任务队列，在不同的进程中通信等。通过list可以实现简单的分布式任务处理机制。也可以实现分页、新鲜事等。</p>
+<h4 id="set_集合">set 集合</h4><p>set是和list类似的一种数据类型，但是set是自动排重的，当要存储一个没有重复元素的列表数据，可以使用set。而且set还提供了判断某个成员是否存在列表的一个接口。<br>set还提供了求交集、并集、差集的操作，这能很方便的实现类似微博等应用中的好友共同关注、共同喜好、二度好友等功能。</p>
+<h4 id="sorted_set_有序集合">sorted set 有序集合</h4><p>sorted set，是set中每个value都关联一个权值，不同的value可以有相同的权值，sorted set会根据权值进行排序。<br>sorted set可以实现一些排序功能，比如按点击量/时间排序/时间轴等功能。作为任务队列可是实现优先队列，优先处理一些权值高的任务等。<br><a id="more"></a></p>
+<h3 id="python的redis模块">python的redis模块</h3><p>redis的Python模块redis-py。安装此模块之后，就可以利用Python与Redis交互了。<br>redis-py基本实现了redis的操作命令。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import redis</span><br><span class="line">rdb = redis.<span class="function"><span class="title">Redis</span><span class="params">(host=<span class="string">'127.0.0.1'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</span></span> #db可选</span><br><span class="line">srdb = redis.<span class="function"><span class="title">StrictRedis</span><span class="params">(host=<span class="string">'127.0.0.1'</span>, port=<span class="number">6739</span>)</span></span></span><br></pre></td></tr></table></figure></p>
 <p>以上代码便是利用redis-py链接redis，利用rdb或srdb即可进行数据的存储。Redis和StrictRedis的区别在于，Redis是StrictRedis的子类，为了向后兼容。<br>推荐使用的StrictRedis。<br>各种数据结构的操作<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#String</span></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; srdb.set(<span class="string">'string:key'</span>, <span class="string">'python'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; value = srdb.get(<span class="string">'string:key'</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; value</span><br><span class="line">python</span><br><span class="line"><span class="comment">#带过期时间戳，单位s</span></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; srdb.set(<span class="string">'string:key:with:expire'</span>, <span class="string">'redis-python'</span>, <span class="number">10</span>)</span><br><span class="line"><span class="comment"># 10s later</span></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; srdb.get(<span class="string">'string:key:with:expire'</span>)</span><br><span class="line"><span class="comment"># get None</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#Hash</span></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; srdb.hset(<span class="string">'hash:key'</span>, <span class="string">'dict_key'</span>, <span class="string">'dict_value'</span>)</span><br><span class="line"><span class="number">1</span>L</span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; srdb.hget(<span class="string">'hash:key'</span>, <span class="string">'dict_key'</span>)</span><br><span class="line">dict_value</span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; srdb.hgetall(<span class="string">'hash:key'</span>)</span><br><span class="line">&#123;<span class="string">'dict_key'</span><span class="symbol">:</span> <span class="string">'dict_value'</span>&#125;</span><br><span class="line"><span class="comment">#List</span></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; rdb.rpush(<span class="string">'list'</span>, <span class="string">'python-redis'</span>)</span><br><span class="line"><span class="number">1</span>L</span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; rdb.lpop(<span class="string">'list'</span>)</span><br><span class="line">python-redis</span><br></pre></td></tr></table></figure><br>以及<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#获取所有键值</span></span><br><span class="line">srdb.<span class="built_in">keys</span>()</span><br><span class="line"><span class="comment">#获取匹配建筑</span></span><br><span class="line"><span class="built_in">keys</span> = [ key  <span class="keyword">for</span> key <span class="operator">in</span> srdb.scan_ier(match=<span class="string">'PREFIX*'</span>]</span><br></pre></td></tr></table></figure><br>更多基本命令参照redis命令参考</p>
 </span>
       
@@ -365,7 +352,7 @@ H">
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis基础数据类型及其应用场合"><span class="nav-number">1.</span> <span class="nav-text">redis基础数据类型及其应用场合</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#String_字符串"><span class="nav-number">1.0.1.</span> <span class="nav-text">String 字符串</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash_字典"><span class="nav-number">1.1.</span> <span class="nav-text">hash 字典</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list_列表"><span class="nav-number">2.</span> <span class="nav-text">list 列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#set_集合"><span class="nav-number">2.1.</span> <span class="nav-text">set 集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sorted_set_有序集合"><span class="nav-number">2.2.</span> <span class="nav-text">sorted set 有序集合</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python的redis模块"><span class="nav-number">3.</span> <span class="nav-text">python的redis模块</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -381,8 +368,8 @@ H">
     <footer id="footer" class="footer">
       <div class="footer-inner"> <div class="copyright" >
   
-  &copy; &nbsp; 
-  <span itemprop="copyrightYear">2015</span>
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>
