@@ -1,0 +1,675 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Tech Blog of Xinjie Wong" />
+
+
+
+  <meta name="keywords" content="ppt,总结笔记," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="搞个大新闻关于什么是RESTful APIs已经有足够多的资料可查阅了，但是怎么设计一个冗余代码少的API，还是需要踩很多坑才能体悟出来的。好比要设计一个用户注册的API，先假设需要经过下列步骤:
+
+解析json并获取email以及password
+验证email及password
+用crypt（或其他的库）对password进行哈希。
+将新的user插入数据库
+发送验证邮件/欢迎邮件给用户
+发送">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简洁Flask RESTful API设计">
+<meta property="og:url" content="http://blog.wongxinjie.com/2016/03/26/简洁Flask-RESTful-API设计/index.html">
+<meta property="og:site_name" content="Wong Page">
+<meta property="og:description" content="搞个大新闻关于什么是RESTful APIs已经有足够多的资料可查阅了，但是怎么设计一个冗余代码少的API，还是需要踩很多坑才能体悟出来的。好比要设计一个用户注册的API，先假设需要经过下列步骤:
+
+解析json并获取email以及password
+验证email及password
+用crypt（或其他的库）对password进行哈希。
+将新的user插入数据库
+发送验证邮件/欢迎邮件给用户
+发送">
+<meta property="og:updated_time" content="2016-03-26T14:27:11.076Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简洁Flask RESTful API设计">
+<meta name="twitter:description" content="搞个大新闻关于什么是RESTful APIs已经有足够多的资料可查阅了，但是怎么设计一个冗余代码少的API，还是需要踩很多坑才能体悟出来的。好比要设计一个用户注册的API，先假设需要经过下列步骤:
+
+解析json并获取email以及password
+验证email及password
+用crypt（或其他的库）对password进行哈希。
+将新的user插入数据库
+发送验证邮件/欢迎邮件给用户
+发送">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 简洁Flask RESTful API设计 | Wong Page </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Wong Page</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              简洁Flask RESTful API设计
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-03-26T17:50:44+08:00" content="2016-03-26">
+            2016-03-26
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/python/" itemprop="url" rel="index">
+                  <span itemprop="name">python</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h4 id="搞个大新闻">搞个大新闻</h4><p>关于什么是RESTful APIs已经有足够多的资料可查阅了，但是怎么设计一个冗余代码少的API，还是需要踩很多坑才能体悟出来的。<br>好比要设计一个用户注册的API，先假设需要经过下列步骤:</p>
+<ol>
+<li>解析json并获取email以及password</li>
+<li>验证email及password</li>
+<li>用crypt（或其他的库）对password进行哈希。</li>
+<li>将新的user插入数据库</li>
+<li>发送验证邮件/欢迎邮件给用户</li>
+<li>发送新用户提醒给系统管理员</li>
+<li>返回json response给客户端，告知其请求失败还是成功</li>
+<li>限制单个用户IP的请求频率，防止攻击。</li>
+</ol>
+<p>看起来也不是特别的复杂是不是？<br><a id="more"></a><br>将全部流程在一个视图入口里实现，看起来是这样子的。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@api.route('/user', methods=['POST'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_user</span><span class="params">()</span>:</span></span><br><span class="line">    data = request.get_json(force=<span class="keyword">True</span>)</span><br><span class="line">    email    = json.get(<span class="string">'email'</span>,<span class="string">''</span>)</span><br><span class="line">    password = json.get(<span class="string">'password'</span>,<span class="string">''</span>)</span><br><span class="line">    attrs = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> re.match(<span class="string">"^[^@ ]+@[^@ ]+\.[^@ ]+$"</span>, email):</span><br><span class="line">        <span class="keyword">raise</span> ValidationError()</span><br><span class="line">    attrs[<span class="string">'email'</span>] = email</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(password) &lt; <span class="number">7</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValidationError()</span><br><span class="line">    attrs[<span class="string">'password'</span>] = bcrypt.hashpw(password, bcrypt.gensalt())</span><br><span class="line">    attrs[<span class="string">'id'</span>] = str(db.users.insert(attrs))</span><br><span class="line">    <span class="keyword">del</span> attrs[<span class="string">'password'</span>]</span><br><span class="line">    session[<span class="string">'id'</span>] = new_user[<span class="string">'id'</span>]</span><br><span class="line">    notify(<span class="string">'admins'</span>, <span class="string">'New User'</span>, repr(new_user))</span><br><span class="line">    envelope = Envelope(</span><br><span class="line">        to_addr   = new_user[<span class="string">'email'</span>],</span><br><span class="line">        subject   = api.config[<span class="string">'WELCOME_EMAIL_SUBJECT'</span>],</span><br><span class="line">        text_body = render_template(<span class="string">'emails/new_user.txt'</span>),</span><br><span class="line">        html_body = render_template(<span class="string">'emails/new_user.html'</span>))</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sender</span><span class="params">()</span>:</span></span><br><span class="line">        envelopes.connstack.push_connection(conn)</span><br><span class="line">        smtp = envelopes.connstack.get_current_connection()</span><br><span class="line">        smtp.send(envelope)</span><br><span class="line">        envelopes.connstack.pop_connection()</span><br><span class="line">    gevent.spawn(sender)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> jsonify(&#123;<span class="string">'status'</span>: <span class="string">'OK'</span>&#125;)</span><br></pre></td></tr></table></figure></p>
+<h4 id="一点人生经验">一点人生经验</h4><p>可是，这样子的API不好维护。设计API有几点DOs:</p>
+<ol>
+<li>利用blueprints来实现API版本更迭</li>
+<li>构建可测试的API模块</li>
+<li>利用装饰器减少冗余的代码</li>
+<li>充分利用Flask可定制的错误处理</li>
+</ol>
+<p>一个简单的API目录结构如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">realmon/</span><br><span class="line">    server.py</span><br><span class="line">    api/</span><br><span class="line">        __init__.py</span><br><span class="line">        v1/                  &lt;--- API major version</span><br><span class="line">            __init__.py      &lt;--- Blueprint location</span><br><span class="line">            decorators.py    &lt;--- Decorators</span><br><span class="line">            errors.py        &lt;--- Custom Error Handlers</span><br><span class="line">            endpoints.py     &lt;--- API endpoints</span><br><span class="line">            models/</span><br><span class="line">                __init__.py</span><br><span class="line">                building.py</span><br><span class="line">                user.py      &lt;--- All validators <span class="keyword">and</span> code</span><br><span class="line">                meter.py          related to the model layer</span><br><span class="line">                env.py</span><br><span class="line">            templates/</span><br><span class="line">                ...</span><br><span class="line">            tests/</span><br><span class="line">                ...</span><br></pre></td></tr></table></figure></p>
+<p>据此，重构views中的函数：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@api.route('/users', methods=['POST'])</span></span><br><span class="line"><span class="decorator">@limit(requests=10, window=60, by="ip")</span></span><br><span class="line"><span class="decorator">@email</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_user</span><span class="params">()</span>:</span></span><br><span class="line">    data = request.get_json(force=<span class="keyword">True</span>)</span><br><span class="line">    new_user = user.create(json=data)</span><br><span class="line">    session[<span class="string">'uid'</span>] = new_user[<span class="string">'id'</span>]</span><br><span class="line">    notify(<span class="string">'admins'</span>, <span class="string">'New User'</span>, repr(new_user))</span><br><span class="line">    <span class="keyword">return</span> Envelope(</span><br><span class="line">        to_addr   = new_user[<span class="string">'email'</span>],</span><br><span class="line">        subject   = api.config[<span class="string">'WELCOME_EMAIL_SUBJECT'</span>],</span><br><span class="line">        text_body = render_template(<span class="string">'emails/new_user.txt'</span>),</span><br><span class="line">        html_body = render_template(<span class="string">'emails/new_user.html'</span>))</span><br></pre></td></tr></table></figure></p>
+<p>实际上API设计中有一些重复的操作，这些操作可以讲其抽象出来写成一个装饰器。</p>
+<h5 id="闷声发大财——装饰器">闷声发大财——装饰器</h5><p>其中email装饰器的实现，这个装饰器用于生成user发送邮件：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">email</span><span class="params">(f)</span>:</span></span><br><span class="line"><span class="decorator">    @functools.wraps(f)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapped</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        envelope = f(*args, **kwargs)</span><br><span class="line">        envelope.from_addr = api.config[<span class="string">'SYSTEM_EMAIL'</span>]</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">task</span><span class="params">()</span>:</span></span><br><span class="line">            smtp().send(envelope)</span><br><span class="line">        gevent.spawn(task)</span><br><span class="line">        <span class="keyword">return</span> jsonify(&#123;<span class="string">"status"</span>: <span class="string">"OK"</span>&#125;)</span><br><span class="line">    <span class="keyword">return</span> wrapped</span><br></pre></td></tr></table></figure></p>
+<p>接下来是limit装饰器，在limit装饰器有几个定义：</p>
+<ul>
+<li>requests 在一个时间窗口内最多允许多少次请求</li>
+<li>window 一个时间窗口是多少秒</li>
+<li>by 一个用来去用户区分信息的key ID</li>
+<li>group(可选) 定义一组有相公速度限制的装饰器</li>
+</ul>
+<p>limit装饰器实现起来如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">limit</span><span class="params">(requests=<span class="number">100</span>, window=<span class="number">60</span>, by=<span class="string">"ip"</span>, group=None)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> callable(by):</span><br><span class="line">        by = &#123; <span class="string">'ip'</span>: <span class="keyword">lambda</span>: request.headers.remote_addr &#125;[by]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(f)</span>:</span></span><br><span class="line"><span class="decorator">        @functools.wraps(f)</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapped</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">            group = group <span class="keyword">or</span> request.endpoint</span><br><span class="line">            key = <span class="string">":"</span>.join([<span class="string">"rl"</span>, group, by()])</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                remaining = requests - int(redis.get(key))</span><br><span class="line">            <span class="keyword">except</span> (ValueError, TypeError):</span><br><span class="line">                remaining = requests</span><br><span class="line">                redis.set(key, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">            ttl = redis.ttl(key)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> ttl:</span><br><span class="line">                redis.expire(key, window)</span><br><span class="line">                ttl = window</span><br><span class="line"></span><br><span class="line">            g.view_limits = (requests,remaining-<span class="number">1</span>,time()+ttl)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> remaining &gt; <span class="number">0</span>:</span><br><span class="line">                redis.incr(key, <span class="number">1</span>)</span><br><span class="line">                <span class="keyword">return</span> f(*args, **kwargs)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> Response(<span class="string">"Too Many Requests"</span>, <span class="number">429</span>)</span><br><span class="line">        <span class="keyword">return</span> wrapped</span><br><span class="line">    <span class="keyword">return</span> decorator</span><br></pre></td></tr></table></figure></p>
+<p>既然有请求次数限制，那么也就必须在返回的headers信息告知client，因此，要在每次请求最后添加这些信息，如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@api.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inject_rate_limit_headers</span><span class="params">(response)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        requests, remaining, reset = map(int, g.view_limits)</span><br><span class="line">    <span class="keyword">except</span> (AttributeError, ValueError):</span><br><span class="line">        <span class="keyword">return</span> response</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        h = response.headers</span><br><span class="line">        h.add(<span class="string">'X-RateLimit-Remaining'</span>, remaining)</span><br><span class="line">        h.add(<span class="string">'X-RateLimit-Limit'</span>, requests)</span><br><span class="line">        h.add(<span class="string">'X-RateLimit-Reset'</span>, reset)</span><br><span class="line">        <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure></p>
+<p>对于一些请求需要花比较诚时间的，可以异步来执行，比如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@api.route('/reports/power/monthly/&lt;int:year&gt;/&lt;int:month&gt;')</span></span><br><span class="line"><span class="decorator">@limit(requests=1, by='ip')</span></span><br><span class="line"><span class="decorator">@background</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">report_monthly_power</span><span class="params">(year, month)</span>:</span></span><br><span class="line">    rdata = generate_power_report(year, month)</span><br><span class="line">    <span class="keyword">return</span> rdata</span><br></pre></td></tr></table></figure></p>
+<p>但generate_power_report执行的时间很长，显然有改进空间。对此我们可以将耗时操作抽象诚一个backgroud装饰器:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">background</span><span class="params">(f)</span>:</span></span><br><span class="line"><span class="decorator">    @functools.wraps(f)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        jobid = uuid4().hex</span><br><span class="line">        key = <span class="string">'job-&#123;0&#125;'</span>.format(jobid)</span><br><span class="line">        skey = <span class="string">'job-&#123;0&#125;-status'</span>.format(jobid)</span><br><span class="line">        expire_time = <span class="number">3600</span></span><br><span class="line">        redis.set(skey, <span class="number">202</span>)</span><br><span class="line">        redis.expire(skey, expire_time)</span><br><span class="line"></span><br><span class="line"><span class="decorator">        @copy_current_request_context</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">task</span><span class="params">()</span>:</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                data = f(*args, **kwargs)</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                redis.set(skey, <span class="number">500</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                redis.set(skey, <span class="number">200</span>)</span><br><span class="line">                redis.set(key, data)</span><br><span class="line">                redis.expire(key, expire_time)</span><br><span class="line">            redis.expire(skey, expire_time)</span><br><span class="line"></span><br><span class="line">        gevent.spawn(task)</span><br><span class="line">        <span class="keyword">return</span> jsonify(&#123;<span class="string">"job"</span>: jobid&#125;)</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br></pre></td></tr></table></figure></p>
+<h5 id="已经决定了，这样来处理Error">已经决定了，这样来处理Error</h5><p>假如我们在models/users.py中定义了一个异常：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValidationError</span><span class="params">(Exception)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, field, message)</span>:</span></span><br><span class="line">        self.field = field</span><br><span class="line">        self.message = message</span><br></pre></td></tr></table></figure></p>
+<p>那么，在错误处理中<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># errors.py</span></span><br><span class="line"><span class="decorator">@api.errorhandler(user.ValidationError)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_user_validation_error</span><span class="params">(error)</span>:</span></span><br><span class="line">    response = jsonify(&#123;</span><br><span class="line">        <span class="string">'msg'</span>: error.message,</span><br><span class="line">        <span class="string">'type'</span>: <span class="string">'validation'</span>,</span><br><span class="line">        <span class="string">'field'</span>: error.field &#125;)</span><br><span class="line">    response.status_code = <span class="number">400</span></span><br><span class="line">    <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure></p>
+<p>而不是在每一个视图中重复的去做错误处理。</p>
+<h5 id="一些微小的总结">一些微小的总结</h5><ol>
+<li>将API中相同的处理模式抽象成一个装饰器</li>
+<li>不要在视图入口写臭脚布逻辑处理</li>
+<li>将一些任务异步执行，可以利用gevent及celery等等</li>
+<li>冒泡处理错误</li>
+<li>不要忘记发掘框架内置的功能</li>
+</ol>
+<p><a href="http://pycoder.net/bospy/presentation.html" target="_blank" rel="external">原slide地址</a></p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ppt/" rel="tag">#ppt</a>
+          
+            <a href="/tags/总结笔记/" rel="tag">#总结笔记</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/11/Python中的Mixin/" rel="next">Python中的Mixin</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="Xinjie Wong" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Xinjie Wong</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Tech Blog of Xinjie Wong</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wongxinjie" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://book.douban.com/people/Xinjie_Wong/" target="_blank">douban</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#搞个大新闻"><span class="nav-number">1.</span> <span class="nav-text">搞个大新闻</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一点人生经验"><span class="nav-number">2.</span> <span class="nav-text">一点人生经验</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#闷声发大财——装饰器"><span class="nav-number">2.1.</span> <span class="nav-text">闷声发大财——装饰器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#已经决定了，这样来处理Error"><span class="nav-number">2.2.</span> <span class="nav-text">已经决定了，这样来处理Error</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#一些微小的总结"><span class="nav-number">2.3.</span> <span class="nav-text">一些微小的总结</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie Wong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
