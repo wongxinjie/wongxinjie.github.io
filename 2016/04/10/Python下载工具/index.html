@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="python基础," />
+  <meta name="keywords" content="Hexo,next" />
 
 
 
@@ -39,16 +39,28 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="range和xrangePython提供了生成和返回整数序列的内置函数range及xrange，虽然这两个函数在功能上是差不多的，但其实现原理还是有差别的。range(n, m)返回的是一个从n到(m-1)的连续的整数列表，而xrange(n, m)返回的却是一个特殊的目的对象，即xrange对象本身.123456&amp;gt;&amp;gt;&amp;gt; range(1, 5)[1, 2, 3, 4]&amp;gt;&amp;g">
+<meta name="description" content="由于业务需求，最近整理了一些关于python下载文件的一些套路。利用python下载文件，大致有以下几种方式：
+
+urllib，标准库自带，缺点是不支持cookie，只支持HTTP/FTP/本地文件，也不支持SSL。
+urllib2，一个完整的HTTP/FTP客户端实现，基本实现了必须的功能，支持cookie，但HTTP只支持GET和POST.
+urllib3,支持复用socket连接，文件上传，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python中的xrange和yield">
-<meta property="og:url" content="http://blog.wongxinjie.com/2015/05/21/Python中的xrange和yield/index.html">
+<meta property="og:title" content="Python下载工具">
+<meta property="og:url" content="http://blog.wongxinjie.com/2016/04/10/Python下载工具/index.html">
 <meta property="og:site_name" content="Wong Page">
-<meta property="og:description" content="range和xrangePython提供了生成和返回整数序列的内置函数range及xrange，虽然这两个函数在功能上是差不多的，但其实现原理还是有差别的。range(n, m)返回的是一个从n到(m-1)的连续的整数列表，而xrange(n, m)返回的却是一个特殊的目的对象，即xrange对象本身.123456&amp;gt;&amp;gt;&amp;gt; range(1, 5)[1, 2, 3, 4]&amp;gt;&amp;g">
-<meta property="og:updated_time" content="2015-10-01T07:47:12.502Z">
+<meta property="og:description" content="由于业务需求，最近整理了一些关于python下载文件的一些套路。利用python下载文件，大致有以下几种方式：
+
+urllib，标准库自带，缺点是不支持cookie，只支持HTTP/FTP/本地文件，也不支持SSL。
+urllib2，一个完整的HTTP/FTP客户端实现，基本实现了必须的功能，支持cookie，但HTTP只支持GET和POST.
+urllib3,支持复用socket连接，文件上传，">
+<meta property="og:updated_time" content="2016-04-10T14:09:42.316Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python中的xrange和yield">
-<meta name="twitter:description" content="range和xrangePython提供了生成和返回整数序列的内置函数range及xrange，虽然这两个函数在功能上是差不多的，但其实现原理还是有差别的。range(n, m)返回的是一个从n到(m-1)的连续的整数列表，而xrange(n, m)返回的却是一个特殊的目的对象，即xrange对象本身.123456&amp;gt;&amp;gt;&amp;gt; range(1, 5)[1, 2, 3, 4]&amp;gt;&amp;g">
+<meta name="twitter:title" content="Python下载工具">
+<meta name="twitter:description" content="由于业务需求，最近整理了一些关于python下载文件的一些套路。利用python下载文件，大致有以下几种方式：
+
+urllib，标准库自带，缺点是不支持cookie，只支持HTTP/FTP/本地文件，也不支持SSL。
+urllib2，一个完整的HTTP/FTP客户端实现，基本实现了必须的功能，支持cookie，但HTTP只支持GET和POST.
+urllib3,支持复用socket连接，文件上传，">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +70,7 @@
   };
 </script>
 
-  <title> Python中的xrange和yield | Wong Page </title>
+  <title> Python下载工具 | Wong Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -165,7 +177,7 @@
           
           
             
-              Python中的xrange和yield
+              Python下载工具
             
           
         </h1>
@@ -174,8 +186,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-05-21T21:32:02+08:00" content="2015-05-21">
-            2015-05-21
+          <time itemprop="dateCreated" datetime="2016-04-10T21:01:47+08:00" content="2016-04-10">
+            2016-04-10
           </time>
         </span>
 
@@ -184,8 +196,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Python/" itemprop="url" rel="index">
-                  <span itemprop="name">Python</span>
+                <a href="/categories/总结/" itemprop="url" rel="index">
+                  <span itemprop="name">总结</span>
                 </a>
               </span>
 
@@ -208,33 +220,73 @@
       
 
       
-        <span itemprop="articleBody"><h3 id="range和xrange">range和xrange</h3><p>Python提供了生成和返回整数序列的内置函数range及xrange，虽然这两个函数在功能上是差不多的，但其实现原理还是有差别的。range(n, m)返回的是一个从n到(m-1)的连续的整数列表，而xrange(n, m)返回的却是一个特殊的目的对象，即xrange对象本身.<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">range</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">xrange</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">xrange</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">type</span><span class="params">(xrange(<span class="number">1</span>, <span class="number">5</span>)</span></span>)</span><br><span class="line">&lt;type <span class="string">'xrange'</span>&gt;</span><br></pre></td></tr></table></figure><br><a id="more"></a><br>但在python2.x中xrange返回的却不是一个迭代器，所以 x = xrange(n, m), x.next()会出错。假如需要返回一个迭代器，需要调用iter(xrange(….))<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; x = <span class="function"><span class="title">iter</span><span class="params">(xrange(<span class="number">1</span>, <span class="number">5</span>)</span></span>)</span><br><span class="line">&gt;&gt;&gt; x.<span class="function"><span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="number">1</span></span><br><span class="line">&gt;&gt;&gt; x.<span class="function"><span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure></p>
-<p>也就是，调用range和xrange程序在运行中占用的内存是不一样的。使用range，程序将首先生成一个list，然后再隐含调用list的iter获取元素。而使用xrange，程序在每次循环产生的是一个xrange对象，这个对象是iterable，根据返回的这个xrange对象我们可以获取元素。</p>
-<h3 id="生成器与yield">生成器与yield</h3><p>借助python的生成器，我们可以实现像内置xrange函数的生成器，但这个生成器返回的是一个又浮点型值组成的序列而不是整型序列。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; def <span class="function"><span class="title">frange</span><span class="params">(start, stop, step=<span class="number">1.0</span>)</span></span>:</span><br><span class="line">    while start &lt; stop:</span><br><span class="line">        yield start</span><br><span class="line">        start += step</span><br><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">frange</span><span class="params">(<span class="number">1.0</span>, <span class="number">5.0</span>)</span></span></span><br><span class="line">&lt;generator <span class="tag">object</span> frange at <span class="number">0</span>x01343148&gt;</span><br><span class="line">&gt;&gt;&gt; <span class="keyword">for</span> <span class="tag">i</span> <span class="keyword">in</span> <span class="function"><span class="title">frange</span><span class="params">(<span class="number">1.0</span>, <span class="number">5.0</span>)</span></span>:</span><br><span class="line">    print <span class="tag">i</span>,</span><br><span class="line"><span class="number">1.0</span> <span class="number">2.0</span> <span class="number">3.0</span> <span class="number">4.0</span></span><br><span class="line">&gt;&gt;&gt; x = <span class="function"><span class="title">iter</span><span class="params">(frange(<span class="number">1.0</span>, <span class="number">5.0</span>)</span></span>)</span><br><span class="line">&gt;&gt;&gt; x.<span class="function"><span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="number">1.0</span></span><br><span class="line">&gt;&gt;&gt; x.<span class="function"><span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="number">2.0</span></span><br></pre></td></tr></table></figure></p>
-<p>在python中，在函数体出现一个或者多个yield，这个函数就是生成器(generator)。在调用生成器的时，系统不会执行该生成器函数体。生成器被调用时将返回一个特殊的迭代器对象，这个个对象包含了生成器函数体、函数体的本地变量（包括函数体参数）以及当前的执行位置。<br>在调用返回的迭代器对象的next方法时，生成器将执行到下一个yield语句。<br>在执行完yield语句时，函数的执行将被“冻结”，保留执行的当前位置和未经使用的本地变量，并将yield语句的执行结果返回作为next方法的结果。继续调用next则继续调用yield，直到函数体运行结束或者执行了return语句（return语句不能含有表达式）。</p>
-<p>最常见的，生成器可以用来构建迭代器。假如我们需要一个从1到N，然后从N到1的数字组成的序列，可以使用生成器:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">updown</span><span class="params">(N)</span>:</span></span><br><span class="line">    <span class="keyword">for</span>  x <span class="keyword">in</span> xrange(<span class="number">1</span>, N): <span class="keyword">yield</span> x</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> xrange(N, <span class="number">0</span>, -<span class="number">1</span>): <span class="keyword">yield</span> x</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> updown(<span class="number">5</span>):</span><br><span class="line">    <span class="keyword">print</span> i,</span><br></pre></td></tr></table></figure><br>当一个函数需要返回一个列表的时候，使用生成器可能更灵活。生成器可以构建一个误解的迭代器，返回一个无限的结果序列。更进一步，生成器构建的迭代器执行的是懒计算:只有函数需要时才会计算结果。<br>所以假如需要对一个序列进行迭代功能，可以考虑迭代器。</p>
+        <span itemprop="articleBody"><p>由于业务需求，最近整理了一些关于python下载文件的一些套路。利用python下载文件，大致有以下几种方式：</p>
+<ul>
+<li><a href="https://docs.python.org/2/library/urllib.html" target="_blank" rel="external">urllib</a>，标准库自带，缺点是不支持cookie，只支持HTTP/FTP/本地文件，也不支持SSL。</li>
+<li><a href="https://docs.python.org/2/library/urllib2.html" target="_blank" rel="external">urllib2</a>，一个完整的HTTP/FTP客户端实现，基本实现了必须的功能，支持cookie，但HTTP只支持GET和POST.</li>
+<li><a href="https://pypi.python.org/pypi/urllib3" target="_blank" rel="external">urllib3</a>,支持复用socket连接，文件上传，内置重定向和重试，而且线程安全。requests就是基于urllib3.</li>
+<li><a href="https://docs.python.org/2/library/httplib.html" target="_blank" rel="external">httplib</a>，标准库自带，只支持HTTP/HTTPS协议，一般不会直接使用，urllib部分功能基于此模块.</li>
+<li><a href="https://pypi.python.org/pypi/httplib2" target="_blank" rel="external">httplib2</a>,只支持HTTP/HTTPS协议，一个较完善的HTTP客户端，支持Keep-Alive，验证、缓存及HTTP GET/POST/HEAD等请求方法等等。</li>
+<li><a href="http://wwwsearch.sourceforge.net/mechanize/" target="_blank" rel="external">mechanize</a>,一个可以模拟用户操作的web browsing拓展包。</li>
+<li><a href="http://docs.python-requests.org/en/master/" target="_blank" rel="external">requests</a>,这个基本都知道, urllib for human。</li>
+<li><a href="http://pycurl.io/docs/latest/" target="_blank" rel="external">PyCurl</a>,libcurl的一个python封装，特点是快（比requests快几倍），支持多种协议，可定制性高。</li>
+</ul>
+<a id="more"></a>
+<p>除了这些python实现，也查找了一些Linux命令行下载工具，比如curl一个wget，利用subprocess.check_call等调用下载文件。curl的作者自己总结了curl和wget的一些异同。<br>相同之处:</p>
+<ul>
+<li>都是支持HTTP/FTP/HTTPS下载文件的命令行工具。</li>
+<li>都可以发送HTTP POST请求，以及都支持cookies。</li>
+<li>都不是为了图形界面而设计。</li>
+<li>都是90s开始的开源项目</li>
+</ul>
+<p>不同的是，<br>curl方面(不翻译了)</p>
+<ul>
+<li>library. curl is powered by libcurl - a cross-platform library with a stable API that can be used by each and everyone. This difference is major since it creates a completely different attitude on how to do things internally. It is also slightly harder to make a library than a “mere” command line tool.</li>
+<li>pipes. curl works more llke the traditional unix cat command, it sends more stuff to stdout, and reads more from stdin in a “everything is a pipe” manner. Wget is more like cp, using the same analogue.</li>
+<li>Single shot. curl is basically made to do single-shot transfers of data. It transfers just the URLs that the user specifies, and does not contain any recursive downloading logic nor any sort of HTML parser.</li>
+<li>More protocols. curl supports FTP, FTPS, Gopher, HTTP, HTTPS, SCP, SFTP, TFTP, TELNET, DICT, LDAP, LDAPS, FILE, POP3, IMAP, SMB/CIFS, SMTP, RTMP and RTSP. Wget only supports HTTP, HTTPS and FTP.</li>
+<li>More portable. curl builds and runs on lots of more platforms than wget. For example: OS/400, TPF and other more “exotic” platforms that aren’t straight-forward unix clones.</li>
+<li>More SSL libraries and SSL support. curl can be built with one out of eleven (11!) different SSL/TLS libraries, and it offers more control and wider support for protocol details. curl supports public key pinning.</li>
+<li>HTTP auth. curl supports more HTTP authentication methods, especially over HTTP proxies: Basic, Digest, NTLM and Negotiate</li>
+<li>SOCKS. curl supports several SOCKS protocol versions for proxy access</li>
+<li>Bidirectional. curl offers upload and sending capabilities. Wget only offers plain HTTP POST support.</li>
+<li>HTTP multipart/form-data sending, which allows users to do HTTP “upload” and in general emulate browsers and do HTTP automation to a wider extent</li>
+<li>curl supports gzip and inflate Content-Encoding and does automatic decompression</li>
+<li>curl offers and performs decompression of Transfer-Encoded HTTP, wget doesn’t</li>
+<li>curl supports HTTP/2 and it does dual-stack connects using Happy Eyeballs</li>
+<li>Much more developer activity. While this can be debated, I consider three metrics here: mailing list activity, source code commit frequency and release frequency. Anyone following these two projects can see that the curl project has a lot higher pace in all these areas, and it has been so for 10+ years. Compare on openhub</li>
+</ul>
+<p>Wget方面</p>
+<ul>
+<li>Wget is command line only. There’s no library.</li>
+<li>Recursive! Wget’s major strong side compared to curl is its ability to download recursively, or even just download everything that is referred to from a remote resource, be it a HTML page or a FTP directory listing.</li>
+<li>Older. Wget has traces back to 1995, while curl can be tracked back no earlier than the end of 1996.</li>
+<li>GPL. Wget is 100% GPL v3. curl is MIT licensed.</li>
+<li>GNU. Wget is part of the GNU project and all copyrights are assigned to FSF. The curl project is entirely stand-alone and independent with no organization parenting at all with almost all copyrights owned by Daniel.</li>
+<li>Wget requires no extra options to simply download a remote URL to a local file, while curl requires -o or -O.</li>
+<li>Wget supports only GnuTLS or OpenSSL for SSL/TLS support</li>
+<li>Wget supports only Basic auth as the only auth type over HTTP proxy</li>
+<li>Wget has no SOCKS support</li>
+<li>Its ability to recover from a prematurely broken transfer and continue downloading has no counterpart in curl.</li>
+<li>Wget enables more features by default: cookies, redirect-following, time stamping from the remote resource etc. With curl most of those features need to be explicitly enabled.</li>
+<li>Wget can be typed in using only the left hand on a qwerty keyboard!</li>
+</ul>
 </span>
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/python基础/" rel="tag">#python基础</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/05/22/SQL基础教材笔记/" rel="prev">SQL基础教材笔记</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/26/简洁Flask-RESTful-API设计/" rel="next">简洁Flask RESTful API设计</a>
             
           </div>
         </div>
@@ -348,7 +400,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#range和xrange"><span class="nav-number">1.</span> <span class="nav-text">range和xrange</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成器与yield"><span class="nav-number">2.</span> <span class="nav-text">生成器与yield</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
