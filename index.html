@@ -166,6 +166,94 @@
           
           
             
+              <a class="post-title-link" href="/2016/05/21/Python面向对象之MRO/" itemprop="url">
+                Python面向对象之MRO
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-05-21T16:00:16+08:00" content="2016-05-21">
+            2016-05-21
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Python基础/" itemprop="url" rel="index">
+                  <span itemprop="name">Python基础</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>Python是支持面向对象编程的，同时也是支持多重继承的。而支持多重继承，正是Python的方法解析顺序(Method Resoluthion Order, 或MRO)问题出现的原因所在。<br>python中至少有三种不同的MRO:</p>
+<ul>
+<li>经典类(calssic class)，深度优先遍历</li>
+<li>在python2.2中提出了type和class的统一，出现了一个内建类型以及自定义类的公共祖先object，即新式类(new-style class)预计算</li>
+<li>python2.3之后新式类的C3算法，这是python3唯一支持的方式</li>
+</ul>
+<h5 id="经典类MRO">经典类MRO</h5><p>在python2中存在两种类，经典类和新式类，而新式类都继承于object。在python2.1之前，经典类是唯一的选择，python3之后新式类是唯一的选择，而python2.2~python2.7则可以混杂使用，但推荐使用新式类。<br>经典类在处理MRO是简单明了：从左到又深度优先。但这种MRO在处理钻石继承时会出现一些bug：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">import</span> inspect</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">method</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"A.method"</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span><span class="params">(A)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">method</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">"C.method"</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">D</span><span class="params">(B, C)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> inspect.getmro(D)</span><br><span class="line">x = D()</span><br><span class="line">x.method()</span><br><span class="line"><span class="comment"># output</span></span><br><span class="line"><span class="comment"># (&lt;class __main__.D at 0x7f5d5ba459a8&gt;, &lt;class __main__.B at 0x7f5d5ba458d8&gt;, &lt;class __main__.A at 0x7f5d5ba45870&gt;, &lt;class __main__.C at 0x7f5d5ba45940&gt;)</span></span><br><span class="line"><span class="comment"># A.method</span></span><br></pre></td></tr></table></figure></p>
+<p>这显然不是我们希望的结果，在C中我们覆盖了A中method的实现，所以当我们从C继承时，在实例D并调用method时，我们希望D.method调用的是C.method而不是A.method。按照从左到右深度优先的方法，方法查找顺序为[D,B, A, C]，所以当x在A找到了method时即直接返回，假如要使得x能调用C的metod，必须得调整D继承对象的顺序为<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">D</span><span class="params">(C,B)</span></span>:pass</span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/21/Python面向对象之MRO/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/04/10/Python下载工具/" itemprop="url">
                 Python下载工具
               </a>
@@ -915,89 +1003,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/27/排序算法（Java版）/" itemprop="url">
-                排序算法（Java版）
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-05-27T22:31:20+08:00" content="2015-05-27">
-            2015-05-27
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/算法/" itemprop="url" rel="index">
-                  <span itemprop="name">算法</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>在《算法分析与设计》(Algorithm Design: Foundations, Analysis, and Internet Examples)中，作者将各种排序算法分成了三类，分别为PQ-Sort简单排序模式、基于分治设计思想以及基于散列法，觉得相当的有趣，于是就按照这种思路将所学的各种算法整理了一下。</p>
-<h3 id="一、PQ-Sort简单排序模式">一、PQ-Sort简单排序模式</h3><p>所谓PQ-Sort简单排序模式，其思路大概就是基于这样一种思路:将一组无序的元素插入到优先队列，然后通过一系列的removeMin操作达到使序列从无序到有序的过程。在算法实现中优先队列往往不是真正的存在，它大多数时候只是作为一个抽象的概念。这中算法实现起来简单，但是效率一般不高，通常都要O(n^2)。<br>以下算法都是PQ-Sort模式的排序算法</p>
-<h4 id="1、选择排序">1、选择排序</h4><p>最简单的排序。令A[1…n]是一个元素的数组，首先找到A中最小的元素，将其放到A[1]中，然后在剩下的n-1个元素中找到最小的元素，将其放到A[2]中，重复此过程直至找到第二大元素将其放在A[n-1]中。<br>Java代码如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> SelectionSort&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] selectionSort(<span class="keyword">int</span>[] <span class="built_in">array</span>)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i &lt; <span class="built_in">array</span>.length-<span class="number">1</span>; i++)&#123;</span><br><span class="line">			<span class="keyword">int</span> currentMinIndex = i;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>; j &lt; <span class="built_in">array</span>.length; j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(<span class="built_in">array</span>[j] &lt; <span class="built_in">array</span>[currentMinIndex])&#123;</span><br><span class="line">					currentMinIndex = j;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(currentMinIndex != i)&#123;</span><br><span class="line">				<span class="keyword">int</span> tmpValue = <span class="built_in">array</span>[i];</span><br><span class="line">				<span class="built_in">array</span>[i] = <span class="built_in">array</span>[currentMinIndex];</span><br><span class="line">				<span class="built_in">array</span>[currentMinIndex] = tmpValue;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">array</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>无论数组的初始化排序如何，执行算法比较的次数为n(n-1)/2。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/05/27/排序算法（Java版）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1036,14 +1041,14 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
