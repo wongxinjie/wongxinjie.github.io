@@ -166,6 +166,88 @@
           
           
             
+              <a class="post-title-link" href="/2016/06/06/数据库连接不上了！/" itemprop="url">
+                数据库连接不上了！
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-06-06T23:04:17+08:00" content="2016-06-06">
+            2016-06-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/工作/" itemprop="url" rel="index">
+                  <span itemprop="name">工作</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>故事发生在公司的一部内网的测试服务器挂掉后修复后，发布一些python项目之后发现基于有数据库本地连接的基本都跑不起来，全部报错<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">OperationalError:</span> (_mysql_exceptions.OperationalError) (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>一开始以为是配置文件写错，但是检查之后发现没什么问题，倒是测试机自己太吊跪，好像只能用unix_socket才能连接，而基于TCP的连接就不行。在ipython试了一下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">from</span> torndb <span class="keyword">import</span> Connection</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'127.0.0.1'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2003</span>, <span class="string">"Can't connect to MySQL server on '127.0.0.1' (111)"</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'localhost'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/06/06/数据库连接不上了！/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/05/21/Python面向对象之MRO/" itemprop="url">
                 Python面向对象之MRO
               </a>
@@ -922,87 +1004,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/07/Git后悔药/" itemprop="url">
-                Git后悔药
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-07-07T23:05:36+08:00" content="2015-07-07">
-            2015-07-07
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Tools/" itemprop="url" rel="index">
-                  <span itemprop="name">Tools</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>公司使用的代码版本控制是GitHub。随着对GitHub的深入使用，越发觉得git大法就是好啊，最基本的git给你后悔的机会。<br>最基本的，要是觉得某天不小心修改了某段代码(真相是写得太烂)，需要将其恢复到修改之前的状态，使用checkout，具体讲<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">git</span> checkout filename</span><br></pre></td></tr></table></figure><br>checkout命令会将文件的内容恢复到上一次commit的状态，妥妥的从头开始。<br>对于已经提交的，又开始后悔不该提交，git也提供了后悔的方法，reset(版本撤回)命令。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/07/Git后悔药/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1041,21 +1042,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

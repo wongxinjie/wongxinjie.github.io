@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="python tools," />
+  <meta name="keywords" content="mysql,python," />
 
 
 
@@ -39,16 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:">
+<meta name="description" content="故事发生在公司的一部内网的测试服务器挂掉后修复后，发布一些python项目之后发现基于有数据库本地连接的基本都跑不起来，全部报错1OperationalError: (_mysql_exceptions.OperationalError) (2002, &quot;Can&apos;t connect to local MySQL server through socket &apos;/var/lib/mysql/mysql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python定时执行">
-<meta property="og:url" content="http://blog.wongxinjie.com/2015/05/23/Python定时执行/index.html">
+<meta property="og:title" content="数据库连接不上了！">
+<meta property="og:url" content="http://blog.wongxinjie.com/2016/06/06/数据库连接不上了！/index.html">
 <meta property="og:site_name" content="Wong Page">
-<meta property="og:description" content="在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:">
-<meta property="og:updated_time" content="2015-10-05T08:32:25.866Z">
+<meta property="og:description" content="故事发生在公司的一部内网的测试服务器挂掉后修复后，发布一些python项目之后发现基于有数据库本地连接的基本都跑不起来，全部报错1OperationalError: (_mysql_exceptions.OperationalError) (2002, &quot;Can&apos;t connect to local MySQL server through socket &apos;/var/lib/mysql/mysql">
+<meta property="og:updated_time" content="2016-06-06T17:36:48.443Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python定时执行">
-<meta name="twitter:description" content="在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:">
+<meta name="twitter:title" content="数据库连接不上了！">
+<meta name="twitter:description" content="故事发生在公司的一部内网的测试服务器挂掉后修复后，发布一些python项目之后发现基于有数据库本地连接的基本都跑不起来，全部报错1OperationalError: (_mysql_exceptions.OperationalError) (2002, &quot;Can&apos;t connect to local MySQL server through socket &apos;/var/lib/mysql/mysql">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -58,7 +58,7 @@
   };
 </script>
 
-  <title> Python定时执行 | Wong Page </title>
+  <title> 数据库连接不上了！ | Wong Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -165,7 +165,7 @@
           
           
             
-              Python定时执行
+              数据库连接不上了！
             
           
         </h1>
@@ -174,8 +174,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-05-23T22:04:20+08:00" content="2015-05-23">
-            2015-05-23
+          <time itemprop="dateCreated" datetime="2016-06-06T23:04:17+08:00" content="2016-06-06">
+            2016-06-06
           </time>
         </span>
 
@@ -184,8 +184,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Python/" itemprop="url" rel="index">
-                  <span itemprop="name">Python</span>
+                <a href="/categories/工作/" itemprop="url" rel="index">
+                  <span itemprop="name">工作</span>
                 </a>
               </span>
 
@@ -208,7 +208,36 @@
       
 
       
-        <span itemprop="articleBody"><p>在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:<br><a id="more"></a><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment">#name: timer.py</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Timer</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, interval, function, args=[], kwargs=&#123;&#125;)</span>:</span></span><br><span class="line">        self.interval = interval</span><br><span class="line">        self.function = function</span><br><span class="line">        self.args = args</span><br><span class="line">        self.kwargs = kwargs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.stop()</span><br><span class="line">        self._timer = threading.Timer(self.interval, self._run)</span><br><span class="line">        self._timer.start()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">restart</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.start()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">stop</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.__dict__.has_key(<span class="string">"_timer"</span>):</span><br><span class="line">            self._timer.cancel()</span><br><span class="line">            <span class="keyword">del</span> self._timer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.function(*self.args, **self.kwargs)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        self.restart()</span><br></pre></td></tr></table></figure><br>测试一下:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#-*- coding: utf-<span class="number">8</span> -*-</span><br><span class="line"><span class="id">#name</span>: test_timer<span class="class">.py</span></span><br><span class="line">import <span class="tag">time</span></span><br><span class="line">import timer</span><br><span class="line"></span><br><span class="line">def <span class="function"><span class="title">tell_time</span><span class="params">(x, y)</span></span>:</span><br><span class="line">    t = <span class="tag">time</span>.<span class="function"><span class="title">strftime</span><span class="params">(<span class="string">"%Y-%m-%d %X"</span>, time.localtime(time.time()</span></span>))</span><br><span class="line">    print x, y, t</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="tag">tr</span> = timer.<span class="function"><span class="title">Timer</span><span class="params">(<span class="number">5</span>, tell_time, (<span class="number">1</span>, <span class="number">2</span>)</span></span>)</span><br><span class="line">    <span class="tag">tr</span>.<span class="function"><span class="title">start</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure><br>输出结果如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ python test_timer.py</span><br><span class="line">$ <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">17</span></span><br><span class="line">  <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">22</span></span><br><span class="line">  <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">27</span></span><br><span class="line">  <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">32</span></span><br></pre></td></tr></table></figure><br>这样子就实现了python定时执行功能，无需while True也无需time.sleep(seconds)。</p>
+        <span itemprop="articleBody"><p>故事发生在公司的一部内网的测试服务器挂掉后修复后，发布一些python项目之后发现基于有数据库本地连接的基本都跑不起来，全部报错<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">OperationalError:</span> (_mysql_exceptions.OperationalError) (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>一开始以为是配置文件写错，但是检查之后发现没什么问题，倒是测试机自己太吊跪，好像只能用unix_socket才能连接，而基于TCP的连接就不行。在ipython试了一下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">from</span> torndb <span class="keyword">import</span> Connection</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'127.0.0.1'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2003</span>, <span class="string">"Can't connect to MySQL server on '127.0.0.1' (111)"</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'localhost'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>用localhost连接的倒是可以解决，要么就改my.cnf中socket的路径，或者连接时指定socket路径:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db = <span class="function"><span class="title">Connection</span><span class="params">(<span class="string">'/var/run/mysqld/mysqld.sock'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span></span></span><br></pre></td></tr></table></figure></p>
+<p>或者加一个软链接：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /var/run/mysqld/mysqld.sock /var/<span class="class"><span class="keyword">lib</span>/<span class="title">mysql</span>/<span class="title">mysql</span>.<span class="title">sock</span></span></span><br></pre></td></tr></table></figure></p>
+<p>问题解决，可是利用TCP/IP连接这个问题就没那么简单了，不仅如此，发现在console中指定TCP/IP连接也会出问题，<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">mysql</span> -u root -p -h <span class="number">127.0.0.1</span></span><br><span class="line">ERROR <span class="number">2003</span> (HY000): Can<span class="string">'t connect to MySQL server on '</span><span class="number">127.0.0.1</span><span class="string">' (111)</span></span><br></pre></td></tr></table></figure></p>
+<p>搜了一些资料，修改了无数次的my.cnf，甚至按照某些回答修改了防火墙:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/sbin/iptables -I INPUT -<span class="tag">p</span> tcp --dport <span class="number">3306</span> -j ACCEPT</span><br></pre></td></tr></table></figure></p>
+<p>在mysql user表修改:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">GRANT</span> ALL <span class="keyword">PRIVILEGES</span> <span class="keyword">ON</span> *.* <span class="keyword">TO</span> <span class="string">'root'</span>@<span class="string">'%'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>然而并没有什么卵用。</p>
+<p>最后只能看文档。在MySQL<a href="http://dev.mysql.com/doc/refman/5.7/en/can-not-connect-to-server.html" target="_blank" rel="external">官方文档</a>中提到了mysql client连接到mysqld server的两种方式：</p>
+<ul>
+<li>通过unxi socket文件，通常是/tmp/mysql.sock，优点是比TCP/IP速度快，缺点是客户端只能连接本机的服务端，当指定连接的hostname为localhost时，便是通过unix socket来连接数据库的。</li>
+<li>通过TCP/IP连接，指定服务器的IP和端口。</li>
+</ul>
+<p>同时文档也说明了在连接数据库时可能出现的两种错误及其原因：</p>
+<blockquote>
+<p>The error (2002) Can’t connect to … normally means that there is no MySQL server running on the system or that you are using an incorrect Unix socket file name or TCP/IP port number when trying to connect to the server. You should also check that the TCP/IP port you are using has not been blocked by a firewall or port blocking service.</p>
+</blockquote>
+<p>针对2002报错，用unix socket的检查是socket file的路径是否正确，使用TCP/IP的检查防火墙或者端口是否有打开，这个检查过了。</p>
+<blockquote>
+<p>The error (2003) Can’t connect to MySQL server on ‘server’ (10061) indicates that the network connection has been refused. You should check that there is a MySQL server running, that it has network connections enabled, and that the network port you specified is the one configured on the server.</p>
+</blockquote>
+<p>这个叫你检查mysql server是否是在运行，网络连接是否正常（我都能SSH上来），端口设置是否正确之类的。<br>好像并没有什么帮助，直到：</p>
+<blockquote>
+<p>Make sure that the server has not been configured to ignore network connections or (if you are attempting to connect remotely) that it has not been configured to listen only locally on its network interfaces.<strong> If the server was started with –skip-networking, it will not accept TCP/IP connections at all. If the server was started with –bind-address=127.0.0.1, it will listen for TCP/IP connections only locally on the loopback interface and will not accept remote connections.</strong></p>
+</blockquote>
+<p>赶紧看了一下my.cnf，发现果然<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">skip</span><span class="attribute">-networking</span></span><br></pre></td></tr></table></figure></p>
+<p>没有注释掉，注释掉重启mysqld，果然问题都解决了。<br><strong>果然还是官方文档靠谱!!</strong></p>
+<p>可是有一个问题，在ipython中指明了localhost之后，为什么会用/var/lib/mysql/mysql.sock来连接，而不是在配置文件中的/var/run/mysqld/mysqld.sock呢？<br>无论是SQLAlchemy还是torndb，都依赖MySQL-python这个依赖包，看了一下出错代码所在的地方<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Connection</span><span class="params">(_mysql.connection)</span>:</span></span><br><span class="line">	...</span><br><span class="line">	autocommit = kwargs2.pop(<span class="string">'autocommit'</span>, <span class="keyword">False</span>)</span><br><span class="line">	super(Connection, self).__init__(*args, **kwargs2)</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure></p>
+<p>而_mysql是一个.so文件，GitHub上也有<a href="https://github.com/farcepest/MySQLdb1/blob/master/_mysql.c" target="_blank" rel="external">源码</a>，发现自己看不懂，回去复习一下C语言。</p>
 </span>
       
     </div>
@@ -217,7 +246,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python-tools/" rel="tag">#python tools</a>
+            <a href="/tags/mysql/" rel="tag">#mysql</a>
+          
+            <a href="/tags/python/" rel="tag">#python</a>
           
         </div>
       
@@ -226,13 +257,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/05/27/排序算法（Java版）/" rel="prev">排序算法（Java版）</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/05/22/SQL基础教材笔记/" rel="next">SQL基础教材笔记</a>
+              <a href="/2016/05/21/Python面向对象之MRO/" rel="next">Python面向对象之MRO</a>
             
           </div>
         </div>
