@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="总结," />
+  <meta name="keywords" content="笔记," />
 
 
 
@@ -39,19 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。
-CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经过处理客户端请求，处理请求并生成相应的结果，然后返">
+<meta name="description" content="Redis虽然是内存型(in-memory)数据数据库，但同时也提供了持久化 选项可以将数据保存到硬盘中，正确地配置这些持久化设置，可以在服务器挂了时将数据损失降到最低。redis提供了两种方法对数据进行持久化，分别是snapshotting(快照)和AOF(append-only file, 只追加文件), 这两种方法可以单独使用或者搭配使用，也可以都不用。Redis在线文档和配置文件（通常在/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python应用部署">
-<meta property="og:url" content="http://blog.wongxinjie.com/2016/03/06/Python应用部署/index.html">
+<meta property="og:title" content="Redis数据安全">
+<meta property="og:url" content="http://blog.wongxinjie.com/2016/08/25/Redis数据安全/index.html">
 <meta property="og:site_name" content="Wong Page">
-<meta property="og:description" content="公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。
-CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经过处理客户端请求，处理请求并生成相应的结果，然后返">
-<meta property="og:updated_time" content="2016-08-25T13:53:09.000Z">
+<meta property="og:description" content="Redis虽然是内存型(in-memory)数据数据库，但同时也提供了持久化 选项可以将数据保存到硬盘中，正确地配置这些持久化设置，可以在服务器挂了时将数据损失降到最低。redis提供了两种方法对数据进行持久化，分别是snapshotting(快照)和AOF(append-only file, 只追加文件), 这两种方法可以单独使用或者搭配使用，也可以都不用。Redis在线文档和配置文件（通常在/">
+<meta property="og:updated_time" content="2016-08-25T16:35:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python应用部署">
-<meta name="twitter:description" content="公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。
-CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经过处理客户端请求，处理请求并生成相应的结果，然后返">
+<meta name="twitter:title" content="Redis数据安全">
+<meta name="twitter:description" content="Redis虽然是内存型(in-memory)数据数据库，但同时也提供了持久化 选项可以将数据保存到硬盘中，正确地配置这些持久化设置，可以在服务器挂了时将数据损失降到最低。redis提供了两种方法对数据进行持久化，分别是snapshotting(快照)和AOF(append-only file, 只追加文件), 这两种方法可以单独使用或者搭配使用，也可以都不用。Redis在线文档和配置文件（通常在/">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +58,7 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
   };
 </script>
 
-  <title> Python应用部署 | Wong Page </title>
+  <title> Redis数据安全 | Wong Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -168,7 +165,7 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
           
           
             
-              Python应用部署
+              Redis数据安全
             
           
         </h1>
@@ -177,8 +174,8 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2016-03-06T14:32:03+08:00" content="2016-03-06">
-            2016-03-06
+          <time itemprop="dateCreated" datetime="2016-08-25T22:09:25+08:00" content="2016-08-25">
+            2016-08-25
           </time>
         </span>
 
@@ -187,8 +184,8 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Python/" itemprop="url" rel="index">
-                  <span itemprop="name">Python</span>
+                <a href="/categories/Redis/" itemprop="url" rel="index">
+                  <span itemprop="name">Redis</span>
                 </a>
               </span>
 
@@ -211,24 +208,29 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
       
 
       
-        <span itemprop="articleBody"><p>公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。</p>
-<h4 id="CGI与WSGI">CGI与WSGI</h4><p>CGI是原始的动态网站开发方式。动态网站的必然要经过处理客户端请求，处理请求并生成相应的结果，然后返回结果的过程。通常，客户端和服务端是通过HTTP协议来通信的。因为在处理用户请求时，程序会做很多重复的工作，比如解析HTTP请求等一系列工作，这些工作可以抽出来作为一个程序，于是Web服务器就出现了。Web服务器HTTP请求，然后把这个请求的各种参数写进进程的环境变量，比如REQUEST_METHOD，PATH_INFO之类的。之后呢，服务器会调用相应的程序来处理这个请求，这个程序也就是我们所要写的CGI程序了。它会负责生成动态内容，然后返回给服务器，再由服务器转交给客户端。服务器和CGI程序之间通信，一般是通过进程的环境变量和管道。<br>但是每一次处理用户请求都要调用一次CGI程序，也就是要创建一个CGI进程，然后处理请求，让后结束子进程。这便是fork-an-excute模式，所以用CGI方式的服务青有多少连接就要开多上CGI子进程。而每一个进程都要占用内容、CPU时间，在用户访问量比较多时，瓶颈就出现了。</p>
-<p>WSGI是基于现存的CGI标准设计的接口协议。是为Python语言定义的Web服务器和Web应用程序或框架之间的一种简单而通用的接口。自从WSGI被开发出来以后，许多其它语言中也出现了类似接口。WSGI是作为Web服务器与Web应用程序或应用框架之间的一种低级别的接口，以提升可移植Web应用开发的共同点。WSGI是为了让python web framework与web服务器无关，使不同的web framework能在不同服务器可移植的一套标准（PEP0333)。</p>
-<p>WSGI区分为两个部份：一为“服务器”或“网关”，另一为“应用程序”或“应用框架”。在处理一个WSGI请求时，服务器会为应用程序提供环境资讯及一个回调函数（Callback Function）。当应用程序完成处理请求后，透过前述的回调函数，将结果回传给服务器。所谓的 WSGI 中间件同时实现了API的两方，因此可以在WSGI服务和WSGI应用之间起调解作用：从WSGI服务器的角度来说，中间件扮演应用程序，而从应用程序的角度来说，中间件扮演服务器。<br><a id="more"></a></p>
-<h4 id="FastCGI、uWSGI和Gunicorn">FastCGI、uWSGI和Gunicorn</h4><p>当代的python web framework基本都实现了WSGI协议，所以程序员无须关注底层，直接跑程序就能调试了。但为什么在部署的时候为什么还需要FastCGI等这些东西呢？原因就是因为无论是CGI还是WSGI，处理并较大用户量和并发请求的能力都很弱。</p>
-<h5 id="FastCGI">FastCGI</h5><p>而Fast CGI是基于CGI的一种改良。FastCGI是一个可伸缩地、高速地在HTTP server和动态脚本语言间通信的接口。多数流行的HTTP server都支持FastCGI，包括Apache、Nginx和lighttpd等，同时，FastCGI也被许多脚本语言所支持，比如Python/PHP等。<br>FastCGI是从CGI发展改进而来的。传统CGI接口方式的主要缺点是性能很差，因为每次HTTP服务器遇到动态程序时都需要重新启动脚本解析器来执行解析，然后结果被返回给HTTP服务器。这在处理高并发访问时，几乎是不可用的。FastCGI像是一个常驻(long-live)型的CGI，它可以一直执行着，只要激活后，不会每次都要花费时间去fork一次(这是CGI最为人诟病的fork-and-execute 模式)。CGI 就是所谓的短生存期应用程序，FastCGI 就是所谓的长生存期应用程序。由于 FastCGI 程序并不需要不断的产生新进程，可以大大降低服务器的压力并且产生较高的应用效率。它的速度效率最少要比CGI技术提高5倍以上。它还支持分布式的运算, 即 FastCGI 程序可以在网站服务器以外的主机上执行并且接受来自其它网站服务器来的请求。</p>
-<p>FastCGI是语言无关的、可伸缩架构的CGI开放扩展，其主要行为是将CGI解释器进程保持在内存中并因此获得较高的性能。众所周知，CGI解释器的反复加载是CGI性能低下的主要原因，如果CGI解释器保持在内存中并接受FastCGI进程管理器调度，则可以提供良好的性能、伸缩性、Fail-Over特性等等。FastCGI接口方式采用C/S结构，可以将HTTP服务器和脚本解析服务器分开，同时在脚本解析服务器上启动一个或者多个脚本解析守护进程。当HTTP服务器每次遇到动态程序时，可以将其直接交付给FastCGI进程来执行，然后将得到的结果返回给浏览器。这种方式可以让HTTP服务器专一地处理静态请求或者将动态脚本服务器的结果返回给客户端，这在很大程度上提高了整个应用系统的性能。</p>
-<p>FastCGI的工作流程:<br>web server启动时载入FastCGI进程管理器 ==&gt; FastCGI进程处理器初始化，启动多个CGI解释器进程等待web server连接 ==&gt; 当有用户请求时，FastCGI管理器便连接到一个CGI解释器，将CGI环境变量和标准输入发送到子进程，然后将子进程输出返回给web server。然后等待下一个连接。</p>
-<h5 id="uWSGI和Gunicorn">uWSGI和Gunicorn</h5><p>uWSGI和Gunicorn都是WSGI应用服务器，都实现了WSGI协议。<br>虽然现在的python web framework都自带wsgi服务器，但是都只能简单的开单进程。而像gunicorn是prefork模式，从nginx转发的每一个请求，它就fork一个进程去处理，并缓存相关的数据。相比裸跑框架自带的wsgi服务器，专业的wsgi服务器是针对线上环境开发的，能更好的配置和应对更复杂的情况，性能也更好。<br>运行和配置详见<a href="https://uwsgi-docs.readthedocs.org/en/latest/" target="_blank" rel="external">uWSGI</a>和<a href="http://gunicorn.org/#docs" target="_blank" rel="external">gunicorn</a></p>
-<h4 id="为什么supervisor">为什么supervisor</h4><p>supervisor是unix-like系统的一个进程管理工具。使用 Supervisor可以更好的控制、管理、重启我们希望运行的进程。<br>详见<a href="http://supervisord.org/introduction.html" target="_blank" rel="external">supervisor</a></p>
-<h4 id="为什么nginx">为什么nginx</h4><p>nginx不只是一个HTTP服务器，同时也是一个反向代理服务器。在python application部署中，它就充当了反向代理服务器的功能，接受到请求，对静态文件的请求自己处理，而动态请求则直接重定向到uWSGI服务器，再不下游服务器的结果返回给用户。<br>使用nginx作为前端服务器：</p>
+        <span itemprop="articleBody"><p>Redis虽然是内存型(in-memory)数据数据库，但同时也提供了持久化 选项可以将数据保存到硬盘中，正确地配置这些持久化设置，可以在服务器挂了时将数据损失降到最低。redis提供了两种方法对数据进行持久化，分别是<strong>snapshotting(快照)</strong>和<strong>AOF(append-only file, 只追加文件)</strong>, 这两种方法可以单独使用或者搭配使用，也可以都不用。Redis在线文档和配置文件（通常在/etc/redis.conf)都写的很仔细。</p>
+<h5 id="快照持久化">快照持久化</h5><p>快照就是将某一时刻将Redis存储的所有数据写到硬盘里，其功能就相当于一个数据备份。快照可以用来在多台机器上建立具有相同数据内容的服务，或者在重启机器时恢复数据。快照相关的配置如下：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">save</span> <span class="number">60</span> <span class="number">10000</span> <span class="comment"># 60s内有10000次写入则自动调用bgsave创建快照</span></span><br><span class="line">stop-writes-<span class="built_in">on</span>-bgsaves-<span class="built_in">error</span> <span class="built_in">no</span>  <span class="comment">#创建快照失败是否继续执行</span></span><br><span class="line">rdbcompression <span class="built_in">yes</span> <span class="comment"># 是否对快照文件进行压缩</span></span><br><span class="line">dbfilename dump.rdb <span class="comment"># 快照文件名</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>通常在以下情况会创建快照：</p>
 <ul>
-<li>高效率处理静态文件,web server都是用c开发，调用是native的函数，对IO，文件传输都做针对性的优化</li>
-<li>充当一个简易的网络防火墙，可以denny一些ip，简单的控制并发连接数量等等</li>
-<li>处理高并发短连接请求，把成千上万用户的request 通过内网的几十个长连接进行转发，原因一个是web server处理高并发很专业，另外一个原因是大部分的application所用的框架都不具备处理高并发的能力</li>
-<li>负载均衡</li>
-<li>缓存</li>
+<li>客户端主动发送BGSAVE命令来创建一个快照。这是Redis会fork一个子进程来负责将快照文件写入硬盘，而父进程则继续处理请求。</li>
+<li>客户端主动发送SAVE命令来创建一个快照。Redis服务器在收到这个命令后在快照创建完成之前将不会响应任何其他命令。</li>
+<li>根据用户的配置(redis.conf)选项，如save 60 1000。当条件被满足时，Redis就会触发BGSAVE命令。用户可以设置多个save配置选项，其中任何一个满足条件便会创建快照。</li>
+<li>Redis通过shutdown命令接收到关闭服务命令，或者收到TERM命令，这时会执行SAVE命令，执行完毕之后关闭服务。</li>
+<li>作为主服务器收到从Redis服务器的SYNC命令，Redis服务器可能会执行BGSAVE命令生成快照。</li>
 </ul>
+<p>当应用程序可以忍受丢失一部分数据的风险时可以只使用快照进行持久化，因为一旦系统崩溃，最近快照之后的数据将会全部丢失。除此之外，因为创建快照时将Redis内的所有数据写到硬盘，在数据量很大的时候(几十G)，或者机器剩余的内存不多的时候，Redis执行BGSAVE 时回导致系统长时间的停顿，这会影响Redis的性能。Redis在执行BGSAVE时创建子进程时不回响应任何命令，而创建子进程所需的时间会随数据的增加而增长。</p>
+<p>所以在生产中可以考虑关闭自动保存，转而通过手动发送BGSAVE或者SAVE命令来进行持久化。</p>
+<h5 id="AOF持久化">AOF持久化</h5><p>AOF持久化便是Redis将所有被执行的写命令添加到AOF文件，以此来记录数据的变化，所有Redis执行一遍AOF文件的写命令，就可以恢复AOF记录的所有数据集。AOF的相关配置如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">appendonly on <span class="preprocessor"># 是否开启AOF持久化，默认为否，开启为yes</span></span><br><span class="line">appendfsync everysec </span><br><span class="line">no-appendfsync-on-rewrite no </span><br><span class="line"><span class="preprocessor"># 当AOF文件大小大于<span class="number">64</span>MB, 并且比上一次重写后大小大了<span class="number">100</span>%则进行重写</span></span><br><span class="line"><span class="keyword">auto</span>-aof-rewrite-percentage <span class="number">100</span> </span><br><span class="line"><span class="keyword">auto</span>-aof-rewrite-min-size <span class="number">64</span>m </span><br><span class="line"></span><br><span class="line">dir ./ <span class="preprocessor">#这个和快照公用，决定rdb和aof文件存放目录</span></span><br></pre></td></tr></table></figure>
+<p>在配置中appendfsync选项有always/everysec/no三个选项。</p>
+<p>always会将每一个写命令都强制写入(file.flush)硬盘，此时Redis的性能会受硬盘性能的限制，数据丢失最少但对硬盘寿命的影响极大。 </p>
+<p>everysec则是将写命令存储到系统缓冲区，然后以每秒一次的频率将写命令同步到AOF文件，兼顾了数据安全和写入性能，也是推荐的设置。</p>
+<p>no则Redis不会对AOF文件进行任何同步操作，由操作系统决定何时将缓冲区的内容写入AOF文件，这个选项不会对Redis性能造成影响。但潜在的问题是无法确定丢失多少数据，同时如果操作系统写入硬盘的速度不够快导致写入缓冲区写满时，Redis写入操作会被阻塞，这时会影响Redis处理请求的速度，所以也不推荐。</p>
+<p>AOF既可以将数据丢失降低到何少，同时又能极短的进行写入同步，看起来的确是很好的持久化方案，但实际上也存在问题，其中一个就是文件大小问题。Redis运行的时间越长，写入命令越多，则AOF文件可能会占用很大的空间，同时在Redis在读取AOF还原数据时时间过长以至到不能忍受的地步。</p>
+<p>要解决AOF文件不断增大问题，客户端可以发送BGREWRITEAOF命令对AOF命令进行重写。AOF重写即通过删除AOF中冗余的写入命令来减小文件大小。BGREWRITEAOF重写的原理和BGSAVE的原理相识：创建子进程，所以快照存在的子进程创建时间问题和内存占用问题同样存在。更糟的是，AOF文件的大小远比快照文件大，进行重写AOF和删除旧文件时，删除一个几十G文件会造成系统的卡顿。</p>
+<h5 id="复制">复制</h5><p>快照和AOF都是单机情况下的通过持久化来保证数据安全，但也可以通过配置将数据的副本复制到其他的机器，不仅可以避免数据的丢失，同时也可以通过主库写从库读的方案降低Redis压力。</p>
 </span>
       
     </div>
@@ -237,7 +239,7 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
       
         <div class="post-tags">
           
-            <a href="/tags/总结/" rel="tag">#总结</a>
+            <a href="/tags/笔记/" rel="tag">#笔记</a>
           
         </div>
       
@@ -246,13 +248,11 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/03/11/Python中的Mixin/" rel="prev">Python中的Mixin</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/12/14/跳坑启示录/" rel="next">跳坑启示录</a>
+              <a href="/2016/06/06/数据库连接不上了！/" rel="next">数据库连接不上了！</a>
             
           </div>
         </div>
@@ -366,7 +366,7 @@ CGI与WSGICGI是原始的动态网站开发方式。动态网站的必然要经�
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#CGI与WSGI"><span class="nav-number">1.</span> <span class="nav-text">CGI与WSGI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FastCGI、uWSGI和Gunicorn"><span class="nav-number">2.</span> <span class="nav-text">FastCGI、uWSGI和Gunicorn</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#FastCGI"><span class="nav-number">2.1.</span> <span class="nav-text">FastCGI</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#uWSGI和Gunicorn"><span class="nav-number">2.2.</span> <span class="nav-text">uWSGI和Gunicorn</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么supervisor"><span class="nav-number">3.</span> <span class="nav-text">为什么supervisor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么nginx"><span class="nav-number">4.</span> <span class="nav-text">为什么nginx</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#快照持久化"><span class="nav-number">1.</span> <span class="nav-text">快照持久化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AOF持久化"><span class="nav-number">2.</span> <span class="nav-text">AOF持久化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#复制"><span class="nav-number">3.</span> <span class="nav-text">复制</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

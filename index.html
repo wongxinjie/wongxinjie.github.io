@@ -166,6 +166,89 @@
           
           
             
+              <a class="post-title-link" href="/2016/08/25/Redis数据安全/" itemprop="url">
+                Redis数据安全
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-08-25T22:09:25+08:00" content="2016-08-25">
+            2016-08-25
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Redis/" itemprop="url" rel="index">
+                  <span itemprop="name">Redis</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>Redis虽然是内存型(in-memory)数据数据库，但同时也提供了持久化 选项可以将数据保存到硬盘中，正确地配置这些持久化设置，可以在服务器挂了时将数据损失降到最低。redis提供了两种方法对数据进行持久化，分别是<strong>snapshotting(快照)</strong>和<strong>AOF(append-only file, 只追加文件)</strong>, 这两种方法可以单独使用或者搭配使用，也可以都不用。Redis在线文档和配置文件（通常在/etc/redis.conf)都写的很仔细。</p>
+<h5 id="快照持久化">快照持久化</h5><p>快照就是将某一时刻将Redis存储的所有数据写到硬盘里，其功能就相当于一个数据备份。快照可以用来在多台机器上建立具有相同数据内容的服务，或者在重启机器时恢复数据。快照相关的配置如下：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">save</span> <span class="number">60</span> <span class="number">10000</span> <span class="comment"># 60s内有10000次写入则自动调用bgsave创建快照</span></span><br><span class="line">stop-writes-<span class="built_in">on</span>-bgsaves-<span class="built_in">error</span> <span class="built_in">no</span>  <span class="comment">#创建快照失败是否继续执行</span></span><br><span class="line">rdbcompression <span class="built_in">yes</span> <span class="comment"># 是否对快照文件进行压缩</span></span><br><span class="line">dbfilename dump.rdb <span class="comment"># 快照文件名</span></span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/25/Redis数据安全/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/06/06/数据库连接不上了！/" itemprop="url">
                 数据库连接不上了！
               </a>
@@ -269,8 +352,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Python基础/" itemprop="url" rel="index">
-                  <span itemprop="name">Python基础</span>
+                <a href="/categories/Python/" itemprop="url" rel="index">
+                  <span itemprop="name">Python</span>
                 </a>
               </span>
 
@@ -357,8 +440,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/总结/" itemprop="url" rel="index">
-                  <span itemprop="name">总结</span>
+                <a href="/categories/工作/" itemprop="url" rel="index">
+                  <span itemprop="name">工作</span>
                 </a>
               </span>
 
@@ -448,8 +531,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/python/" itemprop="url" rel="index">
-                  <span itemprop="name">python</span>
+                <a href="/categories/Flask/" itemprop="url" rel="index">
+                  <span itemprop="name">Flask</span>
                 </a>
               </span>
 
@@ -706,8 +789,8 @@
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/杂谈/" itemprop="url" rel="index">
-                  <span itemprop="name">杂谈</span>
+                <a href="/categories/工作/" itemprop="url" rel="index">
+                  <span itemprop="name">工作</span>
                 </a>
               </span>
 
@@ -919,91 +1002,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/27/Redis笔记/" itemprop="url">
-                Redis笔记
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-07-27T23:45:39+08:00" content="2015-07-27">
-            2015-07-27
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/NoSQL/" itemprop="url" rel="index">
-                  <span itemprop="name">NoSQL</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h3 id="redis基础数据类型及其应用场合">redis基础数据类型及其应用场合</h3><h5 id="String_字符串">String 字符串</h5><p>string 是redis中最基本的数据类型，能存储任何形式/编码的字符串（当然包括二进制），单个value的最大容量是512M。<br>简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。<br>string可以取代memcached作为缓存，存用户的验证码/session数据等，自带的expire功能。</p>
-<h4 id="hash_字典">hash 字典</h4><p>hash是redis中一种非常有用的数据类型，相当于python中的dict，能存储key-value，但是无论是但是key/value只支持string而不支持其他的数据类型（即你不能嵌套一个list什么类型的）。<br>redis提供的Hash是一种key-dict形式的存储，可以想关系型数据库一样update某个字段。<br>hash的应用场合很多，譬如作为集群任务处理的注册中心，简单的登记哪部机器在处理什么任务，避免重复处理。在网站后台中也可以实现一些类似于帖子的热度信息等。</p>
-<h3 id="list_列表">list 列表</h3><p>list 是redis中的一个有序的字符串列表，列表内的元素是非唯一的，相当于双端队列。<br>redis的list其实是一个双端链表，利用List可以实现最新消息排行等功能。List另外一个应用就是消息队列（生产者消费者模型）。<br>list 可以作为单机的任务队列，在不同的进程中通信等。通过list可以实现简单的分布式任务处理机制。也可以实现分页、新鲜事等。</p>
-<h4 id="set_集合">set 集合</h4><p>set是和list类似的一种数据类型，但是set是自动排重的，当要存储一个没有重复元素的列表数据，可以使用set。而且set还提供了判断某个成员是否存在列表的一个接口。<br>set还提供了求交集、并集、差集的操作，这能很方便的实现类似微博等应用中的好友共同关注、共同喜好、二度好友等功能。</p>
-<h4 id="sorted_set_有序集合">sorted set 有序集合</h4><p>sorted set，是set中每个value都关联一个权值，不同的value可以有相同的权值，sorted set会根据权值进行排序。<br>sorted set可以实现一些排序功能，比如按点击量/时间排序/时间轴等功能。作为任务队列可是实现优先队列，优先处理一些权值高的任务等。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/27/Redis笔记/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1042,14 +1040,14 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>

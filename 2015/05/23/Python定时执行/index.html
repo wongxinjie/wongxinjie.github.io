@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="python tools," />
+  <meta name="keywords" content="crontab job," />
 
 
 
@@ -45,7 +45,7 @@
 <meta property="og:url" content="http://blog.wongxinjie.com/2015/05/23/Python定时执行/index.html">
 <meta property="og:site_name" content="Wong Page">
 <meta property="og:description" content="在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:">
-<meta property="og:updated_time" content="2015-10-05T08:32:25.866Z">
+<meta property="og:updated_time" content="2016-08-25T13:52:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python定时执行">
 <meta name="twitter:description" content="在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:">
@@ -209,6 +209,7 @@
 
       
         <span itemprop="articleBody"><p>在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:<br><a id="more"></a><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"><span class="comment">#name: timer.py</span></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Timer</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, interval, function, args=[], kwargs=&#123;&#125;)</span>:</span></span><br><span class="line">        self.interval = interval</span><br><span class="line">        self.function = function</span><br><span class="line">        self.args = args</span><br><span class="line">        self.kwargs = kwargs</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.stop()</span><br><span class="line">        self._timer = threading.Timer(self.interval, self._run)</span><br><span class="line">        self._timer.start()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">restart</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.start()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">stop</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.__dict__.has_key(<span class="string">"_timer"</span>):</span><br><span class="line">            self._timer.cancel()</span><br><span class="line">            <span class="keyword">del</span> self._timer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.function(*self.args, **self.kwargs)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        self.restart()</span><br></pre></td></tr></table></figure><br>测试一下:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#-*- coding: utf-<span class="number">8</span> -*-</span><br><span class="line"><span class="id">#name</span>: test_timer<span class="class">.py</span></span><br><span class="line">import <span class="tag">time</span></span><br><span class="line">import timer</span><br><span class="line"></span><br><span class="line">def <span class="function"><span class="title">tell_time</span><span class="params">(x, y)</span></span>:</span><br><span class="line">    t = <span class="tag">time</span>.<span class="function"><span class="title">strftime</span><span class="params">(<span class="string">"%Y-%m-%d %X"</span>, time.localtime(time.time()</span></span>))</span><br><span class="line">    print x, y, t</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="tag">tr</span> = timer.<span class="function"><span class="title">Timer</span><span class="params">(<span class="number">5</span>, tell_time, (<span class="number">1</span>, <span class="number">2</span>)</span></span>)</span><br><span class="line">    <span class="tag">tr</span>.<span class="function"><span class="title">start</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure><br>输出结果如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ python test_timer.py</span><br><span class="line">$ <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">17</span></span><br><span class="line">  <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">22</span></span><br><span class="line">  <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">27</span></span><br><span class="line">  <span class="number">1</span> <span class="number">2</span> <span class="number">2014</span>-<span class="number">11</span>-<span class="number">10</span> <span class="number">20</span>:<span class="number">35</span>:<span class="number">32</span></span><br></pre></td></tr></table></figure><br>这样子就实现了python定时执行功能，无需while True也无需time.sleep(seconds)。</p>
+<p>增补：实际上这种方法也不是很靠谱，假如真的有定时的任务要做，最直接的就是直接加crontab任务，或者更好的选择是上Celery。</p>
 </span>
       
     </div>
@@ -217,7 +218,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python-tools/" rel="tag">#python tools</a>
+            <a href="/tags/crontab-job/" rel="tag">#crontab job</a>
           
         </div>
       
@@ -294,14 +295,14 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
