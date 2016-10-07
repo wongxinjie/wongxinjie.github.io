@@ -40,13 +40,14 @@
 
 
 <meta name="description" content="Tech Blog of Xinjie Wong">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Wong Page">
-<meta property="og:url" content="http://blog.wongxinjie.com/categories/Algorithm/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Python开发思考">
+<meta property="og:url" content="http://blog.wongxinjie.com/2016/10/03/关于Python开发思考/index.html">
 <meta property="og:site_name" content="Wong Page">
 <meta property="og:description" content="Tech Blog of Xinjie Wong">
+<meta property="og:updated_time" content="2016-10-03T12:29:20.696Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Wong Page">
+<meta name="twitter:title" content="关于Python开发思考">
 <meta name="twitter:description" content="Tech Blog of Xinjie Wong">
 
 
@@ -57,7 +58,7 @@
   };
 </script>
 
-  <title> 分类: Algorithm | Wong Page </title>
+  <title> 关于Python开发思考 | Wong Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -75,7 +76,7 @@
 
 
 
-  <div class="container one-column ">
+  <div class="container one-column page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -152,45 +153,87 @@
       <div class="main-inner">
         <div id="content" class="content"> 
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        Algorithm
-        <small>分类</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
 
-  <article class="post post-type-normal"itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2015/05/27/排序算法（Java版）/" itemprop="url">
-              <span itemprop="name">排序算法（Java版）</span>
-            </a>
-        
-      </h1>
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              关于Python开发思考
+            
+          
+        </h1>
+      
 
       <div class="post-meta">
-        <time class="post-time" datetime="2015-05-27T14:31:20.000Z" itemprop="dateCreated" content="2015-05-27"> 05-27 </time>
-      </div>
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-10-03T20:29:20+08:00" content="2016-10-03">
+            2016-10-03
+          </time>
+        </span>
 
+        
+
+        
+          
+        
+      </div>
     </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/25/Golang学习笔记/" rel="next">Golang学习笔记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
  </div>
 
         
 
+        
+          <div class="comments" id="comments">
+            
+          </div>
         
       </div>
 
@@ -207,6 +250,15 @@
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
 
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
       
 
       <section class="site-overview">
@@ -265,6 +317,17 @@
       </section>
 
       
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
 
     </div>
   </aside>
@@ -306,12 +369,6 @@
   
   
   
-    <script type="text/javascript">
-      postMotionOptions = {stagger: 100, drag: true};
-    </script>
-  
-
-  
     
     
 
@@ -339,6 +396,165 @@
   <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
   
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
 
   <script type="text/javascript">
     $(document).ready(function () {
