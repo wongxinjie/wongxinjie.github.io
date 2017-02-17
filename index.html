@@ -166,6 +166,198 @@
           
           
             
+              <a class="post-title-link" href="/2017/02/17/API-GET-vs-POST/" itemprop="url">
+                API: GET vs POST
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-17T10:40:55+08:00" content="2017-02-17">
+            2017-02-17
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Web/" itemprop="url" rel="index">
+                  <span itemprop="name">Web</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。</p>
+<h5 id="Http:_GET_vs_POST">Http: GET vs POST</h5><p>回到问题的本质，在考虑API是用GET还是用POST时，还是先来回顾一些HTTP协议中GET和POST的区别，下表展示GET和POST的不同之处:</p>
+<table>
+<thead>
+<tr>
+<th>情景</th>
+<th>GET</th>
+<th>POST</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>刷新页面</td>
+<td>没有影响</td>
+<td>会导致重复提交数据</td>
+</tr>
+<tr>
+<td>保存书签</td>
+<td>可以被保存成书签</td>
+<td>不能保存书签</td>
+</tr>
+<tr>
+<td>编码类型</td>
+<td>application/x-www-form-urlencoded</td>
+<td>application/x-www-form-urlencoded或者multipart/form-data</td>
+</tr>
+<tr>
+<td>历史记录</td>
+<td>参数会显示在历史记录中</td>
+<td>参数不会显示在历史记录中</td>
+</tr>
+<tr>
+<td>参数长度</td>
+<td>参数长度有限制，服务端可能对URL有长度限制</td>
+<td>没有限制</td>
+</tr>
+<tr>
+<td>参数类型</td>
+<td>参数只能是ASCII字符</td>
+<td>没有限制，二进制都可以</td>
+</tr>
+<tr>
+<td>安全问题</td>
+<td>相对不安全，因为参数暴露在URL中</td>
+<td>相对安全，参数不会在历史记录中出现，也不会在服务器日志出现</td>
+</tr>
+</tbody>
+</table>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/17/API-GET-vs-POST/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/12/04/Python的Web框架/" itemprop="url">
+                Python的Web框架
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-12-04T22:59:26+08:00" content="2016-12-04">
+            2016-12-04
+          </time>
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody"><p>Python中的web框架，用户基数较大的大概就是Django、Flask和tornado，实际上Python的web框架多如牛毛，甚至已经有很多不再维护，只支持Python2，而个人觉得除了历史遗留项目用Python2，新项目直接上Python3还是靠谱一点。本文就谈谈个人在项目中使用过的或者感兴趣的框架。</p>
+<h4 id="Django"><a href="https://www.djangoproject.com" target="_blank" rel="external">Django</a></h4><p>要推举Python届Web框架卫冕之王，Django应该勉强可以算是。对于学Python web开发的新人，往往被推荐的web框架就是Django。但实际上Django相当不适合给新手入门。<br>Django的文档相当详细，详细到这个东西在项目中怎么实现都给你写的清清楚楚。文档详细一个好处的就是开发过程中对某一点有疑问读一读文档便可以，但文档太详细太长也有坏处，吓跑新手。<br>Django一开始是以一个CMS框架为目的开发，一次Django的封装度实际上是想到高的。一个新手按tutorials一步一步走，的确可以讲一个简单的项目跑起来，连项目结构都已经帮你规划好了，甚至连admin都是自带的，配置一下，三下五除二一个网站便做成了。Django大概就像你的父母，什么都想帮你考虑好，你需要这个东西，我有内置的，以用一下，ORM我内置了，template系统内置了，xxx我内置了，你在settings.py文件了设置一下就可以了！<br>Django这种自带电池的框架，对于工期比较紧的项目，或者是数据库驱动的项目的确是一个好框架。甚至用Class-Base View你写一个models,在views里写几行代码，一个增删查改的功能就出来了，相当省事。<br>但凡事有代价。个人认为，一个项目中的业务层应该和视图层分开，无论是测试还是维护都有好处，但django项目中往往更推崇直接将逻辑写在views中。django自带的ORM，使用起来的确方便，但是写出低效率查询逻辑也是很方便。另外，对于想前后端分离，自己抛弃django模板系统的项目，Django也不是特别友好。<br>Django的一个槽点便是性能低，可能是更框架自身的实现有关。相关文章如<a href="http://klen.github.io/py-frameworks-bench/" target="_blank" rel="external">这篇</a>。</p>
+<h4 id="Flask"><a href="http://flask.pocoo.org/" target="_blank" rel="external">Flask</a></h4><p>毫无疑问的是，Flask是web框架中最优秀的微框架，无论是生态圈还是文档。相比于Django的一坨文件，Flask一个文件就可以跑起来（当然在实际项目中为了可维护性不要这样）,是最适合新手入门的框架。<br>Flask框架是基于<a href="http://inja.pocoo.org" target="_blank" rel="external">Jinja2</a>模板引擎和<a href="http://werkzeug.pocoo.org/" target="_blank" rel="external">Werkzeug</a>WSGI工具集的一个微框架，再实现一些诸如路由管理和session管理等等功能组合起来。但不可否认，Flask的确好用。<br>Flask只提供了最基础的功能，甚至连登录认证、表单验证等功能都不实现，全部都交给了extensions,所以用Flask开发项目的时候往往requirements.txt中有不下几十个Flask相关的依赖。<br>Flask很适合写一些轻量级的项目，写RESTful-api也挺适合。写一些大型项目也可以，但是对项目的组织要求能力也相应教高，很多功能可能都要自己实现，以及在繁杂的拓展中选一个靠谱的插件。<br>在Flask项目中，和Django中的路由是在urls.py中集中管理不同，Flask往往是分散在各个文件中，以装饰器的方式分布在每一个view-function上头，这样带来的一个坏处是路由难以管理，另外一个是一个view-function可能头上顶十几个decorators，而且这些decorators还得按照一定的顺序来写。后来自0.7开始Flask从Django借鉴了Class-Base views思路，实现了<a href="http://flask.pocoo.org/docs/0.11/views/" target="_blank" rel="external">Pluggable views</a>。</p>
+</span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/10/08/Golang面向对象编程/" itemprop="url">
                 Golang面向对象编程
               </a>
@@ -842,171 +1034,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/03/06/Python应用部署/" itemprop="url">
-                Python应用部署
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-03-06T14:32:03+08:00" content="2016-03-06">
-            2016-03-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Python/" itemprop="url" rel="index">
-                  <span itemprop="name">Python</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。</p>
-<h4 id="CGI与WSGI">CGI与WSGI</h4><p>CGI是原始的动态网站开发方式。动态网站的必然要经过处理客户端请求，处理请求并生成相应的结果，然后返回结果的过程。通常，客户端和服务端是通过HTTP协议来通信的。因为在处理用户请求时，程序会做很多重复的工作，比如解析HTTP请求等一系列工作，这些工作可以抽出来作为一个程序，于是Web服务器就出现了。Web服务器HTTP请求，然后把这个请求的各种参数写进进程的环境变量，比如REQUEST_METHOD，PATH_INFO之类的。之后呢，服务器会调用相应的程序来处理这个请求，这个程序也就是我们所要写的CGI程序了。它会负责生成动态内容，然后返回给服务器，再由服务器转交给客户端。服务器和CGI程序之间通信，一般是通过进程的环境变量和管道。<br>但是每一次处理用户请求都要调用一次CGI程序，也就是要创建一个CGI进程，然后处理请求，让后结束子进程。这便是fork-an-excute模式，所以用CGI方式的服务青有多少连接就要开多上CGI子进程。而每一个进程都要占用内容、CPU时间，在用户访问量比较多时，瓶颈就出现了。</p>
-<p>WSGI是基于现存的CGI标准设计的接口协议。是为Python语言定义的Web服务器和Web应用程序或框架之间的一种简单而通用的接口。自从WSGI被开发出来以后，许多其它语言中也出现了类似接口。WSGI是作为Web服务器与Web应用程序或应用框架之间的一种低级别的接口，以提升可移植Web应用开发的共同点。WSGI是为了让python web framework与web服务器无关，使不同的web framework能在不同服务器可移植的一套标准（PEP0333)。</p>
-<p>WSGI区分为两个部份：一为“服务器”或“网关”，另一为“应用程序”或“应用框架”。在处理一个WSGI请求时，服务器会为应用程序提供环境资讯及一个回调函数（Callback Function）。当应用程序完成处理请求后，透过前述的回调函数，将结果回传给服务器。所谓的 WSGI 中间件同时实现了API的两方，因此可以在WSGI服务和WSGI应用之间起调解作用：从WSGI服务器的角度来说，中间件扮演应用程序，而从应用程序的角度来说，中间件扮演服务器。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/03/06/Python应用部署/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/12/14/跳坑启示录/" itemprop="url">
-                跳坑启示录
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-12-14T01:46:43+08:00" content="2015-12-14">
-            2015-12-14
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/工作/" itemprop="url" rel="index">
-                  <span itemprop="name">工作</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>在近期的一个项目中，需要实现这样一个功能：冲HLS直播源中拉流到公司服务器，再构建m3u8文件同时对ts文件进行转码，通过公司的服务器再将m3u8和ts文件分发出去。简单来讲，就是先作为直播客户端， 将直播的HLS文件同步到服务器，然后通过公司的服务器对这些ts进行预加载以及多码率装码后重新构建m3u8文件，作为HLS直播的服务器，相当于直播转播的一个功能。<br>最开始的时候这个功能是由公司的其他同事利用ffmpeg来实现的，但是在实际测试中发现效果不是很理想，首先是利用ffmpeg实现HLS直播转播时，播放时间长会出现卡顿和音画不同步的现象；还有一个问题就是程序难以控制，因为程序的实现实际上是用python的subprocess来调用linux shell命令来实现的，虽然suprocess模块提供了poll/terminate等函数来获取子进程的状态和杀死子进程，但作为一个面向企业用户的直播转播服务，这种实现显然不行。   </p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/14/跳坑启示录/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1045,21 +1072,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -1103,7 +1130,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>
