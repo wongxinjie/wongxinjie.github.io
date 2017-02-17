@@ -294,70 +294,6 @@
           
           
             
-              <a class="post-title-link" href="/2016/12/04/Python的Web框架/" itemprop="url">
-                Python的Web框架
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-12-04T22:59:26+08:00" content="2016-12-04">
-            2016-12-04
-          </time>
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody"><p>Python中的web框架，用户基数较大的大概就是Django、Flask和tornado，实际上Python的web框架多如牛毛，甚至已经有很多不再维护，只支持Python2，而个人觉得除了历史遗留项目用Python2，新项目直接上Python3还是靠谱一点。本文就谈谈个人在项目中使用过的或者感兴趣的框架。</p>
-<h4 id="Django"><a href="https://www.djangoproject.com" target="_blank" rel="external">Django</a></h4><p>要推举Python届Web框架卫冕之王，Django应该勉强可以算是。对于学Python web开发的新人，往往被推荐的web框架就是Django。但实际上Django相当不适合给新手入门。<br>Django的文档相当详细，详细到这个东西在项目中怎么实现都给你写的清清楚楚。文档详细一个好处的就是开发过程中对某一点有疑问读一读文档便可以，但文档太详细太长也有坏处，吓跑新手。<br>Django一开始是以一个CMS框架为目的开发，一次Django的封装度实际上是想到高的。一个新手按tutorials一步一步走，的确可以讲一个简单的项目跑起来，连项目结构都已经帮你规划好了，甚至连admin都是自带的，配置一下，三下五除二一个网站便做成了。Django大概就像你的父母，什么都想帮你考虑好，你需要这个东西，我有内置的，以用一下，ORM我内置了，template系统内置了，xxx我内置了，你在settings.py文件了设置一下就可以了！<br>Django这种自带电池的框架，对于工期比较紧的项目，或者是数据库驱动的项目的确是一个好框架。甚至用Class-Base View你写一个models,在views里写几行代码，一个增删查改的功能就出来了，相当省事。<br>但凡事有代价。个人认为，一个项目中的业务层应该和视图层分开，无论是测试还是维护都有好处，但django项目中往往更推崇直接将逻辑写在views中。django自带的ORM，使用起来的确方便，但是写出低效率查询逻辑也是很方便。另外，对于想前后端分离，自己抛弃django模板系统的项目，Django也不是特别友好。<br>Django的一个槽点便是性能低，可能是更框架自身的实现有关。相关文章如<a href="http://klen.github.io/py-frameworks-bench/" target="_blank" rel="external">这篇</a>。</p>
-<h4 id="Flask"><a href="http://flask.pocoo.org/" target="_blank" rel="external">Flask</a></h4><p>毫无疑问的是，Flask是web框架中最优秀的微框架，无论是生态圈还是文档。相比于Django的一坨文件，Flask一个文件就可以跑起来（当然在实际项目中为了可维护性不要这样）,是最适合新手入门的框架。<br>Flask框架是基于<a href="http://inja.pocoo.org" target="_blank" rel="external">Jinja2</a>模板引擎和<a href="http://werkzeug.pocoo.org/" target="_blank" rel="external">Werkzeug</a>WSGI工具集的一个微框架，再实现一些诸如路由管理和session管理等等功能组合起来。但不可否认，Flask的确好用。<br>Flask只提供了最基础的功能，甚至连登录认证、表单验证等功能都不实现，全部都交给了extensions,所以用Flask开发项目的时候往往requirements.txt中有不下几十个Flask相关的依赖。<br>Flask很适合写一些轻量级的项目，写RESTful-api也挺适合。写一些大型项目也可以，但是对项目的组织要求能力也相应教高，很多功能可能都要自己实现，以及在繁杂的拓展中选一个靠谱的插件。<br>在Flask项目中，和Django中的路由是在urls.py中集中管理不同，Flask往往是分散在各个文件中，以装饰器的方式分布在每一个view-function上头，这样带来的一个坏处是路由难以管理，另外一个是一个view-function可能头上顶十几个decorators，而且这些decorators还得按照一定的顺序来写。后来自0.7开始Flask从Django借鉴了Class-Base views思路，实现了<a href="http://flask.pocoo.org/docs/0.11/views/" target="_blank" rel="external">Pluggable views</a>。</p>
-</span>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
               <a class="post-title-link" href="/2016/10/08/Golang面向对象编程/" itemprop="url">
                 Golang面向对象编程
               </a>
@@ -1034,6 +970,90 @@
 
 
     
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/03/06/Python应用部署/" itemprop="url">
+                Python应用部署
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-03-06T14:32:03+08:00" content="2016-03-06">
+            2016-03-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Python/" itemprop="url" rel="index">
+                  <span itemprop="name">Python</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。</p>
+<h4 id="CGI与WSGI">CGI与WSGI</h4><p>CGI是原始的动态网站开发方式。动态网站的必然要经过处理客户端请求，处理请求并生成相应的结果，然后返回结果的过程。通常，客户端和服务端是通过HTTP协议来通信的。因为在处理用户请求时，程序会做很多重复的工作，比如解析HTTP请求等一系列工作，这些工作可以抽出来作为一个程序，于是Web服务器就出现了。Web服务器HTTP请求，然后把这个请求的各种参数写进进程的环境变量，比如REQUEST_METHOD，PATH_INFO之类的。之后呢，服务器会调用相应的程序来处理这个请求，这个程序也就是我们所要写的CGI程序了。它会负责生成动态内容，然后返回给服务器，再由服务器转交给客户端。服务器和CGI程序之间通信，一般是通过进程的环境变量和管道。<br>但是每一次处理用户请求都要调用一次CGI程序，也就是要创建一个CGI进程，然后处理请求，让后结束子进程。这便是fork-an-excute模式，所以用CGI方式的服务青有多少连接就要开多上CGI子进程。而每一个进程都要占用内容、CPU时间，在用户访问量比较多时，瓶颈就出现了。</p>
+<p>WSGI是基于现存的CGI标准设计的接口协议。是为Python语言定义的Web服务器和Web应用程序或框架之间的一种简单而通用的接口。自从WSGI被开发出来以后，许多其它语言中也出现了类似接口。WSGI是作为Web服务器与Web应用程序或应用框架之间的一种低级别的接口，以提升可移植Web应用开发的共同点。WSGI是为了让python web framework与web服务器无关，使不同的web framework能在不同服务器可移植的一套标准（PEP0333)。</p>
+<p>WSGI区分为两个部份：一为“服务器”或“网关”，另一为“应用程序”或“应用框架”。在处理一个WSGI请求时，服务器会为应用程序提供环境资讯及一个回调函数（Callback Function）。当应用程序完成处理请求后，透过前述的回调函数，将结果回传给服务器。所谓的 WSGI 中间件同时实现了API的两方，因此可以在WSGI服务和WSGI应用之间起调解作用：从WSGI服务器的角度来说，中间件扮演应用程序，而从应用程序的角度来说，中间件扮演服务器。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/03/06/Python应用部署/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1072,7 +1092,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
