@@ -47,7 +47,7 @@ Http: GET vs POST回到问题的本">
 <meta property="og:site_name" content="Wong Page">
 <meta property="og:description" content="在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。
 Http: GET vs POST回到问题的本">
-<meta property="og:updated_time" content="2017-02-17T04:32:30.750Z">
+<meta property="og:updated_time" content="2017-02-24T16:35:40.992Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="API: GET vs POST">
 <meta name="twitter:description" content="在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。
@@ -266,7 +266,7 @@ Http: GET vs POST回到问题的本">
 <li>调用API通常会有一些AccessKey之类的敏感信息，这些信息暴露在URL是不是比POST不安全？<br>答：实际上，POST/GET在底层并没有太大的不同，从数据传输安全角度上讲，POST并不会比GET安全，要保证真正的安全，用HTTPS。而至于这些敏感参数会保留在日志中，造成安全隐患应该不是程序讨论的问题了。</li>
 <li>URL长度有现在，用POST没有这种限制？<br>答：在HTTP协议中，URL是没有最大长度限制的，只是浏览器实现时对URL进行了长度现在。但在编程中URL长度可以没有现在（服务器可能会限制），但合理上来讲，进行API调用带一超大串参数不合理。</li>
 </ol>
-<p>回到最初的问题，API调用用GET还是POST，合理的话按照HTTP协议来，但是根据实际情况还是各自选择吧。</p>
+<p>回到最初的问题，API调用用GET还是POST，合理的话按照HTTP协议来，但是根据实际情况还是各自选择。但是就个人作为POST一刀流而言，对于需要携带类似AccessKey鉴权参数的，还是用POST比较多。</p>
 <p><strong> 参考资料 </strong></p>
 <ul>
 <li><a href="https://www.w3schools.com/tags/ref_httpmethods.asp" target="_blank" rel="external">HTTP Methods: GET vs. POST</a></li>
@@ -289,6 +289,8 @@ Http: GET vs POST回到问题的本">
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/24/MySQL基础笔记/" rel="prev">MySQL基础笔记</a>
             
           </div>
 
@@ -356,7 +358,7 @@ Http: GET vs POST回到问题的本">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -370,7 +372,7 @@ Http: GET vs POST回到问题的本">
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

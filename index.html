@@ -166,6 +166,94 @@
           
           
             
+              <a class="post-title-link" href="/2017/02/24/MySQL基础笔记/" itemprop="url">
+                MySQL基础笔记
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-24T22:00:32+08:00" content="2017-02-24">
+            2017-02-24
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/MySQL/" itemprop="url" rel="index">
+                  <span itemprop="name">MySQL</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。</p>
+<h4 id="检索数据">检索数据</h4><h5 id="简单检索">简单检索</h5><p>获取检索的前N行：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">N</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>获取从指定N行开始后的M行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">N</span>, <span class="keyword">M</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">M</span> <span class="keyword">OFFSET</span> <span class="keyword">N</span>;</span></span><br></pre></td></tr></table></figure>
+<h5 id="检索排序">检索排序</h5><p>数据库不对检索出来的结果做假定有序的，要排序需要明确排序顺序，如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_id, prod_price, prod_name</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_price, prod_name;</span></span><br></pre></td></tr></table></figure>
+<p>数据排序默认是升序排序（从A到Z），要降序排序需明确指明：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_price <span class="keyword">DESC</span>;</span></span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/24/MySQL基础笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2017/02/17/API-GET-vs-POST/" itemprop="url">
                 API: GET vs POST
               </a>
@@ -970,90 +1058,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/03/06/Python应用部署/" itemprop="url">
-                Python应用部署
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-03-06T14:32:03+08:00" content="2016-03-06">
-            2016-03-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Python/" itemprop="url" rel="index">
-                  <span itemprop="name">Python</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。</p>
-<h4 id="CGI与WSGI">CGI与WSGI</h4><p>CGI是原始的动态网站开发方式。动态网站的必然要经过处理客户端请求，处理请求并生成相应的结果，然后返回结果的过程。通常，客户端和服务端是通过HTTP协议来通信的。因为在处理用户请求时，程序会做很多重复的工作，比如解析HTTP请求等一系列工作，这些工作可以抽出来作为一个程序，于是Web服务器就出现了。Web服务器HTTP请求，然后把这个请求的各种参数写进进程的环境变量，比如REQUEST_METHOD，PATH_INFO之类的。之后呢，服务器会调用相应的程序来处理这个请求，这个程序也就是我们所要写的CGI程序了。它会负责生成动态内容，然后返回给服务器，再由服务器转交给客户端。服务器和CGI程序之间通信，一般是通过进程的环境变量和管道。<br>但是每一次处理用户请求都要调用一次CGI程序，也就是要创建一个CGI进程，然后处理请求，让后结束子进程。这便是fork-an-excute模式，所以用CGI方式的服务青有多少连接就要开多上CGI子进程。而每一个进程都要占用内容、CPU时间，在用户访问量比较多时，瓶颈就出现了。</p>
-<p>WSGI是基于现存的CGI标准设计的接口协议。是为Python语言定义的Web服务器和Web应用程序或框架之间的一种简单而通用的接口。自从WSGI被开发出来以后，许多其它语言中也出现了类似接口。WSGI是作为Web服务器与Web应用程序或应用框架之间的一种低级别的接口，以提升可移植Web应用开发的共同点。WSGI是为了让python web framework与web服务器无关，使不同的web framework能在不同服务器可移植的一套标准（PEP0333)。</p>
-<p>WSGI区分为两个部份：一为“服务器”或“网关”，另一为“应用程序”或“应用框架”。在处理一个WSGI请求时，服务器会为应用程序提供环境资讯及一个回调函数（Callback Function）。当应用程序完成处理请求后，透过前述的回调函数，将结果回传给服务器。所谓的 WSGI 中间件同时实现了API的两方，因此可以在WSGI服务和WSGI应用之间起调解作用：从WSGI服务器的角度来说，中间件扮演应用程序，而从应用程序的角度来说，中间件扮演服务器。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/03/06/Python应用部署/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1092,7 +1096,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1106,7 +1110,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

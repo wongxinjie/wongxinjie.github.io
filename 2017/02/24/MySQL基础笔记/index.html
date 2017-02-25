@@ -1,0 +1,770 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Tech Blog of Xinjie Wong" />
+
+
+
+  <meta name="keywords" content="工作总结,读书笔记," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。
+检索数据简单检索获取检索的前N行：1SELECT col FROM which_table LIMIT N;
+获取从指定N行开始后的M行：
+12SELECT col FROM which_table LIMIT N, M;SELECT col FROM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL基础笔记">
+<meta property="og:url" content="http://blog.wongxinjie.com/2017/02/24/MySQL基础笔记/index.html">
+<meta property="og:site_name" content="Wong Page">
+<meta property="og:description" content="在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。
+检索数据简单检索获取检索的前N行：1SELECT col FROM which_table LIMIT N;
+获取从指定N行开始后的M行：
+12SELECT col FROM which_table LIMIT N, M;SELECT col FROM">
+<meta property="og:updated_time" content="2017-02-25T14:47:08.629Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL基础笔记">
+<meta name="twitter:description" content="在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。
+检索数据简单检索获取检索的前N行：1SELECT col FROM which_table LIMIT N;
+获取从指定N行开始后的M行：
+12SELECT col FROM which_table LIMIT N, M;SELECT col FROM">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> MySQL基础笔记 | Wong Page </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Wong Page</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              MySQL基础笔记
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-24T22:00:32+08:00" content="2017-02-24">
+            2017-02-24
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/MySQL/" itemprop="url" rel="index">
+                  <span itemprop="name">MySQL</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。</p>
+<h4 id="检索数据">检索数据</h4><h5 id="简单检索">简单检索</h5><p>获取检索的前N行：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">N</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>获取从指定N行开始后的M行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">N</span>, <span class="keyword">M</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">M</span> <span class="keyword">OFFSET</span> <span class="keyword">N</span>;</span></span><br></pre></td></tr></table></figure>
+<h5 id="检索排序">检索排序</h5><p>数据库不对检索出来的结果做假定有序的，要排序需要明确排序顺序，如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_id, prod_price, prod_name</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_price, prod_name;</span></span><br></pre></td></tr></table></figure>
+<p>数据排序默认是升序排序（从A到Z），要降序排序需明确指明：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_price <span class="keyword">DESC</span>;</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h5 id="过滤数据">过滤数据</h5><p>实际生产环境中检索通常需要过滤，即有SELECT通常会有WHERE，WHERE 子句的操作符和一般编程语言一致。</p>
+<p>检查某个值（通常是数字类型）使用BETWEEN检查范围：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> proc_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_price <span class="keyword">BETWEEN</span> <span class="number">5</span> <span class="keyword">AND</span> <span class="number">10</span>;</span></span><br></pre></td></tr></table></figure>
+<p>对于某列存在空值NULL的，使用空值检查而不能使用 = NULL或 != NULL等语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_id</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_desc <span class="keyword">IS</span> <span class="literal">NULL</span>;</span></span><br></pre></td></tr></table></figure>
+<p>还可以用AND和OR来连接多个过滤条件，需要注意的是AND 的优先级高于OR：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> (vend_id=<span class="number">1002</span> <span class="keyword">OR</span> vend_id=<span class="number">1003</span>) <span class="keyword">AND</span> prod_price &gt; <span class="number">20</span>;</span></span><br></pre></td></tr></table></figure>
+<p>对于同一个列多个过滤条件，使用OR可以使用更灵活的IN来代替：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> vend_id <span class="keyword">IN</span> (<span class="number">1002</span>, <span class="number">1003</span>) <span class="keyword">AND</span> prod_price &gt; <span class="number">20</span>;</span></span><br></pre></td></tr></table></figure>
+<h5 id="通配符与正则表达式">通配符与正则表达式</h5><p>在检索一些文本字段时，会遇到一些需要检索包含的，这是就需要用到LIKE谓词了。与LIKE搭配使用的通配符有(%)和(<em>)，%表示任何字符出现任何次数，\</em>只匹配单个任意字符。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_name <span class="keyword">LIKE</span> <span class="string">"Python%"</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> Prod_name, Prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_name <span class="keyword">LIKE</span> <span class="string">"%MySQL%"</span>;</span></span><br></pre></td></tr></table></figure>
+<p>使用%可以检索一某个关键字开始/结束或者包含的字段，如上面的例子。</p>
+<p>有些类似查找电话号码之类的工作通配符是无法实现的，这时就需要使用MySQL的正则表达式了。如要匹配四位数字相连的字段，通配符就没办法实现了：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_name</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> REGEXP <span class="string">'[[:digit:]]&#123;4&#125;'</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_name;</span></span><br></pre></td></tr></table></figure>
+<p>MySQL的正则表达式还是值得看一看的，但日常工作中较少碰到，所以先不深究。</p>
+<h5 id="创建计算字段">创建计算字段</h5><p>有时候表中没有我们需要的字段，但可以通过表中的字段进行运算得出，这时候就要用计算字段了。</p>
+<p>常用的拼接字段，如将供应商的名字和国家去掉空格拼接打印出来：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span></span><br><span class="line"><span class="keyword">Concat</span>(<span class="keyword">RTrim</span>(vend_name), <span class="string">'('</span>, <span class="keyword">RTrim</span>(vend_conutry), <span class="string">')'</span>) <span class="keyword">AS</span> vend_title</span><br><span class="line"><span class="keyword">FROM</span> vendor</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name;</span></span><br></pre></td></tr></table></figure>
+<p>或则根据字段执行计算：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span></span><br><span class="line">    prod_id,</span><br><span class="line">    quantity,</span><br><span class="line">    item_price,</span><br><span class="line">    quantity*item_price <span class="keyword">AS</span> expanded_price</span><br><span class="line"><span class="keyword">FROM</span> orderitems;</span></span><br></pre></td></tr></table></figure>
+<h4 id="数据聚合与分组">数据聚合与分组</h4><p>常用的聚合函数:</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COUNT()</td>
+<td>返回某列的行数</td>
+</tr>
+<tr>
+<td>AVG()</td>
+<td>返回某列的平均值</td>
+</tr>
+<tr>
+<td>SUM()</td>
+<td>返回某列值之和</td>
+</tr>
+<tr>
+<td>MAX()</td>
+<td>返回某列的最大值</td>
+</tr>
+<tr>
+<td>MIN()</td>
+<td>返回某列的最小值</td>
+</tr>
+</tbody>
+</table>
+<p>使用中有一些注意事项：</p>
+<ul>
+<li>使用COUNT(*)对表行数目进行统计，不管表列中是否包含NULL值还是非空值</li>
+<li>使用COUNT(column)会忽略NULL值的行</li>
+</ul>
+<ul>
+<li>AVG() 、SUM()、MAX()和MIN() 函数忽略列为NULL值的行</li>
+</ul>
+<p>使用GROUP BY 可以对数据进行分组：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*)</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id;</span></span><br></pre></td></tr></table></figure>
+<p>同时可以使用HAVING对分组数据进行过滤:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> vend_id, <span class="keyword">COUNT</span>(*) <span class="keyword">AS</span> product_count</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> vend_id <span class="keyword">HAVING</span> product_count &gt; <span class="number">5</span>;</span></span><br></pre></td></tr></table></figure>
+<p>通常GROUB BY会对输出的数据要求排序，这时候用ORDER BY：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> order_num, <span class="keyword">SUM</span>(quantity * item_price) <span class="keyword">as</span> ordertotal</span><br><span class="line"><span class="keyword">FROM</span> orderitems</span><br><span class="line"><span class="keyword">WHERE</span> order_status != <span class="string">'CANCEL'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> order_num <span class="keyword">HAVING</span> ordertotal &gt;= <span class="number">50</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ordertotal;</span></span><br></pre></td></tr></table></figure>
+<h4 id="子查询">子查询</h4><p>子查询是嵌套在其他查询中的查询，SQL语句对嵌套的子查询深度没有限制，但一般为了维护和性能，都不会嵌套太深，一个例子:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> cust_name, cust_contact</span><br><span class="line"><span class="keyword">FROM</span> customers</span><br><span class="line"><span class="keyword">WHERE</span> cust_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> cust_id</span><br><span class="line">                  <span class="keyword">FROM</span> orders</span><br><span class="line">                  <span class="keyword">WHERE</span> order_num <span class="keyword">IN</span> (<span class="keyword">SELECT</span> order_num</span><br><span class="line">                                      <span class="keyword">FROM</span> orderitems</span><br><span class="line">                                      <span class="keyword">WHERE</span> prod_id=<span class="string">'INT2'</span>));</span></span><br></pre></td></tr></table></figure>
+<p>实际上子查询可以作为计算字段：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span></span><br><span class="line">    cust_name,</span><br><span class="line">    cust_state,</span><br><span class="line">    (<span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*)</span><br><span class="line">     <span class="keyword">FROM</span> orders</span><br><span class="line">     <span class="keyword">WHERE</span> orders.cust_id = customers.cust_id) <span class="keyword">AS</span> orders</span><br><span class="line"><span class="keyword">FROM</span> customers</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> cust_name;</span></span><br></pre></td></tr></table></figure>
+<h4 id="表联接">表联接</h4><p>SQL最大的功能之一就是在检索查询时执行联接(join)。在数据库设计时通常要根据数据库范式将数据拆分到多个表存储，单检索这些数据时就需要使用表联接。</p>
+<h5 id="等值联接">等值联接</h5><p>等值联接又叫内联接，是最常用的联接如:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> vend_name, prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> vendors, products</span><br><span class="line"><span class="keyword">WHERE</span> vendord.vend_id = products.vend_id</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name, prod_name;</span></span><br></pre></td></tr></table></figure>
+<p>在联接两个表时，实际上MySQL数据库只是将第一个表的每一个行和第二个表的每一行进行搭配（笛卡儿积），WHERE子句作为过滤条件，只输出匹配给定条件的行。实际上有另外一种等同的写法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> vend_name, prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> venders <span class="keyword">INNER</span> <span class="keyword">JOIN</span> products</span><br><span class="line"><span class="keyword">ON</span> vendors.vend_id = products.vend_id;</span></span><br></pre></td></tr></table></figure>
+<p>SQL对一条SQL语句中可以联接的表数量没有限制，但从性能来讲，联接的表不要超过三个。</p>
+<p>有时候对一些复杂的SELECT查询，可以使用联接替代子查询，如子查询一节的一个列子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> cust_name, cust_contact</span><br><span class="line"><span class="keyword">FROM</span> customers, orders, orderitems</span><br><span class="line"><span class="keyword">WHERE</span> customers.cust_id = orders.cust_id <span class="keyword">AND</span>\</span><br><span class="line">      orderitems.order_num = orders.order_num <span class="keyword">AND</span>\</span><br><span class="line">      prod_id = <span class="string">'INT2'</span>;</span></span><br></pre></td></tr></table></figure>
+<h5 id="自联接">自联接</h5><p>自联接是指在查询时联接的是同一表，通常自联接可以用子查询来替换，但是子查询的性能有时候比子查询好，一个例子:</p>
+<p>子查询解决方案:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_id, prod_name <span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> vend_id=(<span class="keyword">SELECT</span> vend_id</span><br><span class="line">               <span class="keyword">FROM</span> products</span><br><span class="line">               <span class="keyword">WHERE</span> prod_id=<span class="string">'DINTER'</span>);</span></span><br></pre></td></tr></table></figure>
+<p>内联接解决方案：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> p1.prod_id, p1.prod_name</span><br><span class="line"><span class="keyword">FROM</span> products <span class="keyword">AS</span> p1, products <span class="keyword">AS</span> p2</span><br><span class="line"><span class="keyword">WHERE</span> p1.vend_id = p2.vned_id <span class="keyword">AND</span> p2.prod_id = <span class="string">'DINTER'</span>;</span></span><br></pre></td></tr></table></figure>
+<h5 id="外部联接">外部联接</h5><p>有时候需要联接包含那些相关表没有相关联的行，我们需要外部联接。一些需要用到外部联接的场景:</p>
+<ul>
+<li>对每个客户下了多少订单进行计数，包括那些从未下订单的客户</li>
+<li>列出所用产品的订购数量，包括没有人订购的产品</li>
+<li>计算平均销售规模，包括那些至今尚未下订单的用户</li>
+</ul>
+<p>为了检索所有客户，包括那些没有下过订单的客户：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> customers.cust_id, orders.order_num</span><br><span class="line"><span class="keyword">FROM</span> customers <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> orders</span><br><span class="line"><span class="keyword">ON</span> customers.cust_id = orders.cust_id;</span></span><br></pre></td></tr></table></figure>
+<p>外部联接又分左右联接，实际上左右联接唯一的区别便是所关联的表的顺序不一样，LEFT表示结果包含左表所有的行，RIGHT 表示包含右表所有的行。上面的例子同样可以使用又联接来实现：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> customers.cust_id, orders.order_num</span><br><span class="line"><span class="keyword">FROM</span> orders <span class="keyword">RIGHT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> customs</span><br><span class="line"><span class="keyword">ON</span> customs.cust_id = orders.cust_id;</span></span><br></pre></td></tr></table></figure>
+<h4 id="组合查询">组合查询</h4><p>组合查询是将多个查询结构合并作为单个查询结果集返回。一般采用组合查询有两种情况:</p>
+<ul>
+<li>在单个查询中从不同的表返回类似的结构的数据</li>
+<li>对单个表执行多个查询，按单个查询返回结果</li>
+</ul>
+<p>使用UNION是组合SQL查询，一个例子是在分表中要从过个表获取数据然后返回:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> user_id, traffic, bandwidth</span><br><span class="line"><span class="keyword">FROM</span> logs1</span><br><span class="line"><span class="keyword">WHERE</span> timestamps=<span class="string">'2017-01-02 00:00:00'</span></span><br><span class="line"><span class="keyword">UNION</span></span><br><span class="line"><span class="keyword">SELECT</span> user_id, traffic, bandwidth</span><br><span class="line"><span class="keyword">FROM</span> logs2</span><br><span class="line"><span class="keyword">WHERE</span> timestamps=<span class="string">'2017-01-02 00:00:00'</span>;</span></span><br></pre></td></tr></table></figure>
+<p>使用UNION要注意几点：</p>
+<ul>
+<li>UNION必须由两条或以上的SELECT 语句组成</li>
+<li>UNION中的查询必须包含相同的列、表达式或者聚合函数（不要求顺序）</li>
+<li>列数据类型必须不要求一致，但必须兼容</li>
+</ul>
+<p>在使用UNION时，重复行会被自动取消，加入要返回全部的行包括重复行，用UNION ALL。</p>
+<h4 id="表的创建的操纵">表的创建的操纵</h4><h5 id="主键">主键</h5><p>主键可是是单个列，也可以是组合列，但无论是单个列还是组合列，都必须是唯一的，而且是不能为NULL值的。实际使用MySQL的AUTO_INCREMENT列做主键是比较常见的情况。</p>
+<h5 id="引擎类型">引擎类型</h5><p>在创建表时会指定引擎（ENGINE=InnoDB语句）。MySQL和其他DBMS一样有一个具体管理和处理数据的内部引擎。在CREATE TABLE语句时，引擎复制具体建表，而使用SELECT语句时，引擎负责处理请求。数据库的默认引擎可以在配置文件中设置，较新版本的MySQL的默认引擎是InnoDB。下表是MySQL 5.7支持的引擎常见的引擎（<a href="https://dev.mysql.com/doc/refman/5.7/en/storage-engines.html" target="_blank" rel="external">文档</a>)：</p>
+<table>
+<thead>
+<tr>
+<th>引擎</th>
+<th>特性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>InnoDB</td>
+<td>支持事务，事务安全，支持行锁，支持全文搜索（5.6.4+）</td>
+</tr>
+<tr>
+<td>MyISAM</td>
+<td>只支持表级所，多用于读或只读表</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>数据存储在内存中，处理速度快，适合临时表</td>
+</tr>
+</tbody>
+</table>
+<h5 id="修改表">修改表</h5><p>用ALTER TABLE 来修改表，如定义外键：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> orderitems</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> fk_orderitems_orders FOREIGN <span class="keyword">KEY</span> (order_num)</span><br><span class="line"><span class="keyword">REFERENCES</span> orders (order_num);</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="其他话题">其他话题</h4><ul>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html" target="_blank" rel="external">全文搜索</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/view-syntax.html" target="_blank" rel="external">视图</a></li>
+<li>存储过程</li>
+<li>触发器</li>
+<li><strong>管理事务</strong></li>
+</ul>
+<p><strong>参考资料</strong></p>
+<ul>
+<li>《MySQL必知必会》</li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/" target="_blank" rel="external">MySQL 5.7文档</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/工作总结/" rel="tag">#工作总结</a>
+          
+            <a href="/tags/读书笔记/" rel="tag">#读书笔记</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/17/API-GET-vs-POST/" rel="next">API: GET vs POST</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="Xinjie Wong" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Xinjie Wong</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Tech Blog of Xinjie Wong</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wongxinjie" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://book.douban.com/people/Xinjie_Wong/" target="_blank">douban</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#检索数据"><span class="nav-number">1.</span> <span class="nav-text">检索数据</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#简单检索"><span class="nav-number">1.1.</span> <span class="nav-text">简单检索</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#检索排序"><span class="nav-number">1.2.</span> <span class="nav-text">检索排序</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#过滤数据"><span class="nav-number">1.3.</span> <span class="nav-text">过滤数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#通配符与正则表达式"><span class="nav-number">1.4.</span> <span class="nav-text">通配符与正则表达式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#创建计算字段"><span class="nav-number">1.5.</span> <span class="nav-text">创建计算字段</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据聚合与分组"><span class="nav-number">2.</span> <span class="nav-text">数据聚合与分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子查询"><span class="nav-number">3.</span> <span class="nav-text">子查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表联接"><span class="nav-number">4.</span> <span class="nav-text">表联接</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#等值联接"><span class="nav-number">4.1.</span> <span class="nav-text">等值联接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自联接"><span class="nav-number">4.2.</span> <span class="nav-text">自联接</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#外部联接"><span class="nav-number">4.3.</span> <span class="nav-text">外部联接</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组合查询"><span class="nav-number">5.</span> <span class="nav-text">组合查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表的创建的操纵"><span class="nav-number">6.</span> <span class="nav-text">表的创建的操纵</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#主键"><span class="nav-number">6.1.</span> <span class="nav-text">主键</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#引擎类型"><span class="nav-number">6.2.</span> <span class="nav-text">引擎类型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#修改表"><span class="nav-number">6.3.</span> <span class="nav-text">修改表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他话题"><span class="nav-number">7.</span> <span class="nav-text">其他话题</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie Wong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
