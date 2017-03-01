@@ -44,16 +44,16 @@
 获取从指定N行开始后的M行：
 12SELECT col FROM which_table LIMIT N, M;SELECT col FROM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL基础笔记">
+<meta property="og:title" content="MySQL笔记">
 <meta property="og:url" content="http://blog.wongxinjie.com/2017/02/24/MySQL基础笔记/index.html">
 <meta property="og:site_name" content="Wong Page">
 <meta property="og:description" content="在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。
 检索数据简单检索获取检索的前N行：1SELECT col FROM which_table LIMIT N;
 获取从指定N行开始后的M行：
 12SELECT col FROM which_table LIMIT N, M;SELECT col FROM">
-<meta property="og:updated_time" content="2017-02-25T14:47:08.629Z">
+<meta property="og:updated_time" content="2017-03-01T17:09:54.445Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQL基础笔记">
+<meta name="twitter:title" content="MySQL笔记">
 <meta name="twitter:description" content="在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。
 检索数据简单检索获取检索的前N行：1SELECT col FROM which_table LIMIT N;
 获取从指定N行开始后的M行：
@@ -67,7 +67,7 @@
   };
 </script>
 
-  <title> MySQL基础笔记 | Wong Page </title>
+  <title> MySQL笔记 | Wong Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -174,7 +174,7 @@
           
           
             
-              MySQL基础笔记
+              MySQL笔记
             
           
         </h1>
@@ -235,7 +235,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> (vend_id=<span class="number">1002</span> <span class="keyword">OR</span> vend_id=<span class="number">1003</span>) <span class="keyword">AND</span> prod_price &gt; <span class="number">20</span>;</span></span><br></pre></td></tr></table></figure>
 <p>对于同一个列多个过滤条件，使用OR可以使用更灵活的IN来代替：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> vend_id <span class="keyword">IN</span> (<span class="number">1002</span>, <span class="number">1003</span>) <span class="keyword">AND</span> prod_price &gt; <span class="number">20</span>;</span></span><br></pre></td></tr></table></figure>
-<h5 id="通配符与正则表达式">通配符与正则表达式</h5><p>在检索一些文本字段时，会遇到一些需要检索包含的，这是就需要用到LIKE谓词了。与LIKE搭配使用的通配符有(%)和(<em>)，%表示任何字符出现任何次数，\</em>只匹配单个任意字符。</p>
+<h5 id="通配符与正则表达式">通配符与正则表达式</h5><p>在检索一些文本字段时，会遇到一些需要检索包含的，这是就需要用到LIKE谓词了。与LIKE搭配使用的通配符有(%)和(_)，%表示任何字符出现任何次数，_只匹配单个任意字符。</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_name, prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_name <span class="keyword">LIKE</span> <span class="string">"Python%"</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> Prod_name, Prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> prod_name <span class="keyword">LIKE</span> <span class="string">"%MySQL%"</span>;</span></span><br></pre></td></tr></table></figure>
 <p>使用%可以检索一某个关键字开始/结束或者包含的字段，如上面的例子。</p>
 <p>有些类似查找电话号码之类的工作通配符是无法实现的，这时就需要使用MySQL的正则表达式了。如要匹配四位数字相连的字段，通配符就没办法实现了：</p>
@@ -388,6 +388,8 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/03/01/我的Python开发总结/" rel="prev">我的Python开发总结</a>
+            
           </div>
 
           <div class="post-nav-next post-nav-item">
@@ -454,7 +456,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-count">21</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

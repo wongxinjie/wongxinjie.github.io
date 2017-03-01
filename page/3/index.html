@@ -42,7 +42,7 @@
 <meta name="description" content="Tech Blog of Xinjie Wong">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Wong Page">
-<meta property="og:url" content="http://blog.wongxinjie.com/tags/MySQL/index.html">
+<meta property="og:url" content="http://blog.wongxinjie.com/page/3/index.html">
 <meta property="og:site_name" content="Wong Page">
 <meta property="og:description" content="Tech Blog of Xinjie Wong">
 <meta name="twitter:card" content="summary">
@@ -57,7 +57,7 @@
   };
 </script>
 
-  <title> 标签: MySQL | Wong Page </title>
+  <title> Wong Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -75,7 +75,9 @@
 
 
 
-  <div class="container one-column ">
+  <div class="container one-column 
+   page-home 
+">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -151,41 +153,96 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div id="content" class="content"> 
-
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        MySQL
-        <small>标签</small>
-      </h2>
-    </div>
-
+  <section id="posts" class="posts-expand">
     
       
 
-  <article class="post post-type-normal"itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/06/06/数据库连接不上了！/" itemprop="url">
-              <span itemprop="name">数据库连接不上了！</span>
-            </a>
-        
-      </h1>
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/05/21/Python中的xrange和yield/" itemprop="url">
+                Python中的xrange和yield
+              </a>
+            
+          
+        </h1>
+      
 
       <div class="post-meta">
-        <time class="post-time" datetime="2016-06-06T15:04:17.000Z" itemprop="dateCreated" content="2016-06-06"> 06-06 </time>
-      </div>
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-05-21T21:32:02+08:00" content="2015-05-21">
+            2015-05-21
+          </time>
+        </span>
 
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Python/" itemprop="url" rel="index">
+                  <span itemprop="name">Python</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
     </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h3 id="range和xrange">range和xrange</h3><p>Python提供了生成和返回整数序列的内置函数range及xrange，虽然这两个函数在功能上是差不多的，但其实现原理还是有差别的。range(n, m)返回的是一个从n到(m-1)的连续的整数列表，而xrange(n, m)返回的却是一个特殊的目的对象，即xrange对象本身.<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">range</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">xrange</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">xrange</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">type</span><span class="params">(xrange(<span class="number">1</span>, <span class="number">5</span>)</span></span>)</span><br><span class="line">&lt;type <span class="string">'xrange'</span>&gt;</span><br></pre></td></tr></table></figure><br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/05/21/Python中的xrange和yield/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </article>
 
 
     
-  </div>
+  </section>
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
  </div>
 
         
@@ -304,12 +361,6 @@
 
   
   
-  
-    <script type="text/javascript">
-      postMotionOptions = {stagger: 100, drag: true};
-    </script>
-  
-
   
     
     
