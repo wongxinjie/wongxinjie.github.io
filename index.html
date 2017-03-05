@@ -251,6 +251,88 @@
           
           
             
+              <a class="post-title-link" href="/2017/02/27/Python描述器descriptor/" itemprop="url">
+                Python描述器(descriptor)
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-27T23:29:40+08:00" content="2017-02-27">
+            2017-02-27
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Python/" itemprop="url" rel="index">
+                  <span itemprop="name">Python</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>应该承认，Python的OOP不是想象中的那么简单，其中的诸多概念也许很多都知道，像MRO、super、property等等。很多情况问什么是property，都知道怎么用，但是问property是什么、怎么实现的很多情况就抓瞎了。property是通过descriptor实现的。</p>
+<p>关于descriptor（描述器），在日常代码中也不经常见到，但是了解descriptor有利于理解Python是怎么工作的，也有利用写出更加优雅的程序。网上的的资料很多都零散，我就写写阅读文档和他人的博客之后的一篇笔记。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/27/Python描述器descriptor/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2017/02/24/MySQL基础笔记/" itemprop="url">
                 MySQL笔记
               </a>
@@ -969,98 +1051,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/03/26/简洁Flask-RESTful-API设计/" itemprop="url">
-                简洁Flask RESTful API设计
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-03-26T17:50:44+08:00" content="2016-03-26">
-            2016-03-26
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Flask/" itemprop="url" rel="index">
-                  <span itemprop="name">Flask</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h4 id="搞个大新闻">搞个大新闻</h4><p>关于什么是RESTful APIs已经有足够多的资料可查阅了，但是怎么设计一个冗余代码少的API，还是需要踩很多坑才能体悟出来的。<br>好比要设计一个用户注册的API，先假设需要经过下列步骤:</p>
-<ol>
-<li>解析json并获取email以及password</li>
-<li>验证email及password</li>
-<li>用crypt（或其他的库）对password进行哈希。</li>
-<li>将新的user插入数据库</li>
-<li>发送验证邮件/欢迎邮件给用户</li>
-<li>发送新用户提醒给系统管理员</li>
-<li>返回json response给客户端，告知其请求失败还是成功</li>
-<li>限制单个用户IP的请求频率，防止攻击。</li>
-</ol>
-<p>看起来也不是特别的复杂是不是？<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/03/26/简洁Flask-RESTful-API设计/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1099,7 +1089,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1113,7 +1103,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

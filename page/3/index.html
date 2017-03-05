@@ -166,6 +166,88 @@
           
           
             
+              <a class="post-title-link" href="/2015/05/22/SQL基础教材笔记/" itemprop="url">
+                SQL基础教材笔记
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-05-22T21:40:33+08:00" content="2015-05-22">
+            2015-05-22
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/MySQL/" itemprop="url" rel="index">
+                  <span itemprop="name">MySQL</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h3 id="聚合与排序">聚合与排序</h3><h4 id="1、聚合查询">1、聚合查询</h4><p>SQL中有5个常用的聚合函数：COUNT、SUM、AVG、MAX、MIN。聚合，就是将多行数据汇总成一行，所以聚合函数输入的是多行，而输出的只是一行。<br>使用聚合函数时，NULL的列是不参与计算的。比如在goods表中7列中有3列的price为NULL，则<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*), <span class="keyword">COUNT</span>(price) <span class="keyword">FROM</span> goods;</span></span><br></pre></td></tr></table></figure><br>的结果为7|4</p>
+<h4 id="2、对表进行分组">2、对表进行分组</h4><p>要对表的数据进行分组处理，用GROUP BY子句。在GROUND BY子句中指定的列被称为聚合键或者分组列，是决定表切分方式的非常重要的列。<br><strong>书写顺序：SELECT….FROM….WHERE….GROUP BY…..</strong><br><strong>执行顺序：FROM—-&gt;WHERE—-&gt;GROUP BY——&gt;SELECT</strong><br>使用聚合函数和GROUP BY子句时要避免犯以下错误：<br>（1）把聚合键之外的列面书写在SELECT子句中<br>（2）在GROUP BY子句中不能使用SELECT子句中定义的别名<br>（3）GROUP BY显示的结果是无序的<br>（4）在WHERE子句中不能使用聚合函数<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/05/22/SQL基础教材笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2015/05/21/Python中的xrange和yield/" itemprop="url">
                 Python中的xrange和yield
               </a>
@@ -274,7 +356,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -288,7 +370,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
