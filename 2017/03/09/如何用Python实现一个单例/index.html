@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="REST API," />
+  <meta name="keywords" content="基础,设计模式," />
 
 
 
@@ -39,19 +39,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。
-Http: GET vs POST回到问题的本">
+<meta name="description" content="好吧，我承认如果要白板尽可能多的写出Python实现单例的方法，我除了知道重写__new__之外就没有了。根据设计模式里面单例定义，一个类在全局只能实例化一个对象，用module来代替实现单例是不和规定的。网上流传的用Python实现单例模式至少有以下几种。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="API: GET vs POST">
-<meta property="og:url" content="http://blog.wongxinjie.com/2017/02/17/API-GET-vs-POST/index.html">
+<meta property="og:title" content="如何用Python实现一个单例">
+<meta property="og:url" content="http://blog.wongxinjie.com/2017/03/09/如何用Python实现一个单例/index.html">
 <meta property="og:site_name" content="Wong Page">
-<meta property="og:description" content="在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。
-Http: GET vs POST回到问题的本">
-<meta property="og:updated_time" content="2017-02-27T18:35:40.134Z">
+<meta property="og:description" content="好吧，我承认如果要白板尽可能多的写出Python实现单例的方法，我除了知道重写__new__之外就没有了。根据设计模式里面单例定义，一个类在全局只能实例化一个对象，用module来代替实现单例是不和规定的。网上流传的用Python实现单例模式至少有以下几种。">
+<meta property="og:updated_time" content="2017-03-09T18:47:30.566Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="API: GET vs POST">
-<meta name="twitter:description" content="在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。
-Http: GET vs POST回到问题的本">
+<meta name="twitter:title" content="如何用Python实现一个单例">
+<meta name="twitter:description" content="好吧，我承认如果要白板尽可能多的写出Python实现单例的方法，我除了知道重写__new__之外就没有了。根据设计模式里面单例定义，一个类在全局只能实例化一个对象，用module来代替实现单例是不和规定的。网上流传的用Python实现单例模式至少有以下几种。">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +58,7 @@ Http: GET vs POST回到问题的本">
   };
 </script>
 
-  <title> API: GET vs POST | Wong Page </title>
+  <title> 如何用Python实现一个单例 | Wong Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -168,7 +165,7 @@ Http: GET vs POST回到问题的本">
           
           
             
-              API: GET vs POST
+              如何用Python实现一个单例
             
           
         </h1>
@@ -177,8 +174,8 @@ Http: GET vs POST回到问题的本">
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-02-17T10:40:55+08:00" content="2017-02-17">
-            2017-02-17
+          <time itemprop="dateCreated" datetime="2017-03-09T21:23:28+08:00" content="2017-03-09">
+            2017-03-09
           </time>
         </span>
 
@@ -187,8 +184,8 @@ Http: GET vs POST回到问题的本">
             &nbsp; | &nbsp; 分类于
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Web/" itemprop="url" rel="index">
-                  <span itemprop="name">Web</span>
+                <a href="/categories/Python/" itemprop="url" rel="index">
+                  <span itemprop="name">Python</span>
                 </a>
               </span>
 
@@ -211,67 +208,36 @@ Http: GET vs POST回到问题的本">
       
 
       
-        <span itemprop="articleBody"><p>在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。</p>
-<h5 id="Http:_GET_vs_POST">Http: GET vs POST</h5><p>回到问题的本质，在考虑API是用GET还是用POST时，还是先来回顾一些HTTP协议中GET和POST的区别，下表展示GET和POST的不同之处:</p>
-<table>
-<thead>
-<tr>
-<th>情景</th>
-<th>GET</th>
-<th>POST</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>刷新页面</td>
-<td>没有影响</td>
-<td>会导致重复提交数据</td>
-</tr>
-<tr>
-<td>保存书签</td>
-<td>可以被保存成书签</td>
-<td>不能保存书签</td>
-</tr>
-<tr>
-<td>编码类型</td>
-<td>application/x-www-form-urlencoded</td>
-<td>application/x-www-form-urlencoded或者multipart/form-data</td>
-</tr>
-<tr>
-<td>历史记录</td>
-<td>参数会显示在历史记录中</td>
-<td>参数不会显示在历史记录中</td>
-</tr>
-<tr>
-<td>参数长度</td>
-<td>参数长度有限制，服务端可能对URL有长度限制</td>
-<td>没有限制</td>
-</tr>
-<tr>
-<td>参数类型</td>
-<td>参数只能是ASCII字符</td>
-<td>没有限制，二进制都可以</td>
-</tr>
-<tr>
-<td>安全问题</td>
-<td>相对不安全，因为参数暴露在URL中</td>
-<td>相对安全，参数不会在历史记录中出现，也不会在服务器日志出现</td>
-</tr>
-</tbody>
-</table>
+        <span itemprop="articleBody"><p>好吧，我承认如果要白板尽可能多的写出Python实现单例的方法，我除了知道重写__new__之外就没有了。根据设计模式里面单例定义，一个类在全局只能实例化一个对象，用module来代替实现单例是不和规定的。网上流传的用Python实现单例模式至少有以下几种。</p>
 <a id="more"></a>
-<p>根据<a href="https://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank" rel="external">RFC2616</a> 中HTTP方法中，HTTP方法可根据是否为安全方法(safe methods)和幂等方法(idempoten methods)分成两大类。所谓安全方法，就是请求不会对服务端产生影响，不会改变数据状态，如GET/HEAD/OPTIONS等都是safe method，而像POST/PUT/DELET会改变服务端数据，是不安全的。而幂等方法，则是N(N&gt;1)次请求的效果和单次请求是一致的，GET/HEAD/PUT/DELETE等方法是幂等的，而POST/PATCH不是幂等的。<br>所以，根据HTTP协议来讲，GET作为幂等方法，应该只用来获取资源信息，而POST作为非幂等方法而且稍微安全的方法，用来改变资源信息。</p>
-<h5 id="POST比GET好？">POST比GET好？</h5><p>尽管如此，可是在实际环境中，发现会有一些API还是GET一刀流，无论进行什么操作，一概都用GET方法（如twitter/Aliyun)。合理上来讲，一般用GET读用POST写。估计是想偷懒想少些一些文档。<br>但是还是存在一些问题：</p>
-<ol>
-<li>调用API通常会有一些AccessKey之类的敏感信息，这些信息暴露在URL是不是比POST不安全？<br>答：实际上，POST/GET在底层并没有太大的不同，从数据传输安全角度上讲，POST并不会比GET安全，要保证真正的安全，用HTTPS。而至于这些敏感参数会保留在日志中，造成安全隐患应该不是程序讨论的问题了。</li>
-<li>URL长度有现在，用POST没有这种限制？<br>答：在HTTP协议中，URL是没有最大长度限制的，只是浏览器实现时对URL进行了长度现在。但在编程中URL长度可以没有现在（服务器可能会限制），但合理上来讲，进行API调用带一超大串参数不合理。</li>
-</ol>
-<p>回到最初的问题，API调用用GET还是POST，合理的话按照HTTP协议来，但是根据实际情况还是各自选择。但是就个人作为POST一刀流而言，对于需要携带类似AccessKey鉴权参数的，还是用POST比较多。<br>最近在对接阿里云的一些对象存储/视频之类的API，在对接过程中发现加入一个API携带的参数一多，或者生成Signature的方式比较复杂，那么用GET其实有一个缺点，就是所有非ASCII字母包括那些非url-safe的字母都必须要进行quote,<br>而且Python标准库的urlencode依照的是RFC1738而非RFC3986，这会是一个坑。</p>
-<p><strong> 参考资料 </strong></p>
+<p>先上测试代码:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">single_thread</span><span class="params">()</span>:</span></span><br><span class="line">    a = Singleton()</span><br><span class="line">    b = Singleton()</span><br><span class="line">    <span class="keyword">assert</span> id(a) == id(b)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">multi_thread</span><span class="params">()</span>:</span></span><br><span class="line">    results = &#123;&#125;</span><br><span class="line">    objects = []</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create_instance</span><span class="params">(idx)</span>:</span></span><br><span class="line">        a = Singleton()</span><br><span class="line">        results[idx] = id(a)</span><br><span class="line">        objects.append(a)</span><br><span class="line"></span><br><span class="line">    threads = [threading.Thread(target=create_instance, args=(idx, ))</span><br><span class="line">               <span class="keyword">for</span> idx <span class="keyword">in</span> range(<span class="number">3</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> thread <span class="keyword">in</span> threads:</span><br><span class="line">        thread.start()</span><br><span class="line">    <span class="keyword">for</span> thread <span class="keyword">in</span> threads:</span><br><span class="line">        thread.join()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span> results[<span class="number">0</span>] == results[<span class="number">1</span>] == results[<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<p>在多线程测试函数中，objects的作用的保证在线程创建的对象不会被回收，加入没有objects，这个测试函数会有pass的情况。</p>
+<h5 id="方法一：装饰器">方法一：装饰器</h5><p>其实就是利用Python是通过dict来管理模块，类属性等特点来实现的单例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">singleton</span><span class="params">(cls)</span>:</span></span><br><span class="line">    instances = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_instance</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> instances:</span><br><span class="line">            instances[cls] = cls(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> instances[cls]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> get_instance</span><br><span class="line"></span><br><span class="line"><span class="decorator">@singleton</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>但是这个单例模式会有两个问题：</p>
 <ul>
-<li><a href="https://www.w3schools.com/tags/ref_httpmethods.asp" target="_blank" rel="external">HTTP Methods: GET vs. POST</a></li>
-<li><a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9" target="_blank" rel="external">RFC2616</a></li>
-<li><a href="http://stackoverflow.com/questions/4938276/should-api-calls-be-get-or-post" target="_blank" rel="external">Should api calls be GET or POST</a></li>
+<li>实际上有办法绕过，实际上a = Singleton(), b = Singleton()，c = type(a)(), 结果会是 a == b &amp;&amp; a != c &amp;&amp; b !=c。</li>
+<li>改变了类的属性，创建实例是调用函数，单例类的classmethod, staticmethod都无法使用。</li>
+</ul>
+<p>所以这个方法实际上是有问题的。</p>
+<h5 id="方法二：重写__new__方法">方法二：重写__new__方法</h5><p>这个应该是最简单能想到的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    __instance = <span class="keyword">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__new__</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.__instance <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            self.__instance = super(Singleton, self).__new__(self)</span><br><span class="line">        <span class="keyword">return</span> self.__instance</span><br></pre></td></tr></table></figure>
+<p>因为GIL的原因，实际上这种实现方式是线程安全的。但是有一个缺点，每一个单例都必须重写这个new函数。</p>
+<p>那继承一下就行了,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChildClass</span><span class="params">(Singleton, OtherBase)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>但子类的__new__还是可能被覆盖重写。所以要么麻烦要么不能百分百保证。</p>
+<h5 id="利用metaclass">利用metaclass</h5><p>通用是利用继承，但是利用Python本身的特性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingletonBase</span><span class="params">(type)</span>:</span></span><br><span class="line">    instances = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(cls, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> cls <span class="keyword">not</span> <span class="keyword">in</span> cls.instances:</span><br><span class="line">            cls.instances[cls] = super(SingletonBase, cls).__call__(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> cls.instances[cls]</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，在Python2和Python3使用metaclass是不一样的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python2</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span><span class="params">(object)</span>:</span></span><br><span class="line">    __metaclass__ = SingletonBase</span><br><span class="line">    </span><br><span class="line"><span class="comment"># Python3</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span><span class="params">(metaclass=SingletonBase)</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p><strong>参考资料</strong></p>
+<ul>
+<li><p><a href="http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python" target="_blank" rel="external">Creating a singleton in Python</a></p>
+</li>
+<li><p><a href="https://testing.googleblog.com/2008/08/root-cause-of-singletons.html" target="_blank" rel="external">Root Cause of Singletons</a></p>
+<p>​</p>
+</li>
 </ul>
 </span>
       
@@ -281,7 +247,9 @@ Http: GET vs POST回到问题的本">
       
         <div class="post-tags">
           
-            <a href="/tags/REST-API/" rel="tag">#REST API</a>
+            <a href="/tags/基础/" rel="tag">#基础</a>
+          
+            <a href="/tags/设计模式/" rel="tag">#设计模式</a>
           
         </div>
       
@@ -290,13 +258,11 @@ Http: GET vs POST回到问题的本">
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/02/24/MySQL基础笔记/" rel="prev">MySQL笔记</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/10/08/Golang面向对象编程/" rel="next">Golang面向对象编程</a>
+              <a href="/2017/03/01/我的Python开发总结/" rel="next">我的Python开发总结</a>
             
           </div>
         </div>
@@ -410,7 +376,7 @@ Http: GET vs POST回到问题的本">
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#Http:_GET_vs_POST"><span class="nav-number">1.</span> <span class="nav-text">Http: GET vs POST</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#POST比GET好？"><span class="nav-number">2.</span> <span class="nav-text">POST比GET好？</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法一：装饰器"><span class="nav-number">1.</span> <span class="nav-text">方法一：装饰器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法二：重写__new__方法"><span class="nav-number">2.</span> <span class="nav-text">方法二：重写__new__方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#利用metaclass"><span class="nav-number">3.</span> <span class="nav-text">利用metaclass</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

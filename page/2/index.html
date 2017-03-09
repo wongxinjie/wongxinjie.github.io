@@ -166,6 +166,97 @@
           
           
             
+              <a class="post-title-link" href="/2016/04/10/Python下载工具/" itemprop="url">
+                Python下载工具
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-04-10T21:01:47+08:00" content="2016-04-10">
+            2016-04-10
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/工作/" itemprop="url" rel="index">
+                  <span itemprop="name">工作</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>由于业务需求，最近整理了一些关于python下载文件的一些套路。利用python下载文件，大致有以下几种方式：</p>
+<ul>
+<li><a href="https://docs.python.org/2/library/urllib.html">urllib</a>，标准库自带，缺点是不支持cookie，只支持HTTP/FTP/本地文件，也不支持SSL。</li>
+<li><a href="https://docs.python.org/2/library/urllib2.html">urllib2</a>，一个完整的HTTP/FTP客户端实现，基本实现了必须的功能，支持cookie，但HTTP只支持GET和POST.</li>
+<li><a href="https://pypi.python.org/pypi/urllib3">urllib3</a>,支持复用socket连接，文件上传，内置重定向和重试，而且线程安全。requests就是基于urllib3.</li>
+<li><a href="https://docs.python.org/2/library/httplib.html">httplib</a>，标准库自带，只支持HTTP/HTTPS协议，一般不会直接使用，urllib部分功能基于此模块.</li>
+<li><a href="https://pypi.python.org/pypi/httplib2">httplib2</a>,只支持HTTP/HTTPS协议，一个较完善的HTTP客户端，支持Keep-Alive，验证、缓存及HTTP GET/POST/HEAD等请求方法等等。</li>
+<li><a href="http://wwwsearch.sourceforge.net/mechanize/">mechanize</a>,一个可以模拟用户操作的web browsing拓展包。</li>
+<li><a href="http://docs.python-requests.org/en/master/">requests</a>,这个基本都知道, urllib for human。</li>
+<li><a href="http://pycurl.io/docs/latest/">PyCurl</a>,libcurl的一个python封装，特点是快（比requests快几倍），支持多种协议，可定制性高。</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/04/10/Python下载工具/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2016/03/26/简洁Flask-RESTful-API设计/" itemprop="url">
                 简洁Flask RESTful API设计
               </a>
@@ -907,87 +998,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/23/Python定时执行/" itemprop="url">
-                Python定时执行
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-05-23T22:04:20+08:00" content="2015-05-23">
-            2015-05-23
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Python/" itemprop="url" rel="index">
-                  <span itemprop="name">Python</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/05/23/Python定时执行/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1026,7 +1036,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">23</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

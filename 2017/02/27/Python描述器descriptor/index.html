@@ -47,7 +47,7 @@
 <meta property="og:site_name" content="Wong Page">
 <meta property="og:description" content="应该承认，Python的OOP不是想象中的那么简单，其中的诸多概念也许很多都知道，像MRO、super、property等等。很多情况问什么是property，都知道怎么用，但是问property是什么、怎么实现的很多情况就抓瞎了。property是通过descriptor实现的。
 关于descriptor（描述器），在日常代码中也不经常见到，但是了解descriptor有利于理解Python是怎">
-<meta property="og:updated_time" content="2017-03-05T10:02:56.384Z">
+<meta property="og:updated_time" content="2017-03-07T18:14:57.060Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python描述器(descriptor)">
 <meta name="twitter:description" content="应该承认，Python的OOP不是想象中的那么简单，其中的诸多概念也许很多都知道，像MRO、super、property等等。很多情况问什么是property，都知道怎么用，但是问property是什么、怎么实现的很多情况就抓瞎了。property是通过descriptor实现的。
@@ -233,7 +233,6 @@
 <li>对象所有基类的__dict__</li>
 <li>假如这些都获取不到，raise AttributeError</li>
 </ol>
-<p>对于普通变量，object.attr一般都是object.__dict__[‘attr’]，而descriptor则object.__dict__[‘attr’].__get__(object, type(object))。</p>
 <p>要定义一个描述器很简单，一个类里只要实现以下其中一个函数既可以:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__get__</span><span class="params">(self, _object, _type=None)</span> -&gt; <span class="title">None</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__set__</span><span class="params">(self, _object, value)</span> -&gt; <span class="title">None</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">__delete__</span><span class="params">(self, _object)</span> -&gt; <span class="title">None</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 <p>其中实现了__get__()和__set__()的成为data descriptor（数据描述器)，而只实现了__get__()的为non-data descriptor。二者区别是，当一个对象里有重名的数据描述器，属性和非数据描述器时，访问优先级为：</p>
@@ -336,7 +335,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">22</span>
+              <span class="site-state-item-count">23</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
