@@ -1,8 +1,8 @@
 title: SQL基础教材笔记
 date: 2015-05-22 21:40:33
-categories: 数据库
+categories: MySQL
 tags:
-- MySQL
+- 笔记
 ---
 
 ### 聚合与排序

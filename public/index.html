@@ -166,8 +166,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/08/07/Python的协程、多线程与进程/" itemprop="url">
-                Python的协程、多线程与进程
+              <a class="post-title-link" href="/2017/03/15/nginx笔记/" itemprop="url">
+                nginx笔记
               </a>
             
           
@@ -177,8 +177,94 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-08-07T00:00:05+08:00" content="2015-08-07">
-            2015-08-07
+          <time itemprop="dateCreated" datetime="2017-03-15T22:40:34+08:00" content="2017-03-15">
+            2017-03-15
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/nginx/" itemprop="url" rel="index">
+                  <span itemprop="name">nginx</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>近日看了一下如何用nginx作为web server来配合gunicorn将Python Web项目发布起来，顺便做一下笔记。</p>
+<h5 id="configuring_gunicorn">configuring gunicorn</h5><p>在生产环境中是不能用Django/Flask自带的wsgi应用服务器的，可以选择uwsgi、FastCGI或者是gunicorn，我用的是gunicorn，配置方便。现在假设项目虚拟环境、数据库等等已经配置好了，现在跑gunicorn</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd <span class="variable">$PROJECT</span></span><br><span class="line"><span class="string">" 假设存在website/wsig.py</span><br><span class="line">gunicorn -b 127.0.0.1:8001 -w 17 website.wsgi</span></span><br></pre></td></tr></table></figure>
+<p>一般workers数目按照以下公式计算：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">" cat /proc/cpuinfo| grep processor | wc -l</span></span><br><span class="line"><span class="string">" 可用上面的命令计算几个cpu_core</span></span><br><span class="line"></span><br><span class="line">workers = <span class="number">2</span> * CPU_cores + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>更多关于<a href="http://gunicorn.org/#docs">gunicorn</a> 可详细读文档，一般gunicorn程序我们都会用supervisor来管理。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/03/15/nginx笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/03/09/如何用Python实现一个单例/" itemprop="url">
+                如何用Python实现一个单例
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-03-09T21:23:28+08:00" content="2017-03-09">
+            2017-03-09
           </time>
         </span>
 
@@ -212,10 +298,9 @@
 
       
         
-          <p>最近刚好用到了Python的并发框架Gevent以及多线程，于是把自己总结了一下。</p>
-<h4 id="协程">协程</h4><p>协程，又称微线程，纤程(Coroutine)。一个协程本质就是一个子程序，但是子程序内部可以中断去执行另外的子程序，在适当的时候再回来接着执行。Python本身不提供协程，但可以利用yield实现简单的协程。用Gevent来实现Python的协程就相当的简单了。<br>在Gevent中是通过greenlet来实现协程的。通常利用Gevent来处理一些IO密集型的并发任务，在Gevent中当一个greenlet遇到IO进入等待状态时，程序会自动切换到其他greenlet执行，而不是等待IO执行完毕。<br>在实践中可以利用gevent.queue.Queue以及greenlet来实现整个站点内容的爬去。代码如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lmxl</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> geven.queue <span class="keyword">import</span> Queue</span><br><span class="line"><span class="keyword">import</span> gevent</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Crawler</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        <span class="comment">#其他初始化</span></span><br><span class="line">        self.tasks = Queue()</span><br><span class="line">        <span class="comment">#...</span></span><br><span class="line">        self.tasks.put(url)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">extract_page</span><span class="params">(self)</span>:</span></span><br><span class="line">        url = self.tasks.get()</span><br><span class="line">        <span class="string">'''</span><br><span class="line">        利用requests库请求内容</span><br><span class="line">        利用lxml解析内容和urls</span><br><span class="line">        对urls进行筛选和去重</span><br><span class="line">        ...</span><br><span class="line">        '''</span></span><br><span class="line">        <span class="keyword">for</span> u <span class="keyword">in</span> urls:</span><br><span class="line">            self.tasks.put(u)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">crawl</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> self.tasks.empty():</span><br><span class="line">            self.extract_page()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        crawl_list = [ gevent.spawn(self.extract_page) <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">10</span>)]</span><br><span class="line">        gevent.joinall(crawl_list)</span><br></pre></td></tr></table></figure><br>
+          <p>好吧，我承认如果要白板尽可能多的写出Python实现单例的方法，我除了知道重写__new__之外就没有了。根据设计模式里面单例定义，一个类在全局只能实例化一个对象，用module来代替实现单例是不和规定的。网上流传的用Python实现单例模式至少有以下几种。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/08/07/Python的协程、多线程与进程/#more" rel="contents">
+            <a class="btn" href="/2017/03/09/如何用Python实现一个单例/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -248,8 +333,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/07/27/Redis笔记/" itemprop="url">
-                Redis笔记
+              <a class="post-title-link" href="/2017/03/01/我的Python开发总结/" itemprop="url">
+                我的Python开发总结
               </a>
             
           
@@ -259,259 +344,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-07-27T23:45:39+08:00" content="2015-07-27">
-            2015-07-27
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/NoSQL/" itemprop="url" rel="index">
-                  <span itemprop="name">NoSQL</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>redis的Python模块redis-py。安装此模块之后，就可以利用Python与Redis交互了。<br>redis中一共有5中数据结构，分别是String、Hash、List、Set、Sorted Set。这5中数据结构各有各自己适用的场景。</p>
-<ul>
-<li>String（字符串）：简单的key-value类型，相当于Memcached，但其value可以是String，也可以是数字。但存储的形式是字符串。</li>
-<li>Hash（字典）：redis提供的Hash是一种key-dict形式的存储，可以想关系型数据库一样update某个字段。</li>
-<li>List（列表）：redis的list其实是一个双端链表，利用List可以实现最新消息排行等功能。List另外一个应用就是消息队列（生产者消费者模型）。</li>
-<li>Set（集合）：redis的集合和python的集合一样，去重、求合并差集相当方便。</li>
-<li>SortedSet （有序集合）：在Set中增加一个权重参数score，可实现带权重的队列。
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/27/Redis笔记/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/07/07/Git后悔药/" itemprop="url">
-                Git后悔药
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-07-07T23:05:36+08:00" content="2015-07-07">
-            2015-07-07
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Tools/" itemprop="url" rel="index">
-                  <span itemprop="name">Tools</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>公司使用的代码版本控制是GitHub。随着对GitHub的深入使用，越发觉得git大法就是好啊，最基本的git给你后悔的机会。<br>最基本的，要是觉得某天不小心修改了某段代码(真相是写得太烂)，需要将其恢复到修改之前的状态，使用checkout，具体讲<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">git</span> checkout filename</span><br></pre></td></tr></table></figure><br>checkout命令会将文件的内容恢复到上一次commit的状态，妥妥的从头开始。<br>对于已经提交的，又开始后悔不该提交，git也提供了后悔的方法，reset(版本撤回)命令。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/07/07/Git后悔药/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/27/排序算法（Java版）/" itemprop="url">
-                排序算法（Java版）
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-05-27T22:31:20+08:00" content="2015-05-27">
-            2015-05-27
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/算法/" itemprop="url" rel="index">
-                  <span itemprop="name">算法</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>在《算法分析与设计》(Algorithm Design: Foundations, Analysis, and Internet Examples)中，作者将各种排序算法分成了三类，分别为PQ-Sort简单排序模式、基于分治设计思想以及基于散列法，觉得相当的有趣，于是就按照这种思路将所学的各种算法整理了一下。</p>
-<h3 id="一、PQ-Sort简单排序模式">一、PQ-Sort简单排序模式</h3><p>所谓PQ-Sort简单排序模式，其思路大概就是基于这样一种思路:将一组无序的元素插入到优先队列，然后通过一系列的removeMin操作达到使序列从无序到有序的过程。在算法实现中优先队列往往不是真正的存在，它大多数时候只是作为一个抽象的概念。这中算法实现起来简单，但是效率一般不高，通常都要O(n^2)。<br>以下算法都是PQ-Sort模式的排序算法</p>
-<h4 id="1、选择排序">1、选择排序</h4><p>最简单的排序。令A[1…n]是一个元素的数组，首先找到A中最小的元素，将其放到A[1]中，然后在剩下的n-1个元素中找到最小的元素，将其放到A[2]中，重复此过程直至找到第二大元素将其放在A[n-1]中。<br>Java代码如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> SelectionSort&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] selectionSort(<span class="keyword">int</span>[] <span class="built_in">array</span>)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i &lt; <span class="built_in">array</span>.length-<span class="number">1</span>; i++)&#123;</span><br><span class="line">			<span class="keyword">int</span> currentMinIndex = i;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>; j &lt; <span class="built_in">array</span>.length; j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(<span class="built_in">array</span>[j] &lt; <span class="built_in">array</span>[currentMinIndex])&#123;</span><br><span class="line">					currentMinIndex = j;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(currentMinIndex != i)&#123;</span><br><span class="line">				<span class="keyword">int</span> tmpValue = <span class="built_in">array</span>[i];</span><br><span class="line">				<span class="built_in">array</span>[i] = <span class="built_in">array</span>[currentMinIndex];</span><br><span class="line">				<span class="built_in">array</span>[currentMinIndex] = tmpValue;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">array</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>无论数组的初始化排序如何，执行算法比较的次数为n(n-1)/2。<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/05/27/排序算法（Java版）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/23/Python定时执行/" itemprop="url">
-                Python定时执行
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-05-23T22:04:20+08:00" content="2015-05-23">
-            2015-05-23
+          <time itemprop="dateCreated" datetime="2017-03-01T21:43:11+08:00" content="2017-03-01">
+            2017-03-01
           </time>
         </span>
 
@@ -545,9 +379,13 @@
 
       
         
-          <p>在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:<br>
+          <p>在全职用Python开发接近两年后，发现自己虽然长时间用Python，也看多很多的Best Pratices，读了很多关于别人如何用Python进行开发，但是自己从来没有总结，现在就找时间将关于这两年的经验总结一下。</p>
+<h4 id="Linux,_Vim">Linux, Vim</h4><p>开发环境首推的MacOS，或者退而求其次是Linux。用*Unix系统可以避免很多奇奇怪怪的问题。当然如果是直接SSH到开发机开发那另说，否则直接上Ubuntu。</p>
+<p>开发Python的IDE是PyCharm，社区版就估计够用了。但是个人偏好使用Vim。在Linux下使用Terminal+Vim基本可以完成开发工作。</p>
+<p>Terminal使用<a href="http://ohmyz.sh/">oh-my-zsh</a> ，有同事推荐<a href="https://fishshell.com/">fish</a> ，这两个都是极佳的，目前用的前者。关于终端还有一个很好用的终端分屏工具, <a href="https://tmux.github.io/">tmux</a>，功能很强大，但自从用了双屏，就很少使用了。</p>
+<p>裸使用Vim那简直就是给自己过不去，假如自己有时间和兴趣和精力可以自己写配置，我用的是GitHub上的humiaozuzu的<a href="https://github.com/humiaozuzu/dot-vimrc">Vim配置</a>。 自己clone了一份<a href="https://github.com/wongxinjie/dot-vimrc">配置</a>，比如使用Flask8检查器强制是代码遵循PEP8规则，增加Golang支持以及其他的一些私人配置。Vim配置有很多，其中<a href="https://github.com/spf13/spf13-vim">spf13</a>可以试一试。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/05/23/Python定时执行/#more" rel="contents">
+            <a class="btn" href="/2017/03/01/我的Python开发总结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -580,8 +418,8 @@
           
           
             
-              <a class="post-title-link" href="/2015/05/22/SQL基础教材笔记/" itemprop="url">
-                SQL基础教材笔记
+              <a class="post-title-link" href="/2017/02/27/Python描述器descriptor/" itemprop="url">
+                Python描述器(descriptor)
               </a>
             
           
@@ -591,90 +429,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-05-22T21:40:33+08:00" content="2015-05-22">
-            2015-05-22
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/数据库/" itemprop="url" rel="index">
-                  <span itemprop="name">数据库</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <h3 id="聚合与排序">聚合与排序</h3><h4 id="1、聚合查询">1、聚合查询</h4><p>SQL中有5个常用的聚合函数：COUNT、SUM、AVG、MAX、MIN。聚合，就是将多行数据汇总成一行，所以聚合函数输入的是多行，而输出的只是一行。<br>使用聚合函数时，NULL的列是不参与计算的。比如在goods表中7列中有3列的price为NULL，则<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*), <span class="keyword">COUNT</span>(price) <span class="keyword">FROM</span> goods;</span></span><br></pre></td></tr></table></figure><br>的结果为7|4</p>
-<h4 id="2、对表进行分组">2、对表进行分组</h4><p>要对表的数据进行分组处理，用GROUP BY子句。在GROUND BY子句中指定的列被称为聚合键或者分组列，是决定表切分方式的非常重要的列。<br><strong>书写顺序：SELECT….FROM….WHERE….GROUP BY…..</strong><br><strong>执行顺序：FROM—-&gt;WHERE—-&gt;GROUP BY——&gt;SELECT</strong><br>使用聚合函数和GROUP BY子句时要避免犯以下错误：<br>（1）把聚合键之外的列面书写在SELECT子句中<br>（2）在GROUP BY子句中不能使用SELECT子句中定义的别名<br>（3）GROUP BY显示的结果是无序的<br>（4）在WHERE子句中不能使用聚合函数<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/05/22/SQL基础教材笔记/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/21/Python中的xrange和yield/" itemprop="url">
-                Python中的xrange和yield
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-05-21T21:32:02+08:00" content="2015-05-21">
-            2015-05-21
+          <time itemprop="dateCreated" datetime="2017-02-27T23:29:40+08:00" content="2017-02-27">
+            2017-02-27
           </time>
         </span>
 
@@ -708,9 +464,560 @@
 
       
         
-          <h3 id="range和xrange">range和xrange</h3><p>Python提供了生成和返回整数序列的内置函数range及xrange，虽然这两个函数在功能上是差不多的，但其实现原理还是有差别的。range(n, m)返回的是一个从n到(m-1)的连续的整数列表，而xrange(n, m)返回的却是一个特殊的目的对象，即xrange对象本身.<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">range</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">xrange</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line"><span class="function"><span class="title">xrange</span><span class="params">(<span class="number">1</span>, <span class="number">5</span>)</span></span></span><br><span class="line">&gt;&gt;&gt; <span class="function"><span class="title">type</span><span class="params">(xrange(<span class="number">1</span>, <span class="number">5</span>)</span></span>)</span><br><span class="line">&lt;type <span class="string">'xrange'</span>&gt;</span><br></pre></td></tr></table></figure><br>
+          <p>应该承认，Python的OOP不是想象中的那么简单，其中的诸多概念也许很多都知道，像MRO、super、property等等。很多情况问什么是property，都知道怎么用，但是问property是什么、怎么实现的很多情况就抓瞎了。property是通过descriptor实现的。</p>
+<p>关于descriptor（描述器），在日常代码中也不经常见到，但是了解descriptor有利于理解Python是怎么工作的，也有利用写出更加优雅的程序。网上的的资料很多都零散，我就写写阅读文档和他人的博客之后的一篇笔记。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2015/05/21/Python中的xrange和yield/#more" rel="contents">
+            <a class="btn" href="/2017/02/27/Python描述器descriptor/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/02/24/MySQL基础笔记/" itemprop="url">
+                MySQL笔记
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-24T22:00:32+08:00" content="2017-02-24">
+            2017-02-24
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/MySQL/" itemprop="url" rel="index">
+                  <span itemprop="name">MySQL</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。</p>
+<h4 id="检索数据">检索数据</h4><h5 id="简单检索">简单检索</h5><p>获取检索的前N行：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">N</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>获取从指定N行开始后的M行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">N</span>, <span class="keyword">M</span>;</span></span><br><span class="line"><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">col</span> <span class="keyword">FROM</span> which_table <span class="keyword">LIMIT</span> <span class="keyword">M</span> <span class="keyword">OFFSET</span> <span class="keyword">N</span>;</span></span><br></pre></td></tr></table></figure>
+<h5 id="检索排序">检索排序</h5><p>数据库不对检索出来的结果做假定有序的，要排序需要明确排序顺序，如</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_id, prod_price, prod_name</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_price, prod_name;</span></span><br></pre></td></tr></table></figure>
+<p>数据排序默认是升序排序（从A到Z），要降序排序需明确指明：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">SELECT</span> prod_price</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> prod_price <span class="keyword">DESC</span>;</span></span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/24/MySQL基础笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/02/17/API-GET-vs-POST/" itemprop="url">
+                API: GET vs POST
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-02-17T10:40:55+08:00" content="2017-02-17">
+            2017-02-17
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Web/" itemprop="url" rel="index">
+                  <span itemprop="name">Web</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>在开发中，开发API提供给他人用或者调用第三方API都是常用的事。而在API调用这里，发现大家对使用GET/POST都没有定则，有些API一概用GET调用，无论是安全的获取信息还是不安全的改变服务端资源状态，而有些一概用POST调用，即使只是单纯获取资源列表。那么，API调用应该使用GET还是POST，或者GET/POST混合起来用是不是更合理一点。</p>
+<h5 id="Http:_GET_vs_POST">Http: GET vs POST</h5><p>回到问题的本质，在考虑API是用GET还是用POST时，还是先来回顾一些HTTP协议中GET和POST的区别，下表展示GET和POST的不同之处:</p>
+<table>
+<thead>
+<tr>
+<th>情景</th>
+<th>GET</th>
+<th>POST</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>刷新页面</td>
+<td>没有影响</td>
+<td>会导致重复提交数据</td>
+</tr>
+<tr>
+<td>保存书签</td>
+<td>可以被保存成书签</td>
+<td>不能保存书签</td>
+</tr>
+<tr>
+<td>编码类型</td>
+<td>application/x-www-form-urlencoded</td>
+<td>application/x-www-form-urlencoded或者multipart/form-data</td>
+</tr>
+<tr>
+<td>历史记录</td>
+<td>参数会显示在历史记录中</td>
+<td>参数不会显示在历史记录中</td>
+</tr>
+<tr>
+<td>参数长度</td>
+<td>参数长度有限制，服务端可能对URL有长度限制</td>
+<td>没有限制</td>
+</tr>
+<tr>
+<td>参数类型</td>
+<td>参数只能是ASCII字符</td>
+<td>没有限制，二进制都可以</td>
+</tr>
+<tr>
+<td>安全问题</td>
+<td>相对不安全，因为参数暴露在URL中</td>
+<td>相对安全，参数不会在历史记录中出现，也不会在服务器日志出现</td>
+</tr>
+</tbody>
+</table>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/02/17/API-GET-vs-POST/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/10/08/Golang面向对象编程/" itemprop="url">
+                Golang面向对象编程
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-10-08T21:35:27+08:00" content="2016-10-08">
+            2016-10-08
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Golang/" itemprop="url" rel="index">
+                  <span itemprop="name">Golang</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>刚接触Go的struct时大概会觉得和C的struct似曾相识，C的struct可以实现某种意义的面向对象编程，而Go的struct则直接通过带接收者的函数,通常称为method。Go中不仅struct可以有method，所有用户定义类型都可以有method。</p>
+<h5 id="用户定义类型(user-defined_types)">用户定义类型(user-defined types)</h5><p>最典型的用户定义类型是struct，其次是通过type关键词在已经存在的类型上来定义新类型，例如<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在built-in类型基础上定义</span></span><br><span class="line"><span class="keyword">type</span> Duration <span class="typename">int64</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//在引用类型上定义</span></span><br><span class="line"><span class="keyword">type</span> IP []<span class="typename">byte</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//在struct上定义，这个没多大意义</span></span><br><span class="line"><span class="keyword">type</span> Human <span class="keyword">struct</span> &#123;</span><br><span class="line">	name <span class="typename">string</span></span><br><span class="line">	age  <span class="typename">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> People Human</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line">	<span class="keyword">var</span> duration Duration</span><br><span class="line">    <span class="comment">//用int64赋值会报错</span></span><br><span class="line">    <span class="comment">//duration = int64(100)</span></span><br><span class="line">	duration = Duration(<span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">	ip := IP(<span class="string">"127.0.0.1"</span>)</span><br><span class="line"></span><br><span class="line">	bob := People&#123;<span class="string">"Bob"</span>, <span class="number">42</span>&#125;</span><br><span class="line"></span><br><span class="line">	fmt.Printf(<span class="string">"%v"</span>, ip)</span><br><span class="line">	fmt.Printf(<span class="string">"%v"</span>, duration)</span><br><span class="line">	fmt.Printf(<span class="string">"%v"</span>, bob)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看起来有点像C语言里的typeof操作，但实际上Go的type更强大，type后实际上已经是新的类型了，所以上面的Duration虽然是基于int64，但它是一个新的与int64完全不同的数据类型。像int/bool/float/strint之类built-in类型和slice/map等引用类型不能定义method，但是基于这些内置类型的新类型就没有限制了。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/10/08/Golang面向对象编程/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/09/25/Golang学习笔记/" itemprop="url">
+                Golang学习笔记
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-09-25T21:23:22+08:00" content="2016-09-25">
+            2016-09-25
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Golang/" itemprop="url" rel="index">
+                  <span itemprop="name">Golang</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h5 id="规则">规则</h5><p>Go程序是用package来组织的， 每一个包的目录名称最好和包名保持一直，包中的变量/函数以大写字母开头的可以导出，其他的不能导出。变量只能以字母开头。</p>
+<h5 id="变量">变量</h5><p>使用var关键字定义变量，与C/Java等不同的是Go把变量类型放在变量后面，<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> variable <span class="keyword">type</span></span><br></pre></td></tr></table></figure></p>
+<p>可以定义变量同时初始化变量:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x, y, z <span class="typename">int64</span>;</span><br><span class="line"><span class="keyword">var</span> m, n, p <span class="typename">int64</span> = <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span></span><br></pre></td></tr></table></figure></p>
+<p>同时Go也提供了简短的变量声明，一种只能用在函数内部的方式<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x := <span class="number">23</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="常量">常量</h5><p>Go作为静态语言同样提供了常量的声明，<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> variable = value</span><br></pre></td></tr></table></figure></p>
+<p>但是可可以指定常量的类型<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> PI <span class="typename">float32</span> = <span class="number">3.1415926</span></span><br><span class="line"><span class="keyword">const</span> Prefix = <span class="string">"redis:"</span></span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/09/25/Golang学习笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/08/25/Redis数据安全/" itemprop="url">
+                Redis数据安全
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-08-25T22:09:25+08:00" content="2016-08-25">
+            2016-08-25
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Redis/" itemprop="url" rel="index">
+                  <span itemprop="name">Redis</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>Redis虽然是内存型(in-memory)数据数据库，但同时也提供了持久化 选项可以将数据保存到硬盘中，正确地配置这些持久化设置，可以在服务器挂了时将数据损失降到最低。redis提供了两种方法对数据进行持久化，分别是<strong>snapshotting(快照)</strong>和<strong>AOF(append-only file, 只追加文件)</strong>, 这两种方法可以单独使用或者搭配使用，也可以都不用。Redis在线文档和配置文件（通常在/etc/redis.conf)都写的很仔细。</p>
+<h5 id="快照持久化">快照持久化</h5><p>快照就是将某一时刻将Redis存储的所有数据写到硬盘里，其功能就相当于一个数据备份。快照可以用来在多台机器上建立具有相同数据内容的服务，或者在重启机器时恢复数据。快照相关的配置如下：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">save</span> <span class="number">60</span> <span class="number">10000</span> <span class="comment"># 60s内有10000次写入则自动调用bgsave创建快照</span></span><br><span class="line">stop-writes-<span class="built_in">on</span>-bgsaves-<span class="built_in">error</span> <span class="built_in">no</span>  <span class="comment">#创建快照失败是否继续执行</span></span><br><span class="line">rdbcompression <span class="built_in">yes</span> <span class="comment"># 是否对快照文件进行压缩</span></span><br><span class="line">dbfilename dump.rdb <span class="comment"># 快照文件名</span></span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/25/Redis数据安全/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2016/06/06/数据库连接不上了！/" itemprop="url">
+                数据库连接不上了！
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2016-06-06T23:04:17+08:00" content="2016-06-06">
+            2016-06-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/工作/" itemprop="url" rel="index">
+                  <span itemprop="name">工作</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>故事发生在公司的一部内网的测试服务器挂掉后修复后，发布一些python项目之后发现基于有数据库本地连接的基本都跑不起来，全部报错<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">OperationalError:</span> (_mysql_exceptions.OperationalError) (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
+<p>一开始以为是配置文件写错，但是检查之后发现没什么问题，倒是测试机自己太吊跪，好像只能用unix_socket才能连接，而基于TCP的连接就不行。在ipython试了一下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">from</span> torndb <span class="keyword">import</span> Connection</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'127.0.0.1'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2003</span>, <span class="string">"Can't connect to MySQL server on '127.0.0.1' (111)"</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'localhost'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/06/06/数据库连接不上了！/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -735,6 +1042,10 @@
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
+  </nav>
+
  </div>
 
         
@@ -766,21 +1077,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">20</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -823,8 +1134,8 @@
     <footer id="footer" class="footer">
       <div class="footer-inner"> <div class="copyright" >
   
-  &copy; &nbsp; 
-  <span itemprop="copyrightYear">2015</span>
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>

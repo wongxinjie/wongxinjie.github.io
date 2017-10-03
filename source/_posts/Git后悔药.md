@@ -1,8 +1,9 @@
 title: Git后悔药
 date: 2015-07-07 23:05:36
-categories: Tools
+categories: 经验
 tags:
 - Git
+- Tools
 ---
 公司使用的代码版本控制是GitHub。随着对GitHub的深入使用，越发觉得git大法就是好啊，最基本的git给你后悔的机会。
 最基本的，要是觉得某天不小心修改了某段代码(真相是写得太烂)，需要将其恢复到修改之前的状态，使用checkout，具体讲

@@ -1,6 +1,6 @@
 title: 排序算法（Java版）
 date: 2015-05-27 22:31:20
-categories: 算法
+categories: Algorithm
 tags:
 - 算法
 ---
