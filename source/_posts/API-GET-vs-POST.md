@@ -1,6 +1,6 @@
 title: 'API: GET vs POST'
 date: 2017-02-17 10:40:55
-categories: Web
+categories: HTTP
 tags:
 	- REST API
 ---

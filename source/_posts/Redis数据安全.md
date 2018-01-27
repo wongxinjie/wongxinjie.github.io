@@ -2,7 +2,7 @@ title: Redis数据安全
 date: 2016-08-25 22:09:25
 categories: Redis
 tags:
-- 笔记
+- 读书笔记
 ---
 
 

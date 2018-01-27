@@ -1,8 +1,9 @@
 title: Python下载工具
 date: 2016-04-10 21:01:47
-categories: 工作
+categories: Python
 tags:
 - download tools
+- 工作笔记
 ---
 
 由于业务需求，最近整理了一些关于python下载文件的一些套路。利用python下载文件，大致有以下几种方式：

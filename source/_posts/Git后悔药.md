@@ -1,6 +1,6 @@
 title: Git后悔药
 date: 2015-07-07 23:05:36
-categories: 经验
+categories: 工具使用
 tags:
 - Git
 - Tools

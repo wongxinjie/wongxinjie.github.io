@@ -2,7 +2,7 @@ title: Python描述器(descriptor)
 date: 2017-02-27 23:29:40
 categories: Python
 tags:
-    - Python语法
+    - Python
 ---
 
 应该承认，Python的OOP不是想象中的那么简单，其中的诸多概念也许很多都知道，像MRO、super、property等等。很多情况问什么是property，都知道怎么用，但是问property是什么、怎么实现的很多情况就抓瞎了。property是通过descriptor实现的。

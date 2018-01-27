@@ -1,9 +1,9 @@
 title: MySQL笔记
 date: 2017-02-24 22:00:32
-categories: MySQL
+categories: 数据库
 tags:
+    - MySQL
     - 读书笔记
-    - 工作总结
 ---
 在开发过程中，虽然大多数时候都用ORM来实现数据库操作，但是有时候需要裸写SQL时候发现有些概念不是很清晰，所以重新学习一下MySQL并做记录。
 #### 检索数据

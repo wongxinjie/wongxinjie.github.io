@@ -1,9 +1,9 @@
 title: 简洁Flask RESTful API设计
 date: 2016-03-26 17:50:44
-categories: Flask
+categories: Python
 tags:
-	- Python web frame
-	- 笔记
+	- Flask
+	- 学习笔记
 ---
 #### 搞个大新闻
 关于什么是RESTful APIs已经有足够多的资料可查阅了，但是怎么设计一个冗余代码少的API，还是需要踩很多坑才能体悟出来的。
