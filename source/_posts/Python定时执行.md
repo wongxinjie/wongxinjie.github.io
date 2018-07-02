@@ -2,7 +2,7 @@ title: Python定时执行
 date: 2015-05-23 22:04:20
 categories: Python
 tags:
-- crontab job
+- Python基础
 ---
 在自己做的一个小东西里需要用爬虫定时从某个网站上爬取数据，谷娘了一下python自身好像没有这种功能，唯一有的就是 threading.Timer，不过这个不符合要求，只执行一次，假如需要多长执行需要用time.sleep之后在创建一个，显然不是很 elegant，于是终于发现一个比较pythonic的实现方式，改造代码如下:	
 <!--more-->

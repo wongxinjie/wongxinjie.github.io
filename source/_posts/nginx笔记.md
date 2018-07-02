@@ -2,7 +2,7 @@ title: nginx笔记
 date: 2017-03-15 22:40:34
 categories: nginx
 tags:
-    - 工作笔记
+    - 笔记
 ---
 
 近日看了一下如何用nginx作为web server来配合gunicorn将Python Web项目发布起来，顺便做一下笔记。

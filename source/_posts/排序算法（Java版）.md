@@ -2,7 +2,7 @@ title: 排序算法（Java版）
 date: 2015-05-27 22:31:20
 categories: 算法
 tags:
-- 排序
+- 算法学习
 ---
 
 在《算法分析与设计》(Algorithm Design: Foundations, Analysis, and Internet Examples)中，作者将各种排序算法分成了三类，分别为PQ-Sort简单排序模式、基于分治设计思想以及基于散列法，觉得相当的有趣，于是就按照这种思路将所学的各种算法整理了一下。

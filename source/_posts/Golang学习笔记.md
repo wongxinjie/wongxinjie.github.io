@@ -2,7 +2,7 @@ title: Golang学习笔记
 date: 2016-09-25 21:23:22
 categories: Golang
 tags:
-- 学习笔记
+- 笔记
 
 ---
 ##### 规则

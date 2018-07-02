@@ -2,7 +2,7 @@ title: Python应用部署
 date: 2016-03-06 14:32:03
 categories: Python
 tags:
-    - 工作笔记
+    - 笔记
 ---
 
 公司部署python web application的方式是nginx+supervisor+gunicorn。之前开发的时候都是直接用web framework自带的WSGI server来运行，绑定公网地址也可以访问，那么为什么还要用这种方式来部署，带着这些疑问整合了一些资料。

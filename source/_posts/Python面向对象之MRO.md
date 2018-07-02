@@ -2,8 +2,8 @@ title: Python面向对象之MRO
 date: 2016-05-21 16:00:16
 categories: Python
 tags:
-- 基础
-- 面向对象
+- Python基础
+
 ---
 
 Python是支持面向对象编程的，同时也是支持多重继承的。而支持多重继承，正是Python的方法解析顺序(Method Resoluthion Order, 或MRO)问题出现的原因所在。

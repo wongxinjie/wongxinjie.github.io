@@ -2,7 +2,7 @@ title: Python的协程、多线程与进程
 date: 2015-08-07 00:00:05
 categories: Python
 tags:
-- 工作笔记
+- 笔记
 ---
 
 最近刚好用到了Python的并发框架Gevent以及多线程，于是把自己总结了一下。

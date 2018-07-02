@@ -2,7 +2,8 @@ title: Python中的Mixin
 date: 2016-03-11 00:19:01
 categories: Python
 tags:
-	- Mixin
+	- Python基础
+    - 笔记
 ---
 
 

@@ -2,7 +2,7 @@ title: Python中的xrange和yield
 date: 2015-05-21 21:32:02
 categories: Python
 tags:
-- 基础
+- Python基础
 ---
 ### range和xrange
 

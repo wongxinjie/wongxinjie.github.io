@@ -2,7 +2,7 @@ title: 我的Python开发总结
 date: 2017-03-01 21:43:11
 categories: Python
 tags:
-    - 工作总结
+    - 总结
 ---
 
 在全职用Python开发接近两年后，发现自己虽然长时间用Python，也看多很多的Best Pratices，读了很多关于别人如何用Python进行开发，但是自己从来没有总结，现在就找时间将关于这两年的经验总结一下。
