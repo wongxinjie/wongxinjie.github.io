@@ -1,0 +1,771 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Tech Blog of Xinjie Wong" />
+
+
+
+  <meta name="keywords" content="Golang,NSQ," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="NSQ是分布式实时消息队列。NSQ是分布式的、拓扑结构，具有无单点故障、故障容错、高可用性和保证消息的可靠传递等特点，容易配置和部署。
+核心概念message数据流形式，生产者需要消费者处理的一个数据流（包）。
+topic消息的逻辑关键词。
+
+message属于某个特定的topic
+在由生产者在发布消息时生成
+通常描述消息的内容
+
+channel生产者与消费者之间的消息通道，相当于消息队列。
+
+一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NSQ简介">
+<meta property="og:url" content="http://blog.wongxinjie.com/2018/09/07/NSQ笔记/index.html">
+<meta property="og:site_name" content="Wong Page">
+<meta property="og:description" content="NSQ是分布式实时消息队列。NSQ是分布式的、拓扑结构，具有无单点故障、故障容错、高可用性和保证消息的可靠传递等特点，容易配置和部署。
+核心概念message数据流形式，生产者需要消费者处理的一个数据流（包）。
+topic消息的逻辑关键词。
+
+message属于某个特定的topic
+在由生产者在发布消息时生成
+通常描述消息的内容
+
+channel生产者与消费者之间的消息通道，相当于消息队列。
+
+一">
+<meta property="og:image" content="http://blog.wongxinjie.com/images/nsq-lookups.png">
+<meta property="og:image" content="http://blog.wongxinjie.com/images/nsq-message-flow.gif">
+<meta property="og:updated_time" content="2018-11-09T13:40:05.712Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NSQ简介">
+<meta name="twitter:description" content="NSQ是分布式实时消息队列。NSQ是分布式的、拓扑结构，具有无单点故障、故障容错、高可用性和保证消息的可靠传递等特点，容易配置和部署。
+核心概念message数据流形式，生产者需要消费者处理的一个数据流（包）。
+topic消息的逻辑关键词。
+
+message属于某个特定的topic
+在由生产者在发布消息时生成
+通常描述消息的内容
+
+channel生产者与消费者之间的消息通道，相当于消息队列。
+
+一">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> NSQ简介 | Wong Page </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Wong Page</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              NSQ简介
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2018-09-07T20:00:10+08:00" content="2018-09-07">
+            2018-09-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/消息队列/" itemprop="url" rel="index">
+                  <span itemprop="name">消息队列</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>NSQ是分布式实时消息队列。NSQ是分布式的、拓扑结构，具有无单点故障、故障容错、高可用性和保证消息的可靠传递等特点，容易配置和部署。</p>
+<h3 id="核心概念">核心概念</h3><h4 id="message">message</h4><p>数据流形式，生产者需要消费者处理的一个数据流（包）。</p>
+<h4 id="topic">topic</h4><p>消息的逻辑关键词。</p>
+<ul>
+<li>message属于某个特定的topic</li>
+<li>在由生产者在发布消息时生成</li>
+<li>通常描述消息的内容</li>
+</ul>
+<h4 id="channel">channel</h4><p>生产者与消费者之间的消息通道，相当于消息队列。</p>
+<ul>
+<li>一个topic可以有多个channel</li>
+<li>一个channel只能对应一个topic</li>
+<li>channel由消费者首次订阅产生，一个channel可以有多个消费者，起负载均衡的作用。</li>
+<li>一个topic的消息会复制到与topic关联的各个channel</li>
+<li>channel的名称通常描述的是消费者的业务</li>
+</ul>
+<h3 id="工具套件">工具套件</h3><h4 id="nsqd">nsqd</h4><p>一个负责接收、排队、转发消息到客户端的守护进程。负责message的收发和队列的维护。<br>nsqd默认监听一个TCP端口（4150）和一个HTTP端口 （4151）。  nsqd功能特性：</p>
+<ul>
+<li>topic发布到channel中的消息会被消费者消费</li>
+<li>只要channel存在，即使没有消费者，生产者的message也会缓存在队列中</li>
+<li>topic发布的message至少会被消费一次，nsq正常退出，消息会被写入磁盘</li>
+<li>限制内存中用，channel中的message是存放在内存中的，可以限制其大小，超出时可以将 message缓存到磁盘</li>
+<li>topic和channel一旦创建就会一直存在，除非主动删除</li>
+</ul>
+<h4 id="nsqlookupd">nsqlookupd</h4><p>中心管理服务进程。nsqlookupd提供管理nsqd服务，客户端查询生产者、topic和channel服务。<br>使用TCP(默认端口4160)管理nsqd服务，使用http(默认端口4161)管理nsqadmin服务。</p>
+<ul>
+<li>一个 nsqd服务只能注册到一个nsqlookupd</li>
+<li>去中心化，nsqlookupd崩溃也不会影响到nsqd</li>
+<li>可以充当nsqd和nsqdadmin之间的交互中间件</li>
+<li>消费者可以通过nsqlookupd获取生产者信息</li>
+</ul>
+<a id="more"></a>
+<h4 id="nsqadmin">nsqadmin</h4><p>一套Web用户界面，可实时查看集群的统计数据和执行各种各样的管理任务。默认访问端口是4171。</p>
+<ul>
+<li>查看和管理topic和channel</li>
+<li>查看message数量和状态</li>
+<li>当前版本还是有点buggy，不建议在生成中使用</li>
+</ul>
+<h3 id="NSQ使用">NSQ使用</h3><p>写本地，读远程。消息生产者与nsqd在同一个实例中，生产者不负责发现其他nsqd服务，只往本地nsqd投放消息。消费者可以通过nsqlookupd发现nsqd，连接nsqd消费消息。<br>启动nsqlookupd<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nsqlookupd</span><br></pre></td></tr></table></figure></p>
+<p>启动nsqd<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nsqd --lookupd-tcp-address=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">4160</span></span><br></pre></td></tr></table></figure></p>
+<p>运行nsqadmin（可选)<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nsqadmin --lookupd-http-address=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">4161</span></span><br></pre></td></tr></table></figure></p>
+<p>发布消息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="operator">-d</span> <span class="string">'user1;url1'</span> <span class="string">'http://127.0.0.1:4151/pub?topic=clicks'</span></span><br><span class="line">curl <span class="operator">-d</span> <span class="string">'user2;url2'</span> <span class="string">'http://127.0.0.1:4151/pub?topic=clicks'</span></span><br><span class="line">curl <span class="operator">-d</span> <span class="string">'user3;url3'</span> <span class="string">'http://127.0.0.1:4151/pub?topic=clicks'</span></span><br></pre></td></tr></table></figure>
+<p>topic管理</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST 'http://127.0.0.1:4151/topic/<span class="operator"><span class="keyword">create</span>?topic=nsqdTopic<span class="string">'</span><br><span class="line">curl -X POST '</span><span class="keyword">http</span>://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">4151</span>/topic/<span class="keyword">delete</span>?topic=nsqdTopic<span class="string">'</span><br><span class="line">curl -X POST '</span><span class="keyword">http</span>://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">4151</span>/topic/<span class="keyword">empty</span>?topic=nsqdTopic<span class="string">'</span></span></span><br></pre></td></tr></table></figure>
+<p>channel管理(要创建channel先要有对应的Topic)</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST 'http://127.0.0.1:4151/channel/<span class="operator"><span class="keyword">create</span>?topic=nsqdTopic&amp;channel=nsqdChannel<span class="string">'</span><br><span class="line">curl -X POST '</span><span class="keyword">http</span>://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">4151</span>/channel/<span class="keyword">delete</span>?topic=nsqdTopic&amp;channel=nsqdChannel<span class="string">'</span><br><span class="line">curl -X POST '</span><span class="keyword">http</span>://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">4151</span>/channel/<span class="keyword">empty</span>?topic=nsqdTopic&amp;channel=nsqdChannel<span class="string">'</span></span></span><br></pre></td></tr></table></figure>
+<p>获取nsqd统计</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">curl</span> <span class="string">'http://127.0.0.1:4151/stats'</span></span><br></pre></td></tr></table></figure>
+<p>查看topic有哪些生产者</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">curl</span> <span class="string">'http://127.0.0.1:4161/lookup?topic=test'</span></span><br></pre></td></tr></table></figure>
+<p>nsqlookupd管理接口</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">curl <span class="string">'http</span>:<span class="comment">//127.0.0.1:4161/topics' </span></span><br><span class="line">curl <span class="string">'http</span>:<span class="comment">//127.0.0.1:4161/channels?topic=nsqdTopic'  </span></span><br><span class="line">curl -X POST <span class="string">'http</span>:<span class="comment">//127.0.0.1:4161/topic/create?topic=lookupdTopic'  </span></span><br><span class="line">curl -X POST <span class="string">'http</span>:<span class="comment">//127.0.0.1:4161/topic/delete?topic=lookupdTopic' </span></span><br><span class="line">curl -X POST <span class="string">'http</span>:<span class="comment">//127.0.0.1:4161/channel/create?topic=lookupdTopic&amp;channel=lookupdChannel'</span></span><br><span class="line">curl -X POST <span class="string">'http</span>:<span class="comment">//127.0.0.1:4161/channel/delete?topic=lookupdTopic&amp;channel=lookupdChannel'</span></span><br></pre></td></tr></table></figure>
+<h3 id="工作流程">工作流程</h3><ol>
+<li>启动nsqlookupd服务</li>
+<li>启动nsqd服务，nsqd服务会向nsqlookup广播自己的节点信息，将自己的信息注册到nsqlookupd上</li>
+<li>生产者选一个topic向nsqd发布消息，这时nsqd会将这些信息同步到nsqlookupd服务，在消费者没有准备好时会将数据存放在本地</li>
+<li>消费者通过查询nsqlookupd或者直接绑定的方式连接nsqd，并创建channel和选择订阅自己感兴趣的topic</li>
+<li>有topic发布消息时，这些消息会被复制到各个channel，将消息推送(PUSH)给消费者消费</li>
+</ol>
+<p><img src="/images/nsq-lookups.png" alt="nsq工作流程图"><br><img src="/images/nsq-message-flow.gif" alt="message流通图"></p>
+<h3 id="stats参数解读">stats参数解读</h3><p>查看某个nsqd的状态实例，可以通过stats接口来看<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http:</span><span class="comment">//10.13.82.72:8227/stats?topic=cts_core_events</span></span><br></pre></td></tr></table></figure></p>
+<p>数据的数据如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">nsqd v0<span class="number">.3</span><span class="number">.8</span> (built w/go1<span class="number">.6</span><span class="number">.2</span>)</span><br><span class="line">start_time <span class="number">2018</span>-<span class="number">07</span>-<span class="number">30</span>T02:<span class="number">21</span>:<span class="number">22</span>Z</span><br><span class="line">uptime <span class="number">103</span>h40m20<span class="number">.907107159</span>s</span><br><span class="line"></span><br><span class="line">Health: OK</span><br><span class="line"></span><br><span class="line">   [cts_core_events] depth: <span class="number">0</span>     be-depth: <span class="number">0</span>     msgs: <span class="number">165923</span>   e2e%: </span><br><span class="line">      [group_member_updated     ] depth: <span class="number">21393</span> be-depth: <span class="number">17083</span> inflt: <span class="number">1</span>    def: <span class="number">0</span>    re-q: <span class="number">8</span>     timeout: <span class="number">8</span>     msgs: <span class="number">165871</span>   e2e%: </span><br><span class="line">        [V2 <span class="number">24</span>b148db65b7:<span class="number">49574</span>   ] state: <span class="number">3</span> inflt: <span class="number">1</span>    rdy: <span class="number">1</span>    fin: <span class="number">10462</span>    re-q: <span class="number">0</span>        msgs: <span class="number">10463</span>    connected: <span class="number">5</span>h50m31s</span><br><span class="line">      [namesearch               ] depth: <span class="number">0</span>     be-depth: <span class="number">0</span>     inflt: <span class="number">0</span>    def: <span class="number">0</span>    re-q: <span class="number">0</span>     timeout: <span class="number">0</span>     msgs: <span class="number">165873</span>   e2e%: </span><br><span class="line">        [V2 <span class="number">24</span>b148db65b7:<span class="number">38860</span>   ] state: <span class="number">3</span> inflt: <span class="number">0</span>    rdy: <span class="number">150</span>  fin: <span class="number">20</span>       re-q: <span class="number">0</span>        msgs: <span class="number">20</span>       connected: <span class="number">5</span>h42m48s</span><br><span class="line">      [space                    ] depth: <span class="number">0</span>     be-depth: <span class="number">0</span>     inflt: <span class="number">0</span>    def: <span class="number">0</span>    re-q: <span class="number">0</span>     timeout: <span class="number">0</span>     msgs: <span class="number">165880</span>   e2e%: </span><br><span class="line">        [V2 <span class="number">24</span>b148db65b7:<span class="number">38882</span>   ] state: <span class="number">3</span> inflt: <span class="number">0</span>    rdy: <span class="number">150</span>  fin: <span class="number">20</span>       re-q: <span class="number">0</span>        msgs: <span class="number">20</span>       connected: <span class="number">5</span>h42m48s</span><br><span class="line">      [wpsaccount               ] depth: <span class="number">0</span>     be-depth: <span class="number">0</span>     inflt: <span class="number">0</span>    def: <span class="number">0</span>    re-q: <span class="number">0</span>     timeout: <span class="number">0</span>     msgs: <span class="number">165923</span>   e2e%: </span><br><span class="line">        [V2 <span class="number">24</span>b148db65b7:<span class="number">38874</span>   ] state: <span class="number">3</span> inflt: <span class="number">0</span>    rdy: <span class="number">1500</span> fin: <span class="number">20</span>       re-q: <span class="number">0</span>        msgs: <span class="number">20</span>       connected: <span class="number">5</span>h42m48s</span><br></pre></td></tr></table></figure></p>
+<p>其中一个缩进代表一个层次：<br>cat_core_events 表示的是一个topic层次，各个参数的意义是：</p>
+<ul>
+<li>depth: 表示这个topic未被消费的消息总数，堆积太多的话有问题</li>
+<li>be-depth (backend-depth)：超出men-queue-size的未被消费的消息总数, 这些消息也就是写入磁盘的消息</li>
+<li>msgs: nsqd运行之后这个topic产生的消息总数（包括已经没消费和没被消费的）</li>
+<li>e2e%: 指定e2e-processing-latency-percentile时才会有，表示端到端在指定百分比的消息处理时间</li>
+</ul>
+<p>第一层缩进 group_member_updated  表示的是topic下面的channel，各个参数的意义是：</p>
+<ul>
+<li>depth: 表示在这个channel中未被消费的消息总数</li>
+<li>be-depth: 超出men-queue-size的未被消费的消息总数, 这些消息也就是写入磁盘的消息</li>
+<li>inflt (in-flight-count)：发送过程中或者客户端处理过程中的数量，客户端没有发送FIN、REQ(重新入队列)和超时的消息数量。</li>
+<li>def(deferred_count)：重新入队并且还没有准备好重新发送的消息数量</li>
+<li>re-q(requeue_count): 超时或者客户端发送REQ的消息数量</li>
+<li>timeout: 超时未处理的消息数量</li>
+<li>msgs: channel处理的消息总数量</li>
+</ul>
+<p>第二层缩进 V2 24b148db65b7:49574 表示的是这个channel下面连接的客户端：</p>
+<ul>
+<li>state: 客户端连接状态</li>
+<li>inflt(in-flight-count): 客户端正在处理的消息数量</li>
+<li>rdy(ready-count): 表示客户端能够处理的消息数量</li>
+<li>fin(finished): 客户端处理完成的消息数量</li>
+<li>re-q(requeue): 客户端发送重新排队的消息数量</li>
+<li>msgs: 客户端处理的消息数量</li>
+<li>connected: 客户端连接时长</li>
+</ul>
+<p>实际上可以指明格式是json，这样子结合<a href="https://nsq.io/components/nsqadmin.html" target="_blank" rel="external">文档</a> 各个参数都是很明白的<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http:</span><span class="comment">//10.13.82.72:8227/stats?format=json&amp;topic=dsearch_events</span></span><br></pre></td></tr></table></figure></p>
+<p>以下是2018-08-03 的输出数据，显然这个数据要比上面的要好读很多：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">data</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">health</span>": <span class="value"><span class="string">"OK"</span></span>,</span><br><span class="line">        "<span class="attribute">start_time</span>": <span class="value"><span class="number">1532917282</span></span>,</span><br><span class="line">        "<span class="attribute">topics</span>": <span class="value">[</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">backend_depth</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">channels</span>": <span class="value">[</span><br><span class="line">                    &#123;</span><br><span class="line">                        "<span class="attribute">backend_depth</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">channel_name</span>": <span class="value"><span class="string">"ds"</span></span>,</span><br><span class="line">                        "<span class="attribute">clients</span>": <span class="value">[</span><br><span class="line">                            &#123;</span><br><span class="line">                                "<span class="attribute">client_id</span>": <span class="value"><span class="string">"a40251c8fb4e"</span></span>,</span><br><span class="line">                                "<span class="attribute">connect_ts</span>": <span class="value"><span class="number">1533269935</span></span>,</span><br><span class="line">                                "<span class="attribute">deflate</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">finish_count</span>": <span class="value"><span class="number">24</span></span>,</span><br><span class="line">                                "<span class="attribute">hostname</span>": <span class="value"><span class="string">"a40251c8fb4e"</span></span>,</span><br><span class="line">                                "<span class="attribute">in_flight_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">message_count</span>": <span class="value"><span class="number">24</span></span>,</span><br><span class="line">                                "<span class="attribute">name</span>": <span class="value"><span class="string">"a40251c8fb4e"</span></span>,</span><br><span class="line">                                "<span class="attribute">ready_count</span>": <span class="value"><span class="number">1</span></span>,</span><br><span class="line">                                "<span class="attribute">remote_address</span>": <span class="value"><span class="string">"172.17.0.1:38848"</span></span>,</span><br><span class="line">                                "<span class="attribute">requeue_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">sample_rate</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">snappy</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">state</span>": <span class="value"><span class="number">3</span></span>,</span><br><span class="line">                                "<span class="attribute">tls</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_cipher_suite</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol_is_mutual</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_version</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">user_agent</span>": <span class="value"><span class="string">"go-nsq/1.0.6"</span></span>,</span><br><span class="line">                                "<span class="attribute">version</span>": <span class="value"><span class="string">"V2"</span></span><br><span class="line">                            </span>&#125;</span><br><span class="line">                        ]</span>,</span><br><span class="line">                        "<span class="attribute">deferred_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">depth</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">e2e_processing_latency</span>": <span class="value">&#123;</span><br><span class="line">                            "<span class="attribute">count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                            "<span class="attribute">percentiles</span>": <span class="value"><span class="literal">null</span></span><br><span class="line">                        </span>&#125;</span>,</span><br><span class="line">                        "<span class="attribute">in_flight_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">message_count</span>": <span class="value"><span class="number">5284</span></span>,</span><br><span class="line">                        "<span class="attribute">paused</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                        "<span class="attribute">requeue_count</span>": <span class="value"><span class="number">67</span></span>,</span><br><span class="line">                        "<span class="attribute">timeout_count</span>": <span class="value"><span class="number">67</span></span><br><span class="line">                    </span>&#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        "<span class="attribute">backend_depth</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">channel_name</span>": <span class="value"><span class="string">"plego"</span></span>,</span><br><span class="line">                        "<span class="attribute">clients</span>": <span class="value">[</span><br><span class="line">                            &#123;</span><br><span class="line">                                "<span class="attribute">client_id</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">connect_ts</span>": <span class="value"><span class="number">1533269981</span></span>,</span><br><span class="line">                                "<span class="attribute">deflate</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">finish_count</span>": <span class="value"><span class="number">9</span></span>,</span><br><span class="line">                                "<span class="attribute">hostname</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">in_flight_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">message_count</span>": <span class="value"><span class="number">9</span></span>,</span><br><span class="line">                                "<span class="attribute">name</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">ready_count</span>": <span class="value"><span class="number">150</span></span>,</span><br><span class="line">                                "<span class="attribute">remote_address</span>": <span class="value"><span class="string">"10.13.82.106:64640"</span></span>,</span><br><span class="line">                                "<span class="attribute">requeue_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">sample_rate</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">snappy</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">state</span>": <span class="value"><span class="number">3</span></span>,</span><br><span class="line">                                "<span class="attribute">tls</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_cipher_suite</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol_is_mutual</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_version</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">user_agent</span>": <span class="value"><span class="string">"go-nsq/1.0.6"</span></span>,</span><br><span class="line">                                "<span class="attribute">version</span>": <span class="value"><span class="string">"V2"</span></span><br><span class="line">                            </span>&#125;,</span><br><span class="line">                            &#123;</span><br><span class="line">                                "<span class="attribute">client_id</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">connect_ts</span>": <span class="value"><span class="number">1533108206</span></span>,</span><br><span class="line">                                "<span class="attribute">deflate</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">finish_count</span>": <span class="value"><span class="number">1147</span></span>,</span><br><span class="line">                                "<span class="attribute">hostname</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">in_flight_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">message_count</span>": <span class="value"><span class="number">1147</span></span>,</span><br><span class="line">                                "<span class="attribute">name</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">ready_count</span>": <span class="value"><span class="number">150</span></span>,</span><br><span class="line">                                "<span class="attribute">remote_address</span>": <span class="value"><span class="string">"10.13.82.78:55391"</span></span>,</span><br><span class="line">                                "<span class="attribute">requeue_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">sample_rate</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">snappy</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">state</span>": <span class="value"><span class="number">3</span></span>,</span><br><span class="line">                                "<span class="attribute">tls</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_cipher_suite</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol_is_mutual</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_version</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">user_agent</span>": <span class="value"><span class="string">"go-nsq/1.0.6"</span></span>,</span><br><span class="line">                                "<span class="attribute">version</span>": <span class="value"><span class="string">"V2"</span></span><br><span class="line">                            </span>&#125;,</span><br><span class="line">                            &#123;</span><br><span class="line">                                "<span class="attribute">client_id</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">connect_ts</span>": <span class="value"><span class="number">1533269984</span></span>,</span><br><span class="line">                                "<span class="attribute">deflate</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">finish_count</span>": <span class="value"><span class="number">3</span></span>,</span><br><span class="line">                                "<span class="attribute">hostname</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">in_flight_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">message_count</span>": <span class="value"><span class="number">3</span></span>,</span><br><span class="line">                                "<span class="attribute">name</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">ready_count</span>": <span class="value"><span class="number">150</span></span>,</span><br><span class="line">                                "<span class="attribute">remote_address</span>": <span class="value"><span class="string">"10.13.82.129:65515"</span></span>,</span><br><span class="line">                                "<span class="attribute">requeue_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">sample_rate</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">snappy</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">state</span>": <span class="value"><span class="number">3</span></span>,</span><br><span class="line">                                "<span class="attribute">tls</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_cipher_suite</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol_is_mutual</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_version</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">user_agent</span>": <span class="value"><span class="string">"go-nsq/1.0.6"</span></span>,</span><br><span class="line">                                "<span class="attribute">version</span>": <span class="value"><span class="string">"V2"</span></span><br><span class="line">                            </span>&#125;,</span><br><span class="line">                            &#123;</span><br><span class="line">                                "<span class="attribute">client_id</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">connect_ts</span>": <span class="value"><span class="number">1533269952</span></span>,</span><br><span class="line">                                "<span class="attribute">deflate</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">finish_count</span>": <span class="value"><span class="number">5</span></span>,</span><br><span class="line">                                "<span class="attribute">hostname</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">in_flight_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">message_count</span>": <span class="value"><span class="number">5</span></span>,</span><br><span class="line">                                "<span class="attribute">name</span>": <span class="value"><span class="string">"WIN-366G26BO6HQ"</span></span>,</span><br><span class="line">                                "<span class="attribute">ready_count</span>": <span class="value"><span class="number">150</span></span>,</span><br><span class="line">                                "<span class="attribute">remote_address</span>": <span class="value"><span class="string">"10.13.82.108:52359"</span></span>,</span><br><span class="line">                                "<span class="attribute">requeue_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">sample_rate</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                                "<span class="attribute">snappy</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">state</span>": <span class="value"><span class="number">3</span></span>,</span><br><span class="line">                                "<span class="attribute">tls</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_cipher_suite</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_negotiated_protocol_is_mutual</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                                "<span class="attribute">tls_version</span>": <span class="value"><span class="string">""</span></span>,</span><br><span class="line">                                "<span class="attribute">user_agent</span>": <span class="value"><span class="string">"go-nsq/1.0.6"</span></span>,</span><br><span class="line">                                "<span class="attribute">version</span>": <span class="value"><span class="string">"V2"</span></span><br><span class="line">                            </span>&#125;</span><br><span class="line">                        ]</span>,</span><br><span class="line">                        "<span class="attribute">deferred_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">depth</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">e2e_processing_latency</span>": <span class="value">&#123;</span><br><span class="line">                            "<span class="attribute">count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                            "<span class="attribute">percentiles</span>": <span class="value"><span class="literal">null</span></span><br><span class="line">                        </span>&#125;</span>,</span><br><span class="line">                        "<span class="attribute">in_flight_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">message_count</span>": <span class="value"><span class="number">5317</span></span>,</span><br><span class="line">                        "<span class="attribute">paused</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                        "<span class="attribute">requeue_count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                        "<span class="attribute">timeout_count</span>": <span class="value"><span class="number">0</span></span><br><span class="line">                    </span>&#125;</span><br><span class="line">                ]</span>,</span><br><span class="line">                "<span class="attribute">depth</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                "<span class="attribute">e2e_processing_latency</span>": <span class="value">&#123;</span><br><span class="line">                    "<span class="attribute">count</span>": <span class="value"><span class="number">0</span></span>,</span><br><span class="line">                    "<span class="attribute">percentiles</span>": <span class="value"><span class="literal">null</span></span><br><span class="line">                </span>&#125;</span>,</span><br><span class="line">                "<span class="attribute">message_count</span>": <span class="value"><span class="number">5317</span></span>,</span><br><span class="line">                "<span class="attribute">paused</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">                "<span class="attribute">topic_name</span>": <span class="value"><span class="string">"dsearch_events"</span></span><br><span class="line">            </span>&#125;</span><br><span class="line">        ]</span>,</span><br><span class="line">        "<span class="attribute">version</span>": <span class="value"><span class="string">"0.3.8"</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">status_code</span>": <span class="value"><span class="number">200</span></span>,</span><br><span class="line">    "<span class="attribute">status_txt</span>": <span class="value"><span class="string">"OK"</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>json格式返回的参数基本上都是很清晰的，topics 下面是topics列表，为了方便示例，只选了一个topic。<br>其中topic这一层的 的参数意思：</p>
+<ul>
+<li>depth: 表示这个topic未被消费的消息总数，堆积太多的话有问题</li>
+<li>backend-depth：超出men-queue-size的未被消费的消息总数</li>
+<li>message_count: nsqd运行之后这个topic产生的消息总数（包括已经没消费和没被消费的）</li>
+<li>e2e_processing_latency: 指定e2e-processing-latency-percentile时才会有，表示端到端在指定百分比的消息处理时间</li>
+<li>pause: topic是否被暂停</li>
+</ul>
+<p>channels这一层中比较重要的参数及其意思：</p>
+<ul>
+<li>depth: 表示在这个channel中未被消费的消息总数</li>
+<li>backend_depth: 超出men-queue-size的未被消费的消息总数</li>
+<li>in_flight_count：发送过程中或者客户端处理过程中的数量，客户端没有发送FIN、REQ(重新入队列)和超时的消息数量。</li>
+<li>deferred_count：重新入队并且还没有准备好重新发送的消息数量</li>
+<li>requeue_count: 超时或者客户端发送REQ的消息数量</li>
+<li>timeout_count: 超时未处理的消息数量</li>
+<li>message_count: channel处理的消息总数量</li>
+</ul>
+<p>在topics-&gt;channels-&gt;clients ，是clients指的是连接到该channel上的所有客户端，主要的参数及其意思是：</p>
+<ul>
+<li>state: 客户端连接状态</li>
+<li>in_flight_count: 客户端正在处理的消息数量</li>
+<li>ready_count: 表示客户端能够处理的消息数量</li>
+<li>finish_count: 客户端处理完成的消息数量</li>
+<li>requeue_count: 客户端发送重新排队的消息数量，重新排队时因为消息没有被成功处理</li>
+<li>message_count: 客户端处理的消息数量</li>
+<li>connected: 客户端连接时长</li>
+<li>snappy, deflate 时配置消息压缩程度的</li>
+<li>tls_* 这些参数时当使用TLS连接时的参数</li>
+</ul>
+<h3 id="消息的生命周期">消息的生命周期</h3><p>生产者发布一个消息之后，通过以下途径保证消息可靠性：</p>
+<ul>
+<li>client连接上nsqd，并通过RDY参数告知可以处理的message数量</li>
+<li>nsqd 把消息暂存起来或者推送到各个连接的channels，对于状态为REQ 和 timeout的都会被暂存起来</li>
+<li>客户端消费消息之后，回复nsqd一个FIN表示消息成功处理，或者REQ表示表示这个消息将会继续重新加入到队列中, 如果处理时间超过配置的timeout时间，则nsqd会把这个消息当成超时处理</li>
+<li>如果客户端一直没有回复直到超时，则这个消息会被当成超时消息重新加入到队列中</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Golang/" rel="tag">#Golang</a>
+          
+            <a href="/tags/NSQ/" rel="tag">#NSQ</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/15/nginx笔记/" rel="next">nginx笔记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="Xinjie Wong" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Xinjie Wong</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Tech Blog of Xinjie Wong</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wongxinjie" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://book.douban.com/people/Xinjie_Wong/" target="_blank">douban</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#核心概念"><span class="nav-number">1.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#message"><span class="nav-number">1.1.</span> <span class="nav-text">message</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#topic"><span class="nav-number">1.2.</span> <span class="nav-text">topic</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#channel"><span class="nav-number">1.3.</span> <span class="nav-text">channel</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具套件"><span class="nav-number">2.</span> <span class="nav-text">工具套件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nsqd"><span class="nav-number">2.1.</span> <span class="nav-text">nsqd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nsqlookupd"><span class="nav-number">2.2.</span> <span class="nav-text">nsqlookupd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nsqadmin"><span class="nav-number">2.3.</span> <span class="nav-text">nsqadmin</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NSQ使用"><span class="nav-number">3.</span> <span class="nav-text">NSQ使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工作流程"><span class="nav-number">4.</span> <span class="nav-text">工作流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stats参数解读"><span class="nav-number">5.</span> <span class="nav-text">stats参数解读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息的生命周期"><span class="nav-number">6.</span> <span class="nav-text">消息的生命周期</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie Wong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
