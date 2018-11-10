@@ -1,0 +1,624 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Tech Blog of Xinjie Wong" />
+
+
+
+  <meta name="keywords" content="Tornado," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="随便问一个Python开发者，Tornado框架和Django/Flask之类的框架有什么区别，十有八九会回答，Tornado支持异步非阻塞。Tornado和其他两个框架最大的区别在于，Tornado既是web框架同时又是异步网络库，也是web服务器。而无论Django还是Flask，它们都只是web框架，不能单独在生产环境中使用，必须搭配wsgi web服务器配套使用（如gunicorn, uW">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tornado异步非阻塞">
+<meta property="og:url" content="http://blog.wongxinjie.com/2018/06/04/Tornado异步非阻塞/index.html">
+<meta property="og:site_name" content="Wong Page">
+<meta property="og:description" content="随便问一个Python开发者，Tornado框架和Django/Flask之类的框架有什么区别，十有八九会回答，Tornado支持异步非阻塞。Tornado和其他两个框架最大的区别在于，Tornado既是web框架同时又是异步网络库，也是web服务器。而无论Django还是Flask，它们都只是web框架，不能单独在生产环境中使用，必须搭配wsgi web服务器配套使用（如gunicorn, uW">
+<meta property="og:updated_time" content="2018-11-10T09:47:17.366Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tornado异步非阻塞">
+<meta name="twitter:description" content="随便问一个Python开发者，Tornado框架和Django/Flask之类的框架有什么区别，十有八九会回答，Tornado支持异步非阻塞。Tornado和其他两个框架最大的区别在于，Tornado既是web框架同时又是异步网络库，也是web服务器。而无论Django还是Flask，它们都只是web框架，不能单独在生产环境中使用，必须搭配wsgi web服务器配套使用（如gunicorn, uW">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> Tornado异步非阻塞 | Wong Page </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Wong Page</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Tornado异步非阻塞
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2018-06-04T21:20:36+08:00" content="2018-06-04">
+            2018-06-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Python/" itemprop="url" rel="index">
+                  <span itemprop="name">Python</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>随便问一个Python开发者，Tornado框架和Django/Flask之类的框架有什么区别，十有八九会回答，Tornado支持异步非阻塞。Tornado和其他两个框架最大的区别在于，Tornado既是web框架同时又是异步网络库，也是web服务器。而无论Django还是Flask，它们都只是web框架，不能单独在生产环境中使用，必须搭配wsgi web服务器配套使用（如<a href="http://gunicorn.org/" target="_blank" rel="external">gunicorn</a>, <a href="https://uwsgi-docs.readthedocs.io/en/latest/" target="_blank" rel="external">uWSGI</a>)，同时又因为WSGI协议的缘故，这两个web框架都不支持异步非阻塞。而Tornado又是如何实现处理异步请求的又是一个话题。<br>这篇博客聚焦的是，如何在Tornado中正确的实现异步非阻塞操作。所有的示例代码都是基于Tornado 4.0+ 和 Python 3.5+ 。<br>关于Tornado异步IO，<a href="http://www.tornadoweb.org/en/stable/guide/async.html" target="_blank" rel="external">文档</a> 已经写得很清楚了。Tornado中主要有三种形式的异步实现方式：回调、协程和Future。无论何种形式实现的，都和Tornado核心 IOLoop有千丝万缕的联系。<br><a id="more"></a></p>
+<h4 id="基于回调">基于回调</h4><p>在Tornado中，用@tornado.web.asynchronous 装饰器装饰的请求方法就是基于回调的异步实现。最常见的例子就是AsyncHTTPClient：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CallbackFetchHandler</span><span class="params">(RequestHandler)</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="decorator">    @web.asynchronous</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self)</span>:</span></span><br><span class="line">        url = self.get_argument(<span class="string">"url"</span>, <span class="string">"https://httpbin.org/"</span>)</span><br><span class="line">        client = httpclient.AsyncHTTPClient()</span><br><span class="line">        client.fetch(url, self._on_response)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_on_response</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        size = len(response.body)</span><br><span class="line">        self.write(<span class="string">"pageSize is %s"</span> % size)</span><br><span class="line">        self.finish()</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意的是，@web.asynchronous 这个装饰器只能在请求方法中使用，而在其他方法使用回发生未知错误，同时要在回调函数中自行调用 self.finish()  来关闭请求，否则这个请求回一直pending。<br>这种异步实现需要有支持回调的异步库或者函数可以调用，如果没有即使用了这个装饰器也是白搭。例如AsyncHTTPClient.fetch 方法本事的实现就支持异步的，而HTTPClient.fetch只是做了一个同步的封装。</p>
+<h4 id="基于协程">基于协程</h4><p>相比回调，用协程实现的方式在代码流程上更易于阅读。Tornado用 @gen.coroutine 来配合函数实现异步的调用方式。<br>在Python3 之前，Python的协程都已生成器的方式实现的，所以Tornado自己的协程实现，不能使用普通的生成器，而Python3 之后有原生的协程实现，所以对于新项目，不考虑兼容比较老的Python，可以考虑用原生的语法实现。在较早之前，用这个装饰器的方式返回的是YieldPoint，Tornado 4.0之后便改成了Future。<br>上面的例子可以改成，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GenAsyncHandler</span><span class="params">(RequestHandler)</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="decorator">    @gen.coroutine</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self)</span>:</span></span><br><span class="line">        url = self.get_argument(<span class="string">"url"</span>, <span class="string">"https://httpbin.org/"</span>)</span><br><span class="line">        client = httpclient.AsyncHTTPClient()</span><br><span class="line">        response = <span class="keyword">yield</span> client.fetch(url)</span><br><span class="line">        self.write(<span class="string">"pageSize is %s"</span> % len(response.body))</span><br></pre></td></tr></table></figure></p>
+<p>而且基于协程的异步可以同时运行几个Future，类似于<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@gen.coroutine</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self)</span>:</span></span><br><span class="line">    http_client = AsyncHTTPClient()</span><br><span class="line">    response1, response2 = <span class="keyword">yield</span> [http_client.fetch(url1),</span><br><span class="line">                                  http_client.fetch(url2)]</span><br><span class="line">    response_dict = <span class="keyword">yield</span> dict(</span><br><span class="line">        url3=http_client.fetch(url3),</span><br><span class="line">        url4=http_client.fetch(url4)</span><br><span class="line">    )</span><br><span class="line">    response3 = response_dict[<span class="string">'url3'</span>]</span><br><span class="line">    response4 = response_dict[<span class="string">'url4'</span>]</span><br></pre></td></tr></table></figure></p>
+<p>这种对于在一个请求中要去请求多个外部服务的情况下，还是有很大的作用的。<br>但是无论是基于回调还是基于协程，都必须有一个前提，那就是要有支持异步的库才能实现异步，如果在一个异步的函数中调用了一个同步的方法，整个函数还是同步的。Tornado的<a href="https://github.com/tornadoweb/tornado/wiki/Links" target="_blank" rel="external">第三方</a>里面罗列了一些，但是很多都只是支持Python2，也有很多已经不再更新了，对比于Django和Flask的生态确实差很多。也难怪，基本上所有异步库都要和Tornado本身的IOLoop绑定在一起。</p>
+<h4 id="基于Future">基于Future</h4><p>那么假如要调用一些没有实现异步的外部库呢？Tornado也给出了解决方案，那就是基于线程池的形式，使用concurrent.futures中的ThreadPoolExecutor, 把可能回阻塞的操作都放到线程池中去实现，同样以刚才的例子,<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExecutorHandler</span><span class="params">(RequestHandler)</span>:</span></span><br><span class="line">    executor = ThreadPoolExecutor()</span><br><span class="line"></span><br><span class="line"><span class="decorator">    @gen.coroutine</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self)</span>:</span></span><br><span class="line">        url = self.get_argument(<span class="string">"url"</span>, <span class="string">"https://httpbin.org/"</span>)</span><br><span class="line">        response = <span class="keyword">yield</span> self.fetch(url)</span><br><span class="line">        self.write(<span class="string">"pageSize is %s"</span> % len(response))</span><br><span class="line">        self.finish()</span><br><span class="line"></span><br><span class="line"><span class="decorator">    @run_on_executor</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fetch</span><span class="params">(self, url)</span>:</span></span><br><span class="line">        <span class="keyword">with</span> urlopen(url) <span class="keyword">as</span> page:</span><br><span class="line">            content = page.read().decode(<span class="string">"utf-8"</span>)</span><br><span class="line">        <span class="keyword">return</span> content</span><br></pre></td></tr></table></figure></p>
+<p>但是由于GIL的缘故，Python的多线程在一些计算密集型的任务重表现并不是很好。但很多时候，很难去判断说一个任务是计算密集型还是IO密集型性，好比需要调用一个有鉴权的外部服务，而鉴权的加解密算法需要大量的计算，这就很难讲是IO密集型了。<br>处理这些任务，也可以借助任务队列来实现，比如Celery。在一个项目中，我们就利用了Celery来处理和硬件用UDP协议来进行交互。在Python3中使用Tornado和Celery中，有一个 tornado-celery 库，实际发现使用起来还是同步阻塞的。由于作者长时间不更新，而且也不支持新版的Tornado，所以不建议使用。<br>实际上稍微修改一下就可以自己实现Celery的异步了，如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CeleryAsyncHandler</span><span class="params">(BaseHandler)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wait_for_result</span><span class="params">(self, task, callback)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> task.ready():</span><br><span class="line">            callback(task.result)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            tornado.ioloop.IOLoop.current().add_callback(</span><br><span class="line">                partial(self.wait_for_result, task, callback)</span><br><span class="line">            )</span><br><span class="line"></span><br><span class="line"><span class="decorator">    @gen.coroutine</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self)</span>:</span></span><br><span class="line">        url = self.get_argument(<span class="string">"url"</span>, <span class="string">"https://httpbin.org/"</span>)</span><br><span class="line">        task = fetch_content.apply_async(args=(url, ))</span><br><span class="line">        content = <span class="keyword">yield</span> gen.Task(self.wait_for_result, task)</span><br><span class="line">        self.write(<span class="string">"pageSize is %s"</span> % len(content))</span><br></pre></td></tr></table></figure></p>
+<p>而Celery中worker代码如下；<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> celery <span class="keyword">import</span> Celery</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app = Celery(<span class="string">'tasks'</span>)</span><br><span class="line"></span><br><span class="line">app.conf.update(</span><br><span class="line">    broker_url=<span class="string">"amqp://guest:guest@localhost:5672"</span>,</span><br><span class="line">    result_backend=<span class="string">"redis://localhost:6379/2"</span>,</span><br><span class="line">    timezone=<span class="string">'Asia/Shanghai'</span>,</span><br><span class="line">    enable_utc=<span class="keyword">True</span>,</span><br><span class="line">    TCELERY_RESULT_NOWAIT=<span class="keyword">False</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.task</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_content</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> urlopen(url) <span class="keyword">as</span> page:</span><br><span class="line">        content = page.read().decode(<span class="string">"utf-8"</span>)</span><br><span class="line">    <span class="keyword">return</span> content</span><br></pre></td></tr></table></figure></p>
+<p>实际上就是把可能的复杂计算或者是网络IO全部移出tornado主线程。这个能实现的原理就是把Celery的一个任务当成一个网络IO注册在IOLoop中，Tornado会定时遍历事件是否已经就绪，如果已经就绪则进行回调处理。</p>
+<p>参考资料</p>
+<ul>
+<li><a href="http://www.tornadoweb.org/en/stable/index.html" target="_blank" rel="external">Tornado document</a></li>
+<li><a href="https://hexiangyu.me/2017/01/29/real-tornado-async-noblocking/" target="_blank" rel="external">真正的 Tornado 异步非阻塞</a></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Tornado/" rel="tag">#Tornado</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/07/NSQ笔记/" rel="prev">NSQ简介</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/15/nginx笔记/" rel="next">nginx笔记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="Xinjie Wong" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Xinjie Wong</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Tech Blog of Xinjie Wong</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wongxinjie" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://book.douban.com/people/Xinjie_Wong/" target="_blank">douban</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基于回调"><span class="nav-number">1.</span> <span class="nav-text">基于回调</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于协程"><span class="nav-number">2.</span> <span class="nav-text">基于协程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于Future"><span class="nav-number">3.</span> <span class="nav-text">基于Future</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie Wong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

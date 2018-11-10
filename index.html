@@ -277,6 +277,87 @@
           
           
             
+              <a class="post-title-link" href="/2018/06/04/Tornado异步非阻塞/" itemprop="url">
+                Tornado异步非阻塞
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2018-06-04T21:20:36+08:00" content="2018-06-04">
+            2018-06-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Python/" itemprop="url" rel="index">
+                  <span itemprop="name">Python</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>随便问一个Python开发者，Tornado框架和Django/Flask之类的框架有什么区别，十有八九会回答，Tornado支持异步非阻塞。Tornado和其他两个框架最大的区别在于，Tornado既是web框架同时又是异步网络库，也是web服务器。而无论Django还是Flask，它们都只是web框架，不能单独在生产环境中使用，必须搭配wsgi web服务器配套使用（如<a href="http://gunicorn.org/">gunicorn</a>, <a href="https://uwsgi-docs.readthedocs.io/en/latest/">uWSGI</a>)，同时又因为WSGI协议的缘故，这两个web框架都不支持异步非阻塞。而Tornado又是如何实现处理异步请求的又是一个话题。<br>这篇博客聚焦的是，如何在Tornado中正确的实现异步非阻塞操作。所有的示例代码都是基于Tornado 4.0+ 和 Python 3.5+ 。<br>关于Tornado异步IO，<a href="http://www.tornadoweb.org/en/stable/guide/async.html">文档</a> 已经写得很清楚了。Tornado中主要有三种形式的异步实现方式：回调、协程和Future。无论何种形式实现的，都和Tornado核心 IOLoop有千丝万缕的联系。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/06/04/Tornado异步非阻塞/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2017/03/15/nginx笔记/" itemprop="url">
                 nginx笔记
               </a>
@@ -985,89 +1066,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/08/25/Redis数据安全/" itemprop="url">
-                Redis数据安全
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-08-25T22:09:25+08:00" content="2016-08-25">
-            2016-08-25
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Redis/" itemprop="url" rel="index">
-                  <span itemprop="name">Redis</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>Redis虽然是内存型(in-memory)数据数据库，但同时也提供了持久化 选项可以将数据保存到硬盘中，正确地配置这些持久化设置，可以在服务器挂了时将数据损失降到最低。redis提供了两种方法对数据进行持久化，分别是<strong>snapshotting(快照)</strong>和<strong>AOF(append-only file, 只追加文件)</strong>, 这两种方法可以单独使用或者搭配使用，也可以都不用。Redis在线文档和配置文件（通常在/etc/redis.conf)都写的很仔细。</p>
-<h5 id="快照持久化">快照持久化</h5><p>快照就是将某一时刻将Redis存储的所有数据写到硬盘里，其功能就相当于一个数据备份。快照可以用来在多台机器上建立具有相同数据内容的服务，或者在重启机器时恢复数据。快照相关的配置如下：</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">save</span> <span class="number">60</span> <span class="number">10000</span> <span class="comment"># 60s内有10000次写入则自动调用bgsave创建快照</span></span><br><span class="line">stop-writes-<span class="built_in">on</span>-bgsaves-<span class="built_in">error</span> <span class="built_in">no</span>  <span class="comment">#创建快照失败是否继续执行</span></span><br><span class="line">rdbcompression <span class="built_in">yes</span> <span class="comment"># 是否对快照文件进行压缩</span></span><br><span class="line">dbfilename dump.rdb <span class="comment"># 快照文件名</span></span><br></pre></td></tr></table></figure>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/08/25/Redis数据安全/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1106,7 +1104,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1120,7 +1118,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
