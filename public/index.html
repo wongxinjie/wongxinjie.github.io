@@ -166,6 +166,117 @@
           
           
             
+              <a class="post-title-link" href="/2018/09/07/NSQ笔记/" itemprop="url">
+                NSQ简介
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2018-09-07T20:00:10+08:00" content="2018-09-07">
+            2018-09-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/消息队列/" itemprop="url" rel="index">
+                  <span itemprop="name">消息队列</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>NSQ是分布式实时消息队列。NSQ是分布式的、拓扑结构，具有无单点故障、故障容错、高可用性和保证消息的可靠传递等特点，容易配置和部署。</p>
+<h3 id="核心概念">核心概念</h3><h4 id="message">message</h4><p>数据流形式，生产者需要消费者处理的一个数据流（包）。</p>
+<h4 id="topic">topic</h4><p>消息的逻辑关键词。</p>
+<ul>
+<li>message属于某个特定的topic</li>
+<li>在由生产者在发布消息时生成</li>
+<li>通常描述消息的内容</li>
+</ul>
+<h4 id="channel">channel</h4><p>生产者与消费者之间的消息通道，相当于消息队列。</p>
+<ul>
+<li>一个topic可以有多个channel</li>
+<li>一个channel只能对应一个topic</li>
+<li>channel由消费者首次订阅产生，一个channel可以有多个消费者，起负载均衡的作用。</li>
+<li>一个topic的消息会复制到与topic关联的各个channel</li>
+<li>channel的名称通常描述的是消费者的业务</li>
+</ul>
+<h3 id="工具套件">工具套件</h3><h4 id="nsqd">nsqd</h4><p>一个负责接收、排队、转发消息到客户端的守护进程。负责message的收发和队列的维护。<br>nsqd默认监听一个TCP端口（4150）和一个HTTP端口 （4151）。  nsqd功能特性：</p>
+<ul>
+<li>topic发布到channel中的消息会被消费者消费</li>
+<li>只要channel存在，即使没有消费者，生产者的message也会缓存在队列中</li>
+<li>topic发布的message至少会被消费一次，nsq正常退出，消息会被写入磁盘</li>
+<li>限制内存中用，channel中的message是存放在内存中的，可以限制其大小，超出时可以将 message缓存到磁盘</li>
+<li>topic和channel一旦创建就会一直存在，除非主动删除</li>
+</ul>
+<h4 id="nsqlookupd">nsqlookupd</h4><p>中心管理服务进程。nsqlookupd提供管理nsqd服务，客户端查询生产者、topic和channel服务。<br>使用TCP(默认端口4160)管理nsqd服务，使用http(默认端口4161)管理nsqadmin服务。</p>
+<ul>
+<li>一个 nsqd服务只能注册到一个nsqlookupd</li>
+<li>去中心化，nsqlookupd崩溃也不会影响到nsqd</li>
+<li>可以充当nsqd和nsqdadmin之间的交互中间件</li>
+<li>消费者可以通过nsqlookupd获取生产者信息</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2018/09/07/NSQ笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
               <a class="post-title-link" href="/2017/03/15/nginx笔记/" itemprop="url">
                 nginx笔记
               </a>
@@ -957,88 +1068,6 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2016/06/06/数据库连接不上了！/" itemprop="url">
-                数据库连接不上了！
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2016-06-06T23:04:17+08:00" content="2016-06-06">
-            2016-06-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/数据库/" itemprop="url" rel="index">
-                  <span itemprop="name">数据库</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>故事发生在公司的一部内网的测试服务器挂掉后修复后，发布一些python项目之后发现基于有数据库本地连接的基本都跑不起来，全部报错<br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">OperationalError:</span> (_mysql_exceptions.OperationalError) (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
-<p>一开始以为是配置文件写错，但是检查之后发现没什么问题，倒是测试机自己太吊跪，好像只能用unix_socket才能连接，而基于TCP的连接就不行。在ipython试了一下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;&gt; </span><span class="keyword">from</span> torndb <span class="keyword">import</span> Connection</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'127.0.0.1'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2003</span>, <span class="string">"Can't connect to MySQL server on '127.0.0.1' (111)"</span>)</span><br><span class="line"><span class="prompt">&gt;&gt;&gt; </span>db = Connection(<span class="string">'localhost'</span>, <span class="string">'mysql'</span>, user=<span class="string">'root'</span>, password=<span class="string">'*****'</span>)</span><br><span class="line">...</span><br><span class="line">OperationalError: (<span class="number">2002</span>, <span class="string">"Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2)"</span>)</span><br></pre></td></tr></table></figure></p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/06/06/数据库连接不上了！/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1091,7 +1120,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -1135,7 +1164,7 @@
       <div class="footer-inner"> <div class="copyright" >
   
   &copy; &nbsp;  2015 - 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="icon-next-heart"></i>
   </span>
