@@ -1,0 +1,804 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+    <meta name="description" content="Tech Blog of Xinjie Wong" />
+
+
+
+  <meta name="keywords" content="MySQL," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="核心规定
+尽量不在数据库做运算，cpu 计算务必移至业务层
+控制单表数据量，int 型不超过1000w，含 char 则不超过500w
+保持表身段苗条，字段少而精，字段数建议在20以内
+平衡范式和冗余
+拒绝大SQL，复杂事务，大批量任务
+
+字段类规定
+用好数值字段，尽量简化字段位数
+如果可以，将字符串转化为数字存储
+避免使用Enum或Set
+除非有必要，否则避免使用NULL
+少用并拆分Text/B">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL数据库设计">
+<meta property="og:url" content="http://blog.wongxinjie.com/2018/05/20/SQL数据库设计/index.html">
+<meta property="og:site_name" content="Wong Page">
+<meta property="og:description" content="核心规定
+尽量不在数据库做运算，cpu 计算务必移至业务层
+控制单表数据量，int 型不超过1000w，含 char 则不超过500w
+保持表身段苗条，字段少而精，字段数建议在20以内
+平衡范式和冗余
+拒绝大SQL，复杂事务，大批量任务
+
+字段类规定
+用好数值字段，尽量简化字段位数
+如果可以，将字符串转化为数字存储
+避免使用Enum或Set
+除非有必要，否则避免使用NULL
+少用并拆分Text/B">
+<meta property="og:updated_time" content="2018-11-12T02:47:57.315Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQL数据库设计">
+<meta name="twitter:description" content="核心规定
+尽量不在数据库做运算，cpu 计算务必移至业务层
+控制单表数据量，int 型不超过1000w，含 char 则不超过500w
+保持表身段苗条，字段少而精，字段数建议在20以内
+平衡范式和冗余
+拒绝大SQL，复杂事务，大批量任务
+
+字段类规定
+用好数值字段，尽量简化字段位数
+如果可以，将字符串转化为数字存储
+避免使用Enum或Set
+除非有必要，否则避免使用NULL
+少用并拆分Text/B">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> SQL数据库设计 | Wong Page </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Wong Page</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              SQL数据库设计
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2018-05-20T19:44:12+08:00" content="2018-05-20">
+            2018-05-20
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/数据库/" itemprop="url" rel="index">
+                  <span itemprop="name">数据库</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h4 id="核心规定">核心规定</h4><ol>
+<li>尽量不在数据库做运算，cpu 计算务必移至业务层</li>
+<li>控制单表数据量，int 型不超过1000w，含 char 则不超过500w</li>
+<li>保持表身段苗条，字段少而精，字段数建议在20以内</li>
+<li>平衡范式和冗余</li>
+<li>拒绝大SQL，复杂事务，大批量任务</li>
+</ol>
+<h4 id="字段类规定">字段类规定</h4><ol>
+<li>用好数值字段，尽量简化字段位数</li>
+<li>如果可以，将字符串转化为数字存储</li>
+<li>避免使用Enum或Set</li>
+<li>除非有必要，否则避免使用NULL</li>
+<li>少用并拆分Text/Blob</li>
+<li>不在数据库中存图片<a id="more"></a>
+</li>
+</ol>
+<h4 id="索引类规定">索引类规定</h4><ol>
+<li>谨慎合理添加索引</li>
+<li>字符字段必须建立前缀索引，而不是全部值，以节约空间并得到好的性能</li>
+<li>不在索引列做运算</li>
+<li>自增列或全局ID做InnoDB主键</li>
+<li>尽量不用外键</li>
+</ol>
+<h4 id="SQL类规定">SQL类规定</h4><ol>
+<li>SQL尽可能简单，避免大SQL</li>
+<li>保持事务连接短小，即开即用、用完就关</li>
+<li>尽可能少用存储过程，少用触发器，减用MySQL函数对结果进行处理</li>
+<li>尽量不用Select *</li>
+<li>改写or为IN()</li>
+<li>改写or为Union</li>
+<li>避免负向查询和%前缀模糊查询</li>
+<li>count不要使用在可NULL的字段上面</li>
+<li>减少count(*)</li>
+<li>limit高效分页，SELECT * FROM message WHERE id &gt; 9527 (or sub select) limit 10</li>
+<li>使用union ALL 而不用union</li>
+<li>分解表连接查询，保证高并发</li>
+<li>group By 去除排序</li>
+<li>同数据类型的列值比较</li>
+<li>load Data导入数据，比insert快20倍</li>
+<li>打散大批量更新，尽量凌晨操作</li>
+</ol>
+<h4 id="约定类规定">约定类规定</h4><ol>
+<li>隔离线上线下</li>
+<li>禁止未经DBA认证的子查询</li>
+<li>永远不在程序段显式加锁</li>
+<li>统一字符集为utf8mb4，统一命名规范</li>
+</ol>
+<h2 id="建表规约">建表规约</h2><ol>
+<li><p>【强制】表达是与否概念的字段，必须使用 is_xxx 的方式命名，数据类型是 unsigned tinyint<br>（ 1 表示是，0 表示否）。<br>说明：任何字段如果为非负数，必须是 unsigned。</p>
+</li>
+<li><p>【强制】表名、字段名必须使用小写字母或数字，禁止出现数字开头，禁止两个下划线中间只<br>出现数字。数据库字段名的修改代价很大，因为无法进行预发布，所以字段名称需要慎重考虑。<br>正例：getter_admin，task_config，level3_name<br>反例：GetterAdmin，taskConfig，level_3_name  </p>
+</li>
+<li><p>【强制】禁用保留字，如 desc、range、match、delayed 等，请参考 MySQL 官方保留字。</p>
+</li>
+<li><p>【强制】表名不使用复数名词。</p>
+</li>
+<li><p>【强制】主键索引名为 pk<em>字段名；唯一索引名为 uk</em>字段名；普通索引名则为 idx<em>字段名。<br>说明：pk</em> 即 primary key；uk<em> 即 unique key；idx</em> 即 index 的简称。</p>
+</li>
+<li><p>【强制】小数类型为 decimal，禁止使用 float 和 double。<br>说明：float 和 double 在存储的时候，存在精度损失的问题，很可能在值的比较时，得到不正确的结果。如果存储的数据范围超过 decimal 的范围，建议将数据拆成整数和小数分开存储。</p>
+</li>
+<li><p>【强制】如果存储的字符串长度几乎相等，使用 char 定长字符串类型。  </p>
+</li>
+<li><p>【强制】varchar 是可变长字符串，不预先分配存储空间，长度不要超过 5000，如果存储长度大于此值，定义字段类型为 text，独立出来一张表，用主键来对应，避免影响其它字段索引效率。</p>
+</li>
+<li><p>【强制】表必备三字段：id, gmt_create, gmt_modified。<br>说明：其中 id 必为主键，类型为 unsigned bigint、单表时自增、步长为 1。gmt_create,<br>gmt_modified 的类型均为 datetime 类型。</p>
+</li>
+<li><p>【推荐】表的命名最好是加上“业务名称_表的作用”。<br>正例：tiger_task / tiger_reader / mpp_config</p>
+</li>
+<li><p>【推荐】库名与微服务应用/模块名称尽量一致。</p>
+</li>
+<li><p>【推荐】如果修改字段含义或对字段表示的状态追加时，需要及时更新字段注释。</p>
+</li>
+<li><p>【推荐】字段允许适当冗余，以提高性能，但是必须考虑数据同步的情况。冗余字段应遵循：<br>1）不是频繁修改的字段。<br>2）不是 varchar 超长字段，更不能是 text 字段。<br>正例：商品类目名称使用频率高，字段长度短，名称基本一成不变，可在相关联的表中冗余存储类目名称，避免关联查询。</p>
+</li>
+<li><p>【推荐】单表行数超过 500 万行或者单表容量超过 2GB，才推荐进行分库分表。<br>说明：如果预计三年后的数据量根本达不到这个级别，请不要在创建表时就分库分表。</p>
+</li>
+<li><p>【参考】合适的字符存储长度，不但节约数据库表空间、节约索引存储，更重要的是提升检索速度。<br>正例：无符号值可以避免误存负数，且扩大了表示范围。  </p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>年龄区间</th>
+<th>类型</th>
+<th>表示范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人</td>
+<td>150 岁之内</td>
+<td>unsigned tinyint</td>
+<td>无符号值：0 到 255</td>
+</tr>
+<tr>
+<td>龟</td>
+<td>数百岁</td>
+<td>unsigned smallint</td>
+<td>无符号值：0 到 65535</td>
+</tr>
+<tr>
+<td>恐龙化石</td>
+<td>数千万年</td>
+<td>unsigned int</td>
+<td>无符号值：0 到约 42.9 亿</td>
+</tr>
+<tr>
+<td>太阳</td>
+<td>约 50 亿年</td>
+<td>unsigned bigint</td>
+<td>无符号值：0 到约 10 的 19 次方</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引规约">索引规约</h2><ol>
+<li>【强制】业务上具有唯一特性的字段，即使是组合字段，也必须建成唯一索引。</li>
+<li>【强制】 超过三个表禁止 join。需要 join 的字段，数据类型必须绝对一致；多表关联查询<br>时，保证被关联的字段需要有索引。<br>说明：即使双表 join 也要注意表索引、SQL 性能。</li>
+<li><p>【强制】在 varchar 字段上建立索引时，必须指定索引长度，没必要对全字段建立索引，根据<br>实际文本区分度决定索引长度即可。<br>说明：索引的长度与区分度是一对矛盾体，一般对字符串类型数据，长度为 20 的索引，区分<br>度会高达 90%以上，可以使用 count(distinct left(列名, 索引长度))/count(*)的区分度<br>来确定。</p>
+</li>
+<li><p>【强制】页面搜索严禁左模糊或者全模糊，如果需要请走搜索引擎来解决。<br>说明：索引文件具有 B-Tree 的最左前缀匹配特性，如果左边的值未确定，那么无法使用此索<br>引。</p>
+</li>
+<li><p>【推荐】如果有 order by 的场景，请注意利用索引的有序性。order by 最后的字段是组合<br>索引的一部分，并且放在索引组合顺序的最后，避免出现 file_sort 的情况，影响查询性能。<br>正例：where a=? and b=? order by c; 索引：a_b_c<br>反例：索引中有范围查找，那么索引有序性无法利用，如：WHERE a&gt;10 ORDER BY b; 索引<br>a_b 无法排序。</p>
+</li>
+<li><p>【推荐】利用覆盖索引来进行查询操作，避免回表。<br>说明：如果一本书需要知道第 11 章是什么标题，会翻开第 11 章对应的那一页吗？目录浏览<br>一下就好，这个目录就是起到覆盖索引的作用。<br>正例：能够建立索引的种类：主键索引、唯一索引、普通索引，而覆盖索引是一种查询的一种<br>效果，用 explain 的结果，extra 列会出现：using index。  </p>
+</li>
+<li><p>【推荐】利用延迟关联或者子查询优化超多分页场景。<br>说明：MySQL 并不是跳过 offset 行，而是取 offset+N 行，然后返回放弃前 offset 行，返回N 行，那当 offset 特别大的时候，效率就非常的低下，要么控制返回的总页数，要么对超过<br>特定阈值的页数进行 SQL 改写。<br>正例：先快速定位需要获取的 id 段，然后再关联：<br>SELECT a.* FROM 表 1 a, (select id from 表 1 where 条件 LIMIT 100000,20 ) b where a.id=b.id</p>
+</li>
+<li><p>【推荐】SQL 性能优化的目标：至少要达到 range 级别，要求是 ref 级别，如果可以是 consts<br>最好。<br>说明：<br>1）consts 单表中最多只有一个匹配行（主键或者唯一索引），在优化阶段即可读取到数据。<br>2）ref 指的是使用普通的索引（normal index）。<br>3）range 对索引进行范围检索。</p>
+</li>
+<li><p>【推荐】建组合索引的时候，区分度最高的在最左边。<br>正例：如果 where a=? and b=? ，a 列的几乎接近于唯一值，那么只需要单建 idx_a 索引即<br>可。<br>说明：存在非等号和等号混合判断条件时，在建索引时，请把等号条件的列前置。如：where a&gt;?<br>and b=? 那么即使 a 的区分度更高，也必须把 b 放在索引的最前列。</p>
+</li>
+<li><p>【参考】创建索引时避免有如下极端误解：<br>1）误认为一个查询就需要建一个索引。<br>2）误认为索引会消耗空间、严重拖慢更新和新增速度。<br>3）误认为唯一索引一律需要在应用层通过“先查后插”方式解决。</p>
+</li>
+</ol>
+<h2 id="SQL_规约">SQL 规约</h2><ol>
+<li><p>【强制】不要使用 count(列名)或 count(常量)来替代 count(*)，count(*)是 SQL92 定义的<br>标准统计行数的语法，跟数据库无关，跟 NULL 和非 NULL 无关。<br>说明：count(*)会统计值为 NULL 的行，而 count(列名)不会统计此列为 NULL 值的行。</p>
+</li>
+<li><p>【强制】count(distinct col) 计算该列除 NULL 之外的不重复行数，注意 count(distinct<br>col1, col2) 如果其中一列全为 NULL，那么即使另一列有不同的值，也返回为 0。</p>
+</li>
+<li><p>【强制】当某一列的值全是 NULL 时，count(col)的返回结果为 0，但 sum(col)的返回结果为<br>NULL，因此使用 sum()时需注意 NPE 问题。<br>正例：可以使用如下方式来避免 sum 的 NPE 问题：SELECT IF(ISNULL(SUM(g)),0,SUM(g))<br>FROM table;</p>
+</li>
+<li><p>【强制】使用 ISNULL()来判断是否为 NULL 值。注意：NULL 与任何值的直接比较都为 NULL。<br>说明：<br>1） NULL&lt;&gt;NULL 的返回结果是 NULL，而不是 false。<br>2） NULL=NULL 的返回结果是 NULL，而不是 true。<br>3） NULL&lt;&gt;1 的返回结果是 NULL，而不是 true。  </p>
+</li>
+<li><p>【强制】在代码中写分页查询逻辑时，若 count 为 0 应直接返回，避免执行后面的分页语句。</p>
+</li>
+<li><p>【强制】不得使用外键与级联，一切外键概念必须在应用层解决。<br>说明：（概念解释）学生表中的 student_id 是主键，那么成绩表中的 student_id 则为外键。  如果更新学生表中的 student_id，同时触发成绩表中的 student_id 更新，则为级联更新。<br>外键与级联更新适用于单机低并发，不适合分布式、高并发集群；级联更新是强阻塞，存在数<br>据库更新风暴的风险；外键影响数据库的插入速度。</p>
+</li>
+<li><p>【强制】禁止使用存储过程，存储过程难以调试和扩展，更没有移植性。</p>
+</li>
+<li><p>【强制】数据订正时，删除和修改记录时，要先 select，避免出现误删除，确认无误才能执<br>行更新语句。</p>
+</li>
+<li><p>【推荐】in 操作能避免则避免，若实在避免不了，需要仔细评估 in 后边的集合元素数量，控<br>制在 1000 个之内。</p>
+</li>
+<li><p>【参考】如果有全球化需要，所有的字符存储与表示，均以 utf-8 编码，那么字符计数方法注意：<br>说明：<br>SELECT LENGTH(“轻松工作”)； 返回为 12<br>SELECT CHARACTER_LENGTH(“轻松工作”)； 返回为 4<br>如果要使用表情，那么使用 utfmb4 来进行存储，注意它与 utf-8 编码的区别。</p>
+</li>
+<li><p>【参考】TRUNCATE TABLE 比 DELETE 速度快，且使用的系统和事务日志资源少，但 TRUNCATE<br>无事务且不触发 trigger，有可能造成事故，故不建议在开发代码中使用此语句。<br>说明：TRUNCATE TABLE 在功能上与不带 WHERE 子句的 DELETE 语句相同。</p>
+</li>
+</ol>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag">#MySQL</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/04/Tornado异步非阻塞/" rel="prev">Tornado异步非阻塞</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/15/nginx笔记/" rel="next">nginx笔记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/images/avatar.jpg" alt="Xinjie Wong" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Xinjie Wong</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">Tech Blog of Xinjie Wong</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wongxinjie" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://book.douban.com/people/Xinjie_Wong/" target="_blank">douban</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#核心规定"><span class="nav-number">1.</span> <span class="nav-text">核心规定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字段类规定"><span class="nav-number">2.</span> <span class="nav-text">字段类规定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引类规定"><span class="nav-number">3.</span> <span class="nav-text">索引类规定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL类规定"><span class="nav-number">4.</span> <span class="nav-text">SQL类规定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#约定类规定"><span class="nav-number">5.</span> <span class="nav-text">约定类规定</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建表规约"><span class="nav-number"></span> <span class="nav-text">建表规约</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引规约"><span class="nav-number"></span> <span class="nav-text">索引规约</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL_规约"><span class="nav-number"></span> <span class="nav-text">SQL 规约</span></a></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xinjie Wong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
